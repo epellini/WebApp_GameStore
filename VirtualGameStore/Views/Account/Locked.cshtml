@@ -1,0 +1,31 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Locked</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">Account Locked</div>
+                    <div class="card-body text-center">
+                        <p>Your account has been locked due to multiple incorrect password attempts.</p>
+                        <p>A verification email has been sent to your registered email address. Please check your email and follow the instructions to unlock your account.</p>
+                        <a asp-action="Login" asp-controller="Account" class="btn btn-primary mt-3">Return to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
