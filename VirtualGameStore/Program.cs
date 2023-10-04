@@ -18,10 +18,10 @@ builder.Services.AddScoped<IGameStoreManager, GameStoreManager>();
 
 //Set up the identity service options:
 builder.Services.AddIdentity<User, IdentityRole>(options => {
-    //options.Password.RequiredLength = 6;
-    //options.Password.RequireNonAlphanumeric = true;
-    //options.Password.RequireDigit = true;
-    options.User.RequireUniqueEmail = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireDigit = true;
 }).AddEntityFrameworkStores<GameStoreDbContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
