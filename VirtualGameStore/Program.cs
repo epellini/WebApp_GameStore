@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Extensions.DependencyInjection;
 using VirtualGameStore.DataAccess;
 using VirtualGameStore.Entities;
 using VirtualGameStore.Services;
@@ -23,6 +25,10 @@ builder.Services.AddIdentity<User, IdentityRole>(options => {
     options.Password.RequireUppercase = true;
     options.Password.RequireDigit = true;
 }).AddEntityFrameworkStores<GameStoreDbContext>().AddDefaultTokenProviders();
+
+// Add Send Grid email service:
+builder.Services.AddSendGrid(options => options.ApiKey = builder.Configuration.GetValue<string>("SendGridApiKey") ?? throw new Exception("The 'SendGridApiKey' is not configured"));
+builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
 
 var app = builder.Build();
 
