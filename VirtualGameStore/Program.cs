@@ -27,7 +27,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options => {
 }).AddEntityFrameworkStores<GameStoreDbContext>().AddDefaultTokenProviders();
 
 // Add Send Grid email service:
-builder.Services.AddSendGrid(options => options.ApiKey = builder.Configuration.GetValue<string>("SendGridApiKey") ?? throw new Exception("The 'SendGridApiKey' is not configured"));
+var emailStr = "SG." + builder.Configuration.GetValue<string>("EmailKey1") + "." + builder.Configuration.GetValue<string>("EmailKey2");
+builder.Services.AddSendGrid(options => options.ApiKey = emailStr ?? throw new Exception("The 'SendGridApiKey' is not configured"));
 builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
 
 var app = builder.Build();
