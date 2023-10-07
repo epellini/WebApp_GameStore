@@ -17,8 +17,21 @@
             <h4>@game.Name</h4>
             <p>Developer: <b>@game.Developer</b></p>
             <p>Release Date: <b>@game.ReleaseDate.Value.ToString("d")</b></p>
-            <p>Price: <b>$@game.RetailPrice</b></p>
-            <p>Platform: <b>@game.Platform.PlatformName</b></p>
+            @if (game.RetailPrice == null || game.RetailPrice <= 0.0)
+			{
+                <p>Price: <b>Free to Play</b></p>
+            }
+            else
+            {
+                <p>Price: <b>$@game.RetailPrice</b></p>
+            }
+            <p>Platforms: 
+            @foreach (var platform in game.Platforms)
+            {
+                <b>@platform.PlatformId</b>
+            }
+            </p>
+            @* <p>Platform: <b>@game.Platform.PlatformName</b></p> *@
         </div>
     }
 </div>

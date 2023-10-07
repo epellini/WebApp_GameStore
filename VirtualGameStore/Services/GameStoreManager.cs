@@ -18,7 +18,7 @@ namespace VirtualGameStore.Services
 
         public ICollection<Game> GetAllGames()
         {
-            return _gameStoreDbContext.Games.Include(g => g.Platform).ToList();
+            return _gameStoreDbContext.Games.Include(g => g.Platforms).Include(g => g.Genres).Include(g => g.Languages).ToList();
         }
 
         public ICollection<Platform> GetAllPlatforms()
