@@ -8,30 +8,3 @@
     <h1 class="display-4">Virtual Game Store</h1>
     <p>Enrico was here! John was also here!! And also John too! And Nikita was here!</p>
 </div>
-
-<div class="row text-center">
-    <h1 class="display-4">All Games:</h1>
-    @foreach (var game in Model)
-    {
-        <div class="text-start col-auto">
-            <h4>@game.Name</h4>
-            <p>Developer: <b>@game.Developer</b></p>
-            <p>Release Date: <b>@game.ReleaseDate.Value.ToString("d")</b></p>
-            @if (game.RetailPrice == null || game.RetailPrice <= 0.0)
-			{
-                <p>Price: <b>Free to Play</b></p>
-            }
-            else
-            {
-                <p>Price: <b>$@game.RetailPrice</b></p>
-            }
-            <p>Platforms: 
-            @foreach (var platform in game.Platforms)
-            {
-                <b>@platform.PlatformId</b>
-            }
-            </p>
-            @* <p>Platform: <b>@game.Platform.PlatformName</b></p> *@
-        </div>
-    }
-</div>

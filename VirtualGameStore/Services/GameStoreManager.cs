@@ -16,9 +16,17 @@ namespace VirtualGameStore.Services
 
         // Implement all interface methods:
 
+        /// <summary>
+        /// Get all the games in the database including their platforms, genres, and languages.
+        /// </summary>
+        /// <returns>A list of Game objects</returns>
         public ICollection<Game> GetAllGames()
         {
-            return _gameStoreDbContext.Games.Include(g => g.Platforms).Include(g => g.Genres).Include(g => g.Languages).ToList();
+            return _gameStoreDbContext.Games
+                .Include(g => g.Platforms).ThenInclude(p => p.Platform)
+                .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
+                .Include(g => g.Languages).ThenInclude(l => l.Language)
+                .ToList();
         }
 
         public ICollection<Platform> GetAllPlatforms()
