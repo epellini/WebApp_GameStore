@@ -26,12 +26,18 @@ namespace VirtualGameStore.Services
                 .Include(g => g.Platforms).ThenInclude(p => p.Platform)
                 .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
                 .Include(g => g.Languages).ThenInclude(l => l.Language)
+                .Include(g => g.Pictures)
                 .ToList();
         }
 
         public ICollection<Platform> GetAllPlatforms()
         {
             throw new NotImplementedException();
+        }
+
+        public Picture GetPictureById(int id)
+        {
+            return _gameStoreDbContext.Pictures.Where(p => p.PictureId == id).FirstOrDefault();
         }
 
 

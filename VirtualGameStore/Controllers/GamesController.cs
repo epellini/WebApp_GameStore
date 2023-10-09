@@ -24,6 +24,18 @@ namespace VirtualGameStore.Controllers
             return View("AllGames", allGames);
         }
 
+        // GET: /images/{id}
+        [HttpGet("images/{id}")]
+        public IActionResult ViewImage(int id)
+        {
+            Picture picture = _gameStoreManager.GetPictureById(id);
+            if (picture != null)
+            {
+                return File(picture.Image, "image/jpg");
+            }
+            return RedirectToAction("Error", "Home");
+        }
+
         // Private fields for services
         private IGameStoreManager _gameStoreManager;
         private SignInManager<User> _signInManager;

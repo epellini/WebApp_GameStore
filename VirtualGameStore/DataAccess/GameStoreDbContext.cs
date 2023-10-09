@@ -7,9 +7,13 @@ namespace VirtualGameStore.DataAccess
 {
     public class GameStoreDbContext : IdentityDbContext<User>
     {
+        // Add a private field to store the web host environment:
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
         // Constructor with DbContext options (so EFCore can connect to DB): 
-        public GameStoreDbContext(DbContextOptions options) : base(options)
+        public GameStoreDbContext(DbContextOptions options, IWebHostEnvironment webHostEnvironment) : base(options)
         {
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // Insert an admin user into the database (method called in program.cs):
@@ -39,6 +43,21 @@ namespace VirtualGameStore.DataAccess
             }
         }
 
+        // Generate an array of bytes from an image file located in wwwroot/images:
+        private byte[] GetBytes(string fileName)
+        {
+            var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+
+            // Check that the file exists:
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("Image not found");
+            }
+            
+            // Read all the bytes and return as byte array:
+            return File.ReadAllBytes(path);
+        }
+
         // DbSets of every entity (used to query and save instances of entities):
         public DbSet<Game>? Games { get; set; }
         public DbSet<Genre>? Genres { get; set; }
@@ -51,6 +70,7 @@ namespace VirtualGameStore.DataAccess
         public DbSet<GameLanguage>? GameLanguages { get; set; }
         public DbSet<Profile>? Profiles { get; set; }
         public DbSet<ShippingAddress>? ShippingAddresses { get; set; }
+        public DbSet<Picture>? Pictures { get; set; }
 
         // Override base class method OnModelCreating to establish DB relationships
         // or seed the DB or generate primary keys as a composites of 2 foreign keys:
@@ -150,6 +170,13 @@ namespace VirtualGameStore.DataAccess
                 .HasOne(sa => sa.User)
                 .WithMany(u => u.ShippingAddresses)
                 .HasForeignKey(sa => sa.UserId);
+
+            // Establish Picture relationships:
+            // Each Picture has 1 game - Each game could have many Pictures - Picture has FK to game:
+            modelBuilder.Entity<Picture>()
+                .HasOne(p => p.Game)
+                .WithMany(g => g.Pictures)
+                .HasForeignKey(p => p.GameId);
 
             // Seed the Platforms table:
             modelBuilder.Entity<Platform>().HasData( 
@@ -271,6 +298,45 @@ namespace VirtualGameStore.DataAccess
                     LanguageName = "Spanish",
                 });
 
+            // Seed the Pictures table:
+            modelBuilder.Entity<Picture>().HasData(
+                new Picture
+                {
+                    PictureId = 1,
+                    GameId = 1,
+                    Title = "Doom Cover Art",
+                    AltText = "Cover image for the 1993 game, Doom",
+                    IsCoverArt = true,
+                    Image = GetBytes("doom-cover.jpg")
+                },
+                new Picture
+                {
+                    PictureId = 2,
+                    GameId = 2,
+                    Title = "RuneScape Cover Art",
+                    AltText = "Cover image for the 2001 game, RuenScape",
+                    IsCoverArt = true,
+                    Image = GetBytes("runescape-cover.jpg")
+                },
+                new Picture
+                {
+                    PictureId = 3,
+                    GameId = 3,
+                    Title = "Minecraft Cover Art",
+                    AltText = "Cover image for the 2011 game, Minecraft",
+                    IsCoverArt = true,
+                    Image = GetBytes("minecraft-cover.png")
+                },
+                new Picture
+                {
+                    PictureId = 4,
+                    GameId = 4,
+                    Title = "RollerCoaster Tycoon Cover Art",
+                    AltText = "Cover image for the 1999 game, RollerCoaster Tycoon",
+                    IsCoverArt = true,
+                    Image = GetBytes("rollercoaster-tycoon-cover.png")
+                });
+
             // Seed the Games table:
             modelBuilder.Entity<Game>().HasData(
                 new Game()
@@ -308,8 +374,8 @@ namespace VirtualGameStore.DataAccess
                     Developer = "Chris Sawyer",
                     ReleaseDate = new DateTime(1999, 03, 25),
                     RetailPrice = 5.99
-                }
-                );
+                });
+
             // Seed the GameGenres table:
             modelBuilder.Entity<GameGenre>().HasData(
                 new GameGenre

@@ -7,5 +7,7 @@ namespace VirtualGameStore.Services
         public ICollection<Game> GetAllGames();
         
         public ICollection<Platform> GetAllPlatforms();
+
+        public Picture GetPictureById(int id);
     }
 }
