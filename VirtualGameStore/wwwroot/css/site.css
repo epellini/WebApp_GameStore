@@ -16,3 +16,226 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*Nord Theme Colors*/
+/*Polar Night from darkest to lightest*/
+.bg-night-deep {
+    background-color: #242933;
+}
+.text-night-deep {
+    color: #242933;
+}
+.bg-night{
+    background-color: #2E3440;
+}
+.text-night {
+    color: #2E3440;
+}
+.bg-night-bright{
+    background-color: #3B4252;
+}
+.text-night-bright {
+    color: #3B4252;
+}
+.bg-shade {
+    background-color: #434c5e;
+}
+.text-shade {
+    color: #434c5e;
+}
+.bg-shade-bright {
+    background-color: #4c566a;
+}
+.text-shade-bright {
+    color: #4c566a;
+}
+
+
+/*Snow Storm from darkest to lightest*/
+.bg-snow-deep {
+    background-color: #d8dee9;
+}
+.text-snow-deep {
+    color: #d8dee9;
+}
+.bg-snow {
+    background-color: #e5e9f0;
+}
+.text-snow {
+    color: #e5e9f0;
+}
+.bg-snow-bright {
+    background-color: #eceff4;
+}
+.text-snow-bright {
+    color: #eceff4;
+}
+.nav-link-snow {
+    color: #d8dee9;
+    border-radius: .5rem;
+}
+.nav-link-snow:hover {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-radius: .5rem;
+}
+.nav-link-snow:focus {
+    color: #2E3440;
+    background-color: #8fbcbb;
+}
+.nav-link-snow-active {
+    color: #2E3440;
+    background-color: #8fbcbb;
+}
+.nav-link-snow-active:hover {
+    color: #eceff4;
+    background-color: #8fbcbb;
+    border-radius: .5rem;
+}
+.nav-link-snow:focus:hover {
+    color: #eceff4;
+}
+.navbar-brand-snow {
+    color: #d8dee9;
+}
+.navbar-brand-snow:hover {
+    color: #eceff4;
+}
+
+/*Frost from greenest to bluest*/
+.bg-frost-accent {
+    background-color: #8fbcbb;
+}
+.text-frost-accent {
+    color: #8fbcbb;
+}
+
+.btn-frost-accent {
+    color: #2E3440;
+    background-color: #8fbcbb;
+    border-color: #8fbcbb;
+}
+.btn-frost-accent:hover {
+    color: #2E3440;
+    background-color: #688988;
+    border-color: #688988;
+}
+.btn-frost-accent-outline {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-color: #eceff4;
+}
+.btn-frost-accent-outline:hover {
+    color: #8fbcbb;
+    background-color: #2E3440;
+    border-color: #8fbcbb;
+}
+
+.bg-frost-primary {
+    background-color: #88c0d0;
+}
+.text-frost-primary {
+    color: #88c0d0;
+}
+
+.btn-frost-primary {
+    color: #2E3440;
+    background-color: #88c0d0;
+    border-color: #88c0d0;
+}
+.btn-frost-primary:hover {
+    color: #2E3440;
+    background-color: #5a8996;
+    border-color: #5a8996;
+}
+.btn-frost-primary-outline {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-color: #eceff4;
+}
+.btn-frost-primary-outline:hover {
+    color: #88c0d0;
+    background-color: #2E3440;
+    border-color: #88c0d0;
+}
+.link-frost {
+    color: #88c0d0;
+}
+.link-frost:hover {
+    color: #5a8996;
+}
+
+.bg-frost {
+    background-color: #81a1c1;
+}
+.text-frost {
+    color: #81a1c1;
+}
+.bg-frost-deep {
+    background-color: #5e81ac;
+}
+.text-frost-deep {
+    color: #5e81ac;
+}
+
+.btn-frost {
+    color: #2E3440;
+    background-color: #81a1c1;
+    border-color: #81a1c1;
+}
+.btn-frost:hover {
+    color: #2E3440;
+    background-color: #5e81ac;
+    border-color: #5e81ac;
+}
+.btn-frost-outline {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-color: #eceff4;
+}
+.btn-frost-outline:hover {
+    color: #5e81ac;
+    background-color: #2E3440;
+    border-color: #5e81ac;
+}
+
+/*Aurora from warmest to coolest*/
+.bg-aurora-red {
+    background-color: #bf616a;
+}
+.text-aurora-red {
+    color: #bf616a;
+}
+.bg-aurora-orange {
+    background-color: #d08770;
+}
+.text-aurora-orange {
+    color: #d08770;
+}
+.bg-aurora-yellow {
+    background-color: #ebcb8b;
+}
+.text-aurora-yellow {
+    color: #ebcb8b;
+}
+.bg-aurora-green {
+    background-color: #a3be8c;
+}
+.text-aurora-green {
+    color: #a3be8c;
+}
+.bg-aurora-purple {
+    background-color: #b48ead;
+}
+.text-aurora-purple {
+    color: #b48ead;
+}
+
+.svg-icon {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.svg-icon path {
+    stroke-width: 1%;
+}

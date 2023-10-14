@@ -298,7 +298,7 @@ namespace VirtualGameStore.DataAccess
                     LanguageName = "Spanish",
                 });
 
-            // Seed the Pictures table:
+            //Seed the Pictures table:
             modelBuilder.Entity<Picture>().HasData(
                 new Picture
                 {

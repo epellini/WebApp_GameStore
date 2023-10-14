@@ -10,7 +10,7 @@ namespace VirtualGameStore.Services
         // Read all Games:
         public List<Game> GetAllGames();
         // Read Game:
-        public Game GetGameById(int id);
+        public Game? GetGameById(int id);
         // Update Game:
         public void UpdateGame(Game game);
         // Delete Game:
