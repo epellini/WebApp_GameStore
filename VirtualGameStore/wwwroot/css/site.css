@@ -194,9 +194,9 @@ body {
     border-color: #eceff4;
 }
 .btn-frost-outline:hover {
-    color: #5e81ac;
+    color: #81a1c1;
     background-color: #2E3440;
-    border-color: #5e81ac;
+    border-color: #81a1c1;
 }
 
 /*Aurora from warmest to coolest*/
@@ -231,11 +231,28 @@ body {
     color: #b48ead;
 }
 
-.svg-icon {
-    width: 1.5em;
-    height: 1.5em;
+.svg-icon-snow path {
+    fill: #d8dee9;
+    stroke: #d8dee9;
+    stroke-width: 2%;
 }
 
-.svg-icon path {
-    stroke-width: 1%;
+.svg-icon-snow:hover > path {
+    fill: #eceff4;
+    stroke: #eceff4;
+}
+
+.svg-icon-shade path {
+    fill: #4c566a;
+    stroke: #4c566a;
+    stroke-width: 2%;
+}
+
+.svg-icon-shade:hover > path {
+    fill: #434c5e;
+    stroke: #434c5e;
+}
+
+.btn {
+    font-weight: bold;
 }
