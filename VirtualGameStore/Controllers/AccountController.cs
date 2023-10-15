@@ -159,7 +159,70 @@ namespace VirtualGameStore.Controllers
         [HttpGet("account/login")]
         public IActionResult Login()
         {
-            return View();
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var model = new LoginViewModel();
+            return View(model);
+        }
+
+        //POST:
+        // /Account/LogIn
+        [HttpPost("account/login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LogIn(LoginViewModel model)
+        {
+            // If the form was filled out correctly:
+            if (ModelState.IsValid)
+            {
+                // Try to find the user by username:
+                var user = await _userManager.FindByNameAsync(model.Username);
+
+                // If the user already exist:
+                if (user != null)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (!user.EmailConfirmed && !roles.Contains("Admin"))
+                    {
+                        return RedirectToAction("SuccessRegistration", new { email = user.Email });
+                    }
+                    if (_userManager.GetAccessFailedCountAsync(user).Result < 2)
+                    {
+                        var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, lockoutOnFailure: false);
+
+                        if (result.Succeeded)
+                        {
+                            _userManager.ResetAccessFailedCountAsync(user);
+                            return RedirectToAction("Index", "Home");
+                        }
+                        await _userManager.AccessFailedAsync(user);
+                    }
+                    else
+                    {
+                        if (!_userManager.IsLockedOutAsync(user).Result && !_userManager.IsLockedOutAsync(user).Result)
+                        {
+                            await _signInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, lockoutOnFailure: true);
+                        }
+                        return View("Locked");
+                    }
+
+                }
+            }
+
+            ModelState.AddModelError("", "Invalid username/password.");
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                await _signInManager.SignOutAsync();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
 
