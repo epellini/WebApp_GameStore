@@ -16,5 +16,6 @@
         public ICollection<GameGenre>? Genres { get; set; }
         public ICollection<GameLanguage>? Languages { get; set; }
         public ICollection<GamePlatform>? Platforms { get; set; } 
+        public ICollection<Picture>? Pictures { get; set; }
     }
 }

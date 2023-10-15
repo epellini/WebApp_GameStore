@@ -12,7 +12,7 @@ using VirtualGameStore.DataAccess;
 namespace VirtualGameStore.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    [Migration("20231007001804_Initial")]
+    [Migration("20231013191115_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -573,6 +573,36 @@ namespace VirtualGameStore.Migrations
                         });
                 });
 
+            modelBuilder.Entity("VirtualGameStore.Entities.Picture", b =>
+                {
+                    b.Property<int>("PictureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PictureId"), 1L, 1);
+
+                    b.Property<string>("AltText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool?>("IsCoverArt")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PictureId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Pictures");
+                });
+
             modelBuilder.Entity("VirtualGameStore.Entities.Platform", b =>
                 {
                     b.Property<int>("PlatformId")
@@ -909,6 +939,15 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("Platform");
                 });
 
+            modelBuilder.Entity("VirtualGameStore.Entities.Picture", b =>
+                {
+                    b.HasOne("VirtualGameStore.Entities.Game", "Game")
+                        .WithMany("Pictures")
+                        .HasForeignKey("GameId");
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("VirtualGameStore.Entities.PreferredLanguage", b =>
                 {
                     b.HasOne("VirtualGameStore.Entities.Language", "Language")
@@ -947,6 +986,8 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("Genres");
 
                     b.Navigation("Languages");
+
+                    b.Navigation("Pictures");
 
                     b.Navigation("Platforms");
                 });

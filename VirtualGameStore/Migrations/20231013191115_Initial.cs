@@ -260,6 +260,28 @@ namespace VirtualGameStore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Pictures",
+                columns: table => new
+                {
+                    PictureId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameId = table.Column<int>(type: "int", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AltText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsCoverArt = table.Column<bool>(type: "bit", nullable: true),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pictures", x => x.PictureId);
+                    table.ForeignKey(
+                        name: "FK_Pictures_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "GameId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FavouriteGenres",
                 columns: table => new
                 {
@@ -583,6 +605,11 @@ namespace VirtualGameStore.Migrations
                 column: "PlatformId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pictures_GameId",
+                table: "Pictures",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PreferredLanguages_LanguageId",
                 table: "PreferredLanguages",
                 column: "LanguageId");
@@ -638,6 +665,9 @@ namespace VirtualGameStore.Migrations
                 name: "GamePlatform");
 
             migrationBuilder.DropTable(
+                name: "Pictures");
+
+            migrationBuilder.DropTable(
                 name: "PreferredLanguages");
 
             migrationBuilder.DropTable(
@@ -653,10 +683,10 @@ namespace VirtualGameStore.Migrations
                 name: "Genres");
 
             migrationBuilder.DropTable(
-                name: "Games");
+                name: "Platforms");
 
             migrationBuilder.DropTable(
-                name: "Platforms");
+                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "Languages");
