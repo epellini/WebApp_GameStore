@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> _signInManager
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +40,7 @@
                                     </svg>
                                 </a>
 
-                                @if (User.Identity.Name != null )
+                                @if (User.Identity.Name != null)
                                 {
                                     <a class="nav-link nav-link-snow dropdown-toggle p-1 px-3 m-2 ms-0 text-uppercase fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         @User.Identity.Name
@@ -58,10 +58,11 @@
                                     {
                                         <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow nav-link-snow-active text-uppercase fw-bold" href="#">Profile</a></li>
                                     }
-                                    else{
+                                    else
+                                    {
                                         <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow text-uppercase fw-bold" href="#">Profile</a></li>
                                     }
-                                    
+
                                     @if (ViewData["Title"] == "My Preferences")
                                     {
                                         <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow nav-link-active text-uppercase fw-bold" href="#">Preferences</a></li>
@@ -70,7 +71,7 @@
                                     {
                                         <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow text-uppercase fw-bold" href="#">Preferences</a></li>
                                     }
-                                    
+
                                     <li class="nav-item">
                                         <hr class="dropdown-divider">
                                     </li>
@@ -99,7 +100,6 @@
                         <li class="nav-item py-1 col-auto">
                             <div class="vr d-flex h-100 mx-2 text-snow-deep"></div>
                         </li>
-<<<<<<< HEAD
                         @if (ViewData["Title"] == "Sign Up")
                         {
                             <li class="nav-item">
@@ -115,13 +115,6 @@
                     }
 
                 </ul>
-=======
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Profile">Profile</a>
-                        </li>
-                    </ul>
-                </div>
->>>>>>> profile-page
             </div>
         </nav>
     </header>
