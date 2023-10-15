@@ -22,6 +22,10 @@ namespace VirtualGameStore.DataAccess
             UserManager<User> userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+            // Temporarily replace the password validator with my custom validator:
+            userManager.PasswordValidators.Clear();
+            userManager.PasswordValidators.Add( new CustomPasswordValidator());
+
             string username = "admin";
             string password = "admin";
             string roleName = "Admin";
@@ -41,6 +45,9 @@ namespace VirtualGameStore.DataAccess
                     await userManager.AddToRoleAsync(user, roleName);
                 }
             }
+
+            // Restore the default password validator:
+            userManager.PasswordValidators.Add(new PasswordValidator<User>());
         }
 
         // Generate an array of bytes from an image file located in wwwroot/images:

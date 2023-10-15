@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Success</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card ">
+                        <div class="card-header text-center">Success</div>
+                        <div class="card-body text-center">
+                            <!-- Displaying the checkmark icon -->
+                            <img src="~/images/checked.png" alt="Success Icon" class="mb-3" style="width: 100px; height: 100px;">
+
+                            <p>Thank you for confirming your registration! You can now <a asp-action="Login" asp-controller="Account">log in</a> to your account.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
