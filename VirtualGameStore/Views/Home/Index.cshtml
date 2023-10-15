@@ -24,17 +24,3 @@
         </div>
     </form>
 </div>
-
-<div class="row text-center">
-    <h1 class="display-4">All Games:</h1>
-    @foreach (var game in Model)
-    {
-        <div class="text-start col-auto">
-            <h4>@game.Name</h4>
-            <p>Developer: <b>@game.Developer</b></p>
-            <p>Release Date: <b>@game.ReleaseDate.Value.ToString("d")</b></p>
-            <p>Price: <b>$@game.RetailPrice</b></p>
-            <p>Platform: <b>@game.Platform.PlatformName</b></p>
-        </div>
-    }
-</div>
