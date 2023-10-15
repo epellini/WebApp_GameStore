@@ -19,7 +19,7 @@ namespace VirtualGameStore.Controllers
 
         public IActionResult Index()
         {
-            List<Game> games = _gameStoreManager.GetAllGames().ToList();
+            List<Game> games = _gameStoreManager.GetAllGames("New").ToList();
             return View(games);
         }
 

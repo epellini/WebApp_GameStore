@@ -30,14 +30,61 @@ namespace VirtualGameStore.Services
         /// Get all the games in the database including their platforms, genres, languages, and pictures.
         /// </summary>
         /// <returns>A list of Game objects</returns>
-        public List<Game> GetAllGames()
+        public List<Game> GetAllGames(string sort)
         {
-            return _gameStoreDbContext.Games
+            List<Game> games = new List<Game>();
+            if (sort == null) sort = "New";
+            if (sort == "New")
+            {
+                games = _gameStoreDbContext.Games
+                    .Include(g => g.Platforms).ThenInclude(p => p.Platform)
+                    .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
+                    .Include(g => g.Languages).ThenInclude(l => l.Language)
+                    .Include(g => g.Pictures)
+                    .OrderByDescending(g => g.ReleaseDate)
+                    .ToList();
+            }
+            if (sort == "Popular")
+            {
+                games = _gameStoreDbContext.Games
+                .Include(g => g.Platforms).ThenInclude(p => p.Platform)
+                .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
+                .Include(g => g.Languages).ThenInclude(l => l.Language)
+                .Include(g => g.Pictures)
+                .OrderBy(g => g.Genres.Count())
+                .ToList();
+            }
+            if (sort == "Top")
+            {
+                games = _gameStoreDbContext.Games
                 .Include(g => g.Platforms).ThenInclude(p => p.Platform)
                 .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
                 .Include(g => g.Languages).ThenInclude(l => l.Language)
                 .Include(g => g.Pictures)
                 .ToList();
+            }
+            return games;
+        }
+        public List<Game> GetGamesBySearch(string query)
+        {
+            if (query != null)
+            {
+                return _gameStoreDbContext.Games
+                .Include(g => g.Platforms).ThenInclude(p => p.Platform)
+                .Include(g => g.Pictures)
+                .Where(g => g.Name.Contains(query))
+                .OrderByDescending(g => g.Name.StartsWith(query))
+                .ThenBy(g => g.Name)
+                .ToList();
+            }
+            else
+            {
+                return _gameStoreDbContext.Games
+                .Include(g => g.Platforms).ThenInclude(p => p.Platform)
+                .Include(g => g.Pictures)
+                .OrderByDescending(g => g.ReleaseDate)
+                .ToList();
+            }
         }
 
         // Read Game:

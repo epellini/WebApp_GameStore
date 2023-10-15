@@ -15,7 +15,7 @@
         <nav class="navbar navbar-expand bg-night shadow-sm text-snow-bright mb-3">
             <div class="container-sm">
                 <a class="navbar-brand navbar-brand-snow text-snow-bright fw-bold me-0 me-sm-5" asp-area="" asp-controller="Home" asp-action="Index">CVGS</a>
-                <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
+                <ul class="navbar-nav justify-content-start flex-grow-1">
                     <li class="nav-item">
                         @if (ViewData["Title"] == "All Games")
                         {
@@ -27,7 +27,7 @@
                         }
                     </li>
                 </ul>
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <ul class="navbar-nav justify-content-end flex-grow-1">
 
                     @if (_signInManager.IsSignedIn(User))
                     {
@@ -117,7 +117,7 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-sm">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

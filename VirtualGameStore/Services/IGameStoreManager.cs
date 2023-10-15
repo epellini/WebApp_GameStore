@@ -1,4 +1,5 @@
 ﻿using VirtualGameStore.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace VirtualGameStore.Services
 {
@@ -8,7 +9,8 @@ namespace VirtualGameStore.Services
         // Create Game:
         public void CreateGame(Game game);
         // Read all Games:
-        public List<Game> GetAllGames();
+        public List<Game> GetAllGames(string sort);
+        public List<Game> GetGamesBySearch(string query);
         // Read Game:
         public Game? GetGameById(int id);
         // Update Game:

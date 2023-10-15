@@ -74,8 +74,17 @@ body {
     color: #d8dee9;
     border-radius: .5rem;
 }
+.sort-link-snow {
+    color: #4c566a;
+    border-radius: .5rem;
+}
 .nav-link-snow:hover {
     color: #eceff4;
+    background-color: #3B4252;
+    border-radius: .5rem;
+}
+.sort-link-snow:hover {
+    color: #d8dee9;
     background-color: #2E3440;
     border-radius: .5rem;
 }
@@ -83,13 +92,26 @@ body {
     color: #2E3440;
     background-color: #8fbcbb;
 }
+.sort-link-snow:focus {
+    color: #88c0d0;
+}
 .nav-link-snow-active {
     color: #2E3440;
     background-color: #8fbcbb;
 }
+.sort-link-snow-active {
+    color: #eceff4;
+    background-color: #5e81ac;
+    border-radius: .5rem;
+}
 .nav-link-snow-active:hover {
     color: #eceff4;
     background-color: #8fbcbb;
+    border-radius: .5rem;
+}
+.sort-link-snow-active:hover {
+    color: #eceff4;
+    background-color: #81a1c1;
     border-radius: .5rem;
 }
 .nav-link-snow:focus:hover {
@@ -100,6 +122,21 @@ body {
 }
 .navbar-brand-snow:hover {
     color: #eceff4;
+}
+.searchBar {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-radius: 2rem;
+    border: none;
+}
+.searchBar:focus {
+    color: #242933;
+    background-color: #d8dee9;
+    border-radius: 2rem;
+    border: none;
+}
+.searchBar::placeholder {
+    color: #4c566a;
 }
 
 /*Frost from greenest to bluest*/

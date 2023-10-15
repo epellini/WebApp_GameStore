@@ -18,9 +18,14 @@ namespace VirtualGameStore.Controllers
 
         // GET: /games
         [HttpGet("games")]
-        public IActionResult ViewAllGames()
+        public IActionResult ViewAllGames(string sort)
         {
-            List<Game> allGames = _gameStoreManager.GetAllGames().ToList();
+            if (string.IsNullOrEmpty(sort))
+            {
+                sort = "New";
+            }
+            List<Game> allGames = _gameStoreManager.GetAllGames(sort).ToList();
+            ViewBag.Sort = sort;
             return View("AllGames", allGames);
         }
 
@@ -34,6 +39,34 @@ namespace VirtualGameStore.Controllers
                 return File(picture.Image, "image/jpg");
             }
             return RedirectToAction("Error", "Home");
+        }
+
+        [HttpGet("games/search")]
+        public JsonResult SearchGames(string query)
+        {
+            List<Game> games = _gameStoreManager.GetGamesBySearch(query);
+            List<Platform>[]? platforms = new List<Platform>[games.Count];
+            List<Picture>[]? pictures = new List<Picture>[games.Count];
+
+            for (int i = 0; i < games.Count; i++)
+            {
+                List<GamePlatform> gamePlatforms = games[i].Platforms.ToList();
+                platforms[i] = new List<Platform>();
+                foreach (var gamePlatform in gamePlatforms)
+                {
+                    gamePlatform.Platform.Games = null;
+                    platforms[i].Add(gamePlatform.Platform);
+                }
+                pictures[i] = games[i].Pictures.ToList();
+                games[i].Platforms = null;
+                games[i].Pictures = null;
+            }
+            string sort = "";
+            if (string.IsNullOrEmpty(query))
+            {
+                sort = "New";
+            }
+            return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort});
         }
 
         // Private fields for services
