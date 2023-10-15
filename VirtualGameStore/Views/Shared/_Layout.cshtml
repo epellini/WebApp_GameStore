@@ -1,44 +1,132 @@
-﻿<!DOCTYPE html>
+﻿﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> _signInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - VirtualGameStore</title>
+    <title>@ViewData["Title"] - CVGS</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VirtualGameStore.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="bg-night-deep text-snow-bright">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VirtualGameStore</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        <nav class="navbar navbar-expand bg-night shadow-sm text-snow-bright mb-3">
+            <div class="container-sm">
+                <a class="navbar-brand navbar-brand-snow text-snow-bright fw-bold me-0 me-sm-5" asp-area="" asp-controller="Home" asp-action="Index">CVGS</a>
+                <ul class="navbar-nav justify-content-start flex-grow-1">
+                    <li class="nav-item">
+                        @if (ViewData["Title"] == "All Games")
+                        {
+                            <a class="nav-link nav-link-snow nav-link-snow-active p-1 px-3 m-2 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames">Games</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames">Games</a>
+                        }
+                    </li>
+                </ul>
+                <ul class="navbar-nav justify-content-end flex-grow-1">
+
+                    @if (_signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item dropdown">
+                            <div class="d-inline-flex align-bottom">
+                                <a class="nav-link" href="#">
+                                    <svg style="height:auto;" class="svg-icon svg-icon-btn mt-1 d-none d-sm-flex" viewBox="0 0 20 20">
+                                        <path fill="none" d="M10,10.9c2.373,0,4.303-1.932,4.303-4.306c0-2.372-1.93-4.302-4.303-4.302S5.696,4.223,5.696,6.594C5.696,8.969,7.627,10.9,10,10.9z M10,3.331c1.801,0,3.266,1.463,3.266,3.263c0,1.802-1.465,3.267-3.266,3.267c-1.8,0-3.265-1.465-3.265-3.267C6.735,4.794,8.2,3.331,10,3.331z"></path>
+                                        <path fill="none" d="M10,12.503c-4.418,0-7.878,2.058-7.878,4.685c0,0.288,0.231,0.52,0.52,0.52c0.287,0,0.519-0.231,0.519-0.52c0-1.976,3.132-3.646,6.84-3.646c3.707,0,6.838,1.671,6.838,3.646c0,0.288,0.234,0.52,0.521,0.52s0.52-0.231,0.52-0.52C17.879,14.561,14.418,12.503,10,12.503z"></path>
+                                    </svg>
+                                </a>
+
+                                @if (User.Identity.Name != null)
+                                {
+                                    <a class="nav-link nav-link-snow dropdown-toggle p-1 px-3 m-2 ms-0 text-uppercase fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        @User.Identity.Name
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link nav-link-snow dropdown-toggle p-1 px-3 m-2 ms-0 text-uppercase fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Account
+                                    </a>
+                                }
+
+                                <ul class="dropdown-menu bg-night-deep text-snow-bright">
+                                    @if (ViewData["Title"] == "My Profile")
+                                    {
+                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow nav-link-snow-active text-uppercase fw-bold" href="#">Profile</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow text-uppercase fw-bold" href="#">Profile</a></li>
+                                    }
+
+                                    @if (ViewData["Title"] == "My Preferences")
+                                    {
+                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow nav-link-active text-uppercase fw-bold" href="#">Preferences</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow text-uppercase fw-bold" href="#">Preferences</a></li>
+                                    }
+
+                                    <li class="nav-item">
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-link-snow text-uppercase fw-bold" asp-controller="Account" asp-action="LogOut">Log Out</a>
+                                    </li>
+                                </ul>
+
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    }
+                    else
+                    {
+                        @if (ViewData["Title"] == "Log In")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-snow nav-link-snow-active p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Account" asp-action="LogIn">Log In</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Account" asp-action="LogIn">Log In</a>
+                            </li>
+                        }
+                        <li class="nav-item py-1 col-auto">
+                            <div class="vr d-flex h-100 mx-2 text-snow-deep"></div>
                         </li>
-                    </ul>
-                </div>
+                        @if (ViewData["Title"] == "Sign Up")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-snow nav-link-snow-active p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Account" asp-action="Register">Sign Up</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Account" asp-action="Register">Sign Up</a>
+                            </li>
+                        }
+                    }
+
+                </ul>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-sm">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-snow-deep bg-night-bright">
         <div class="container">
-            &copy; 2023 - VirtualGameStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Conestoga Virtual Game Store
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

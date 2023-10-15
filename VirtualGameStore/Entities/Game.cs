@@ -3,19 +3,19 @@
     public class Game
     {
         // Primary key property:
-        public string GameId { get; set; } = Guid.NewGuid().ToString();
-
-        // Foreign key properties:
-        public string? PlatformId { get; set; }
-
-        // Reference navigation property to principal entitiy for each foreign key:
-        public Platform? Platform { get; set; }
+        public int GameId { get; set; }
 
         // Properties:
         public string? Name { get; set; }
+        public string? Description { get; set; }
         public string? Developer { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public double? RetailPrice { get; set; }
 
+        // Reference navigation properties to dependent entities that have GameId as a foreign key:
+        public ICollection<GameGenre>? Genres { get; set; }
+        public ICollection<GameLanguage>? Languages { get; set; }
+        public ICollection<GamePlatform>? Platforms { get; set; } 
+        public ICollection<Picture>? Pictures { get; set; }
     }
 }

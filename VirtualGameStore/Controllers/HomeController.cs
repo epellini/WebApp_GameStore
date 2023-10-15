@@ -19,7 +19,7 @@ namespace VirtualGameStore.Controllers
 
         public IActionResult Index()
         {
-            List<Game> games = _gameStoreManager.GetAllGames().ToList();
+            List<Game> games = _gameStoreManager.GetAllGames("New").ToList();
             return View(games);
         }
 
@@ -28,7 +28,12 @@ namespace VirtualGameStore.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		public IActionResult Profile()
+		{
+			return View();
+		}
+
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
