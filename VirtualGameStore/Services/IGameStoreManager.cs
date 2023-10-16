@@ -19,6 +19,10 @@ namespace VirtualGameStore.Services
         public void DeleteGame(Game game);
 
         public Profile GetProfileById(string id);
+        public List<PreferredLanguage> GetPreferredLanguagesById(string id);
+        public List<FavouriteGenre> GetFavouriteGenreById(string id);
+        public List<FavouritePlatform> GetFavouritePlatformById(string id);
+        public List<ShippingAddress> GetShippingAddressesById(string id);
         public List<Platform> GetAllPlatforms();
 
         public Picture GetPictureById(int id);
