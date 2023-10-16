@@ -19,29 +19,6 @@ namespace VirtualGameStore.Controllers
             _emailSender = emailSender;
         }
 
-        // TODO: remove when email is confirmed working for login/signup
-        // Temporary POST method for home page to test email service
-        [HttpPost]
-        public async Task<IActionResult> TestEmail()
-        {
-            // I'm using HttpContext Request to quickly get the form data
-            // but we will want to use view models for the actual application:
-            string email = HttpContext.Request.Form["email"];
-
-            // Create a link to imbed in the email
-            string? link = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-
-            // Create an email body in HTML (including the link)
-            string body = string.Format("<h2>Hey punk!</h2><hr>" +
-                    $"<p><b>Thanks for giving me your email address</b></p><br>" +
-                    $"<p>Now I'm going to spam you with ads for boner pills and stuff!</p>" +
-                    $"<p>Click <a href=\"{link}\">here</a> if you wanna get hacked</p>");
-
-            // Send the email
-            await _emailSender.SendEmailAsync(email, "1 weird coding trick! Developers hate him", body);
-            return RedirectToAction("Success");
-        }
-
         // GET:
         // /account/signup
         [HttpGet("account/signup")]
@@ -194,7 +171,7 @@ namespace VirtualGameStore.Controllers
 
                         if (result.Succeeded)
                         {
-                            _userManager.ResetAccessFailedCountAsync(user);
+                            await _userManager.ResetAccessFailedCountAsync(user);
                             return RedirectToAction("Index", "Home");
                         }
                         await _userManager.AccessFailedAsync(user);
@@ -205,6 +182,13 @@ namespace VirtualGameStore.Controllers
                         {
                             await _signInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, lockoutOnFailure: true);
                         }
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var confirmationLink = Url.Action("Unlock", "Account", new { token, email = user.Email }, Request.Scheme);
+                        string body = string.Format("<h2>Unlock your account!</h2><hr>" +
+                            $"<p><b>Hi {user.UserName.Substring(0, 1).ToUpper()}{user.UserName.Substring(1).ToLower()},</b></p><br>" +
+                            $"<p>Your account has been locked due to too many log in attempts.</p>" +
+                            $"<p>Click <a href=\"{confirmationLink}\">here</a> to unlock your account.</p>");
+                        await _emailSender.SendEmailAsync(user.Email, "Your Account is Locked", body);
                         return View("Locked");
                     }
 
@@ -215,7 +199,34 @@ namespace VirtualGameStore.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        // GET:
+        // /Account/Unlock
+        [HttpGet("account/unlock")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Unlock(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    await _userManager.ResetAccessFailedCountAsync(user);
+                    return View("SuccessUnlock");
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Unfortunately, we were unable to unlock your account. Please try again.";
+                }
+            }
+            else
+            {
+                ViewBag.errorMessage = "Unfortunately, we were unable to validate your account details.";
+            }
+            return View("Error");
+        }
+
+        [HttpGet("account/logout")]
         public async Task<IActionResult> Logout()
         {
             if (_signInManager.IsSignedIn(User))
@@ -225,20 +236,11 @@ namespace VirtualGameStore.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
         // Forgot Password
-        [HttpGet]
+        [HttpGet("account/forgot-password")]
         public IActionResult ForgotPassword()
         {
             return View("ForgotPassword");
-        }
-
-        //Registration Success page
-        //It's going to be shown to the user after email confirmation
-        [HttpGet]
-        public IActionResult Success()
-        {
-            return View("Success");
         }
 
         //Locked
