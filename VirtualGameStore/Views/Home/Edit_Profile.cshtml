@@ -1,0 +1,49 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Edit Profile Page";
+}
+
+<section>
+    <h1>Edit Profile</h1>
+    <div class="container py-5">
+
+        <!--User Profile Card-->
+        <div class="row g-3">
+            <div class="col">
+
+                <form id="UserEditForm">
+                    <div class="form-group">
+
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Joe" aria-label="First Name">
+                        </div>
+
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Mama" aria-label="Last Name">
+                        </div>
+
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Female" aria-label="Gender">
+                        </div>
+
+                        <div class="col">
+                            <input type="date" class="form-control" id="dateInput" name="date">
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input" type="checkbox" id="gridCheck">
+                            <label class="form-check-label" for="gridCheck">
+                                Subscribe to promotions
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" id="cancelProfileButton">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>

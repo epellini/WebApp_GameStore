@@ -2,10 +2,11 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-	ViewData["Title"] = "Profile Page";
+    ViewData["Title"] = "Profile Page";
 }
 
 <section>
+    <h1>My Profile</h1>
     <div class="container py-5">
 
         <!--User Profile Card-->
@@ -13,20 +14,40 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                             class="rounded-circle img-fluid" style="width: 150px;">
-                        <h5 class="my-3">FIRST + LAST NAME</h5>
-                        <p class="text-muted mb-1">GENDER</p>
-                        <p class="text-muted mb-4">BIRTHDAY</p>
-                        <p class="text-muted mb-4">PLATFORM</p>
-                        <div class="d-flex justify-content-center mb-2">
-                            <button type="button" class="btn btn-primary">Wishlist</button>
-                            <button type="button" class="btn btn-outline-primary ms-1">Edit Profile</button>
-                        </div>
+                        <h5 class="my-3">Joe Mama</h5>
+                        <p class="text-muted mb-1">Female</p>
+                        <p class="text-muted mb-4">1990-10-15</p>
+
+                        <fieldset disabled>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Receiving Promotions
+                                </label>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
 
-                <!--User Friendlist Card-->
+                <!--Buttons-->
+                <div class="card mb-4 mb-lg-0">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush rounded-3">
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center p-2">
+                                <button type="button" class="btn btn-primary">Wishlist</button>
+                                <button type="button" class="btn btn-primary ms-1">Edit Profile</button>
+                                <button type="button" class="btn btn-primary">Preferences</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!--Friend List-->
+            <div class="col-lg-8">
                 <div class="card mb-4 mb-lg-0">
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush rounded-3">
@@ -49,115 +70,46 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-
-            <!--User's Shipping Info Section-->
-            <div class="col-lg-8">
-                <div class="card mb-4">
+        <div class="my-4"></div> <!--Weird spacer but it works for now-->
+        <!--Games List-->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4 mb-md-0">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Full Name</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">FIRST LAST</p> <!--User's Full Name-->
-                            </div>
-                        </div>
+                        <p class="mb-4">
+                            My Games
+                        </p>
 
-                        <hr>
-
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Email</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">example@example.com</p> <!--User's Email-->
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Phone</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">(097) 234-5678</p> <!--User's Phone-->
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Address</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">123 Name St | City | Postal Code</p> <!--Address Line 1-->
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Country</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">Province | Country</p> <!--Country & Province-->
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <button type="button" class="btn btn-primary">Preferences</button>
-
+                        <ul class="list-group">
+                            <li class="list-group-item">Game 1</li>
+                            <li class="list-group-item">Game 2</li>
+                            <li class="list-group-item">Game 3</li>
+                            <li class="list-group-item">Game 4</li>
+                            <li class="list-group-item">Game 5</li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <!--Card Lists for Games and Genres-->
-                <div class="row">
-
-                    <!--Games List-->
-                    <div class="col-md-6">
-                        <div class="card mb-4 mb-md-0">
-                            <div class="card-body">
-                                <p class="mb-4">
-                                  My Games
-                                </p>
-
-                                <ul class="list-group">
-                                    <li class="list-group-item">Game 1</li>
-                                    <li class="list-group-item">Game 2</li>
-                                    <li class="list-group-item">Game 3</li>
-                                    <li class="list-group-item">Game 4</li>
-                                    <li class="list-group-item">Game 5</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--Genres List-->
-                    <div class="col-md-6">
-                        <div class="card mb-4 mb-md-0">
-                            <div class="card-body">
-                                <p class="mb-4">
-                                     Favourite Genres
-                                </p>
-                                <ul class="list-group">
-                                    <li class="list-group-item">Genre 1</li>
-                                    <li class="list-group-item">Genre 1</li>
-                                    <li class="list-group-item">Genre 1</li>
-                                    <li class="list-group-item">Genre 1</li>
-                                    <li class="list-group-item">Genre 1</li>
-                                </ul>
-                                </div>
-                            </div>
-                        </div>
+            <!--Genres List-->
+            <div class="col-md-6">
+                <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                        <p class="mb-4">
+                            Favourite Genres
+                        </p>
+                        <ul class="list-group">
+                            <li class="list-group-item">Genre 1</li>
+                            <li class="list-group-item">Genre 1</li>
+                            <li class="list-group-item">Genre 1</li>
+                            <li class="list-group-item">Genre 1</li>
+                            <li class="list-group-item">Genre 1</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
