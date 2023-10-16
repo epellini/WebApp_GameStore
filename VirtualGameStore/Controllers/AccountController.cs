@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using VirtualGameStore.Entities;
@@ -240,7 +241,94 @@ namespace VirtualGameStore.Controllers
         [HttpGet("account/forgot-password")]
         public IActionResult ForgotPassword()
         {
-            return View("ForgotPassword");
+            var model = new ForgotViewModel();
+            return View("ForgotPassword", model);
+        }
+
+        [HttpPost("account/forgot-password")]
+        public async Task<IActionResult> SendForgotLink(ForgotViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string email = model.Email;
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var confirmationLink = Url.Action("ResetPasswordAttempt", "Account", new { token, email = user.Email }, Request.Scheme);
+                    string body = string.Format("<h2>Forgot your password?</h2><hr>" +
+                        $"<p><b>Hi {user.UserName.Substring(0, 1).ToUpper()}{user.UserName.Substring(1).ToLower()},</b></p><br>" +
+                        $"<p>We received a request to reset your password!</p>" +
+                        $"<p>Click <a href=\"{confirmationLink}\">here</a> to begin.</p>");
+                    await _emailSender.SendEmailAsync(user.Email, "Reset Your Password", body);
+                }
+                return View("ForgotVerification");
+            }
+            ModelState.AddModelError("", "Email address is invalid.");
+            return View("ForgotPassword", model);
+        }
+
+        [HttpGet("account/reset-password-attempt")]
+        public async Task<IActionResult> ResetPasswordAttempt(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                var result = await _userManager.ResetPasswordAsync(user, token, "Sesame123$");
+                if (result.Succeeded)
+                {
+                    PasswordViewModel model = new PasswordViewModel();
+                    model.Email = email;
+                    return View("ResetPassword", model);
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Unfortunately, we were unable to process your email confirmation request. Please try again.";
+                }
+            }
+            else
+            {
+                ViewBag.errorMessage = "Unfortunately, we were unable to validate your account details.";
+            }
+            return View("Error");
+        }
+
+        [HttpGet("account/reset-password")]
+        public async Task<IActionResult> ResetPassword(PasswordViewModel model)
+        {
+            
+            return View(model);
+        }
+
+        [HttpPost("account/reset-password")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(PasswordViewModel model)
+        {
+            // If the form is not valid, return the view with the model (showing errors, see RegisterViewModel):
+            if (!ModelState.IsValid)
+            {
+                return View("ResetPassword", model);
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            var result = await _userManager.ChangePasswordAsync(user, "Sesame123$", model.Password);
+
+            // If the operation was not successful, add the errors to the model and return the view:
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                // This will display the error messages in the validation summary:
+                return View("ResetPassword", model);
+            }
+
+            // If the operation was successful, redirect to method that sends email:
+            return RedirectToAction("LogIn");
         }
 
         //Locked
