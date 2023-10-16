@@ -1,8 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model User
 @{
-    ViewData["Title"] = "Profile Page";
+    ViewData["Title"] = "My Profile";
 }
 
 <section>
@@ -12,32 +10,40 @@
         <!--User Profile Card-->
         <div class="row">
             <div class="col-lg-4">
-                <div class="card mb-4">
+                <div class="card shadow bg-night text-snow-bright mb-4">
                     <div class="card-body text-center">
-                        <h5 class="my-3">Joe Mama</h5>
-                        <p class="text-muted mb-1">Female</p>
-                        <p class="text-muted mb-4">1990-10-15</p>
-
-                        <fieldset disabled>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    Receiving Promotions
-                                </label>
-                            </div>
-                        </fieldset>
+                        <h5 class="my-3">@Model.UserName</h5>
+                        @if (Model.Profile != null)
+                        {
+                            @if (Model.Profile.Gender != null)
+                            {
+                                <p class="text-muted mb-1">@Model.Profile.Gender</p>
+                            }
+                            @if (Model.Profile.BirthDate != null)
+                            {
+                                <p class="text-muted mb-4">@Model.Profile.BirthDate</p>
+                            }
+                            <fieldset disabled>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Receiving Promotions
+                                    </label>
+                                </div>
+                            </fieldset>
+                        }
                     </div>
                 </div>
 
                 <!--Buttons-->
-                <div class="card mb-4 mb-lg-0">
+                <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0">
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush rounded-3">
 
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-2">
-                                <button type="button" class="btn btn-primary">Wishlist</button>
-                                <button type="button" class="btn btn-primary ms-1">Edit Profile</button>
-                                <button type="button" class="btn btn-primary">Preferences</button>
+                            <li class="bg-night text-snow-bright list-group-item d-flex justify-content-between align-items-center p-2">
+                                <a href="#" type="button" class="btn btn-frost-primary p-2 text-uppercase">Wishlist</a>
+                                <a asp-action="EditProfile" asp-controller="Home" class="btn btn-frost-primary p-2 text-uppercase">Edit Profile</a>
+                                <a asp-action="EditPreferences" asp-controller="Home" class="btn btn-frost-primary p-2 text-uppercase">Preferences</a>
                             </li>
                         </ul>
                     </div>
@@ -48,10 +54,10 @@
 
             <!--Friend List-->
             <div class="col-lg-8">
-                <div class="card mb-4 mb-lg-0">
+                <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0">
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush rounded-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            @* <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                 <p class="mb-0">FRIEND #1</p> <!--Friend Item-->
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
@@ -65,7 +71,7 @@
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                 <p class="mb-0">FRIEND #5</p> <!--Friend Item-->
-                            </li>
+                            </li> *@
                         </ul>
                     </div>
                 </div>
@@ -76,18 +82,18 @@
         <!--Games List-->
         <div class="row">
             <div class="col-md-6">
-                <div class="card mb-4 mb-md-0">
+                <div class="card shadow bg-night text-snow-bright mb-4 mb-md-0">
                     <div class="card-body">
                         <p class="mb-4">
                             My Games
                         </p>
 
                         <ul class="list-group">
-                            <li class="list-group-item">Game 1</li>
+                            @* <li class="list-group-item">Game 1</li>
                             <li class="list-group-item">Game 2</li>
                             <li class="list-group-item">Game 3</li>
                             <li class="list-group-item">Game 4</li>
-                            <li class="list-group-item">Game 5</li>
+                            <li class="list-group-item">Game 5</li> *@
                         </ul>
                     </div>
                 </div>
@@ -95,17 +101,17 @@
 
             <!--Genres List-->
             <div class="col-md-6">
-                <div class="card mb-4 mb-md-0">
+                <div class="card shadow bg-night text-snow-bright mb-4 mb-md-0">
                     <div class="card-body">
                         <p class="mb-4">
                             Favourite Genres
                         </p>
                         <ul class="list-group">
+                            @* <li class="list-group-item">Genre 1</li>
                             <li class="list-group-item">Genre 1</li>
                             <li class="list-group-item">Genre 1</li>
                             <li class="list-group-item">Genre 1</li>
-                            <li class="list-group-item">Genre 1</li>
-                            <li class="list-group-item">Genre 1</li>
+                            <li class="list-group-item">Genre 1</li> *@
                         </ul>
                     </div>
                 </div>

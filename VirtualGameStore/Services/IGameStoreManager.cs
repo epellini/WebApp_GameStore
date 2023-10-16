@@ -18,7 +18,7 @@ namespace VirtualGameStore.Services
         // Delete Game:
         public void DeleteGame(Game game);
 
-
+        public Profile GetProfileById(string id);
         public List<Platform> GetAllPlatforms();
 
         public Picture GetPictureById(int id);

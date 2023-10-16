@@ -104,6 +104,11 @@ namespace VirtualGameStore.Services
                 .FirstOrDefault();
         }
 
+        public Profile GetProfileById(string id)
+        {
+            return _gameStoreDbContext.Profiles.Where(p => p.UserId == id).FirstOrDefault();
+        }
+
         // Update Game:
         public void UpdateGame(Game game)
         {

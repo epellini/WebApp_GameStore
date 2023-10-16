@@ -56,11 +56,11 @@
                                 <ul class="dropdown-menu bg-night-deep text-snow-bright">
                                     @if (ViewData["Title"] == "My Profile")
                                     {
-                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow nav-link-snow-active text-uppercase fw-bold" href="#">Profile</a></li>
+                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow nav-link-snow-active text-uppercase fw-bold" asp-action="Profile" asp-controller="Home" asp-route-username="@User.Identity.Name">Profile</a></li>
                                     }
                                     else
                                     {
-                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow text-uppercase fw-bold" href="#">Profile</a></li>
+                                        <li class="nav-item"><a class="dropdown-item nav-link nav-link-snow text-uppercase fw-bold" asp-action="Profile" asp-controller="Home" asp-route-username="@User.Identity.Name">Profile</a></li>
                                     }
 
                                     @if (ViewData["Title"] == "My Preferences")
