@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "My Addresses";
+}
+<h2>My Addresses</h2>
+<hr />
+
+<form>
+    <!-- Shipping Address -->
+    <fieldset disabled>
+        <legend>Default Shipping Address:</legend>
+        @if (Model.ShippingAddresses.Count > 0)
+        {
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" value="@Model.ShippingAddresses.FirstOrDefault().FullName">
+                </div>
+                <div class="col-md-6">
+                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phoneNumber" value="@Model.ShippingAddresses.FirstOrDefault().Phone">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="addressLine1" class="form-label">Address Line 1</label>
+                <input type="text" class="form-control" id="addressLine1" value="@Model.ShippingAddresses.FirstOrDefault().Address">
+            </div>
+            <div class="mb-3">
+                <label for="addressLine2" class="form-label">Address Line 2</label>
+                <input type="text" class="form-control" id="addressLine2" value="@Model.ShippingAddresses.FirstOrDefault().Address2">
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" value="@Model.ShippingAddresses.FirstOrDefault().City">
+                </div>
+                <div class="col-md-6">
+                    <label for="province" class="form-label">Province</label>
+                    <input type="text" class="form-control" id="province" value="@Model.ShippingAddresses.FirstOrDefault().Province">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="postalCode" class="form-label">Postal Code</label>
+                    <input type="text" class="form-control" id="postalCode" value="@Model.ShippingAddresses.FirstOrDefault().PostalCode">
+                </div>
+                <div class="col-md-6">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="country" value="@Model.ShippingAddresses.FirstOrDefault().Country">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="deliveryInstructions" class="form-label">Delivery Instructions</label>
+                <textarea class="form-control" id="deliveryInstructions" rows="3">@Model.ShippingAddresses.First().DeliveryInstructions</textarea>
+            </div>
+        }
+        else
+        {
+            <p>None</p>
+        }
+
+        
+
+    </fieldset>
+
+    <!--Edit Button-->
+    <div class="row justify-content-start">
+        <div class="col-3">
+            
+        </div>
+
+    </div>
+
+</form>

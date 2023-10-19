@@ -135,21 +135,26 @@ namespace VirtualGameStore.Services
                 .FirstOrDefault();
         }
 
-        public List<PreferredLanguage> GetPreferredLanguagesById(string id)
+        public List<PreferredLanguage>? GetPreferredLanguagesById(string id)
         {
             return _gameStoreDbContext.PreferredLanguages.Include(pl => pl.Language).Where(pl => pl.UserId == id).ToList();
         }
-        public List<FavouriteGenre> GetFavouriteGenreById(string id)
+        public List<FavouriteGenre>? GetFavouriteGenresById(string id)
         {
             return _gameStoreDbContext.FavouriteGenres.Include(fg => fg.Genre).Where(fg => fg.UserId == id).ToList();
         }
-        public List<FavouritePlatform> GetFavouritePlatformById(string id)
+        public List<FavouritePlatform>? GetFavouritePlatformsById(string id)
         {
             return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp  => fp.UserId == id).ToList();
         }
-        public List<ShippingAddress> GetShippingAddressesById(string id)
+        public List<ShippingAddress>? GetShippingAddressesById(string id)
         {
             return _gameStoreDbContext.ShippingAddresses.Where(s => s.UserId == id).ToList();
+        }
+
+        public ShippingAddress? GetAddressById(int id)
+        {
+            return _gameStoreDbContext.ShippingAddresses.Where(a => a.ShippingAddressId == id).FirstOrDefault();
         }
 
 

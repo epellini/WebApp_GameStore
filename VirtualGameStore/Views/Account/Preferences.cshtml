@@ -1,0 +1,87 @@
+﻿@model User
+@{
+    ViewData["Title"] = "My Preferences";
+}
+
+<h2>My Preferences</h2>
+<hr />
+
+<form>
+    
+    <fieldset disabled>
+        
+
+        <!--Favourite Platform-->
+        <div class="mb-3">
+            <legend>Favourite Platforms:</legend>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    @if (Model.Platforms.Count == 0)
+                    {
+                        <p>None</p>
+                    }
+                    else
+                    {
+                        @foreach (var platform in Model.Platforms)
+                        {
+                            <p>@platform.Platform.PlatformName</p>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Favourite Genre -->
+        <div class="mb-3">
+            <legend>Favourite Genres:</legend>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    @if (Model.Genres.Count == 0)
+                    {
+                        <p>None</p>
+                    }
+                    else
+                    {
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <p>@genre.Genre.GenreName</p>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferred Language -->
+        <div class="mb-3">
+            <legend>Preferred Languages:</legend>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    @if (Model.Languages.Count == 0)
+                    {
+                        <p>None</p>
+                    }
+                    else
+                    {
+                        @foreach (var lang in Model.Languages)
+                        {
+                            <p>@lang.Language.LanguageName</p>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <!--Edit Button-->
+    <div class="row justify-content-start">
+        <div class="col-3">
+            <a class="dropdown-item nav-link nav-link-snow nav-link-snow-active col-3 text-uppercase fw-bold text-center" asp-action="EditPreferences" asp-controller="Account">Edit</a>
+        </div>
+
+    </div>
+
+</form>

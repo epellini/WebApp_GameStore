@@ -7,16 +7,18 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using VirtualGameStore.Entities;
 using VirtualGameStore.Models;
+using VirtualGameStore.Services;
 
 namespace VirtualGameStore.Controllers
 {
     public class AccountController : Controller
     {
        // Constructor to assign services to private fields
-      public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender)
+      public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IGameStoreManager gameStoreManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _gameStoreManager = gameStoreManager;
             _emailSender = emailSender;
         }
 
@@ -327,8 +329,8 @@ namespace VirtualGameStore.Controllers
                 return View("ResetPassword", model);
             }
 
-            // If the operation was successful, redirect to method that sends email:
-            return RedirectToAction("LogIn");
+            // If the operation was successful, redirect to login:
+            return RedirectToAction("Login");
         }
 
         //Locked
@@ -381,9 +383,131 @@ namespace VirtualGameStore.Controllers
             }
         }
 
+        [HttpGet("/users/{username}")]
+        public async Task<IActionResult> ViewProfile(string username)
+        {
+            User user = await _userManager.FindByNameAsync(username);
+            user.Profile = _gameStoreManager.GetProfileById(user.Id);
+
+            return View("Profile", user);
+        }
+
+        [HttpGet("/account/edit-profile")]
+        public async Task<IActionResult> EditProfile()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                Profile profile = _gameStoreManager.GetProfileById(user.Id);
+                if (profile == null)
+                {
+                    profile = new Profile();
+                }
+                profile.User = user;
+
+                return View("EditProfile", profile);
+            }
+
+            return RedirectToAction("Login");
+
+        }
+
+        [HttpPost("/account/edit-profile")]
+        public async Task<IActionResult> SaveProfile(Profile profile)
+        {
+            if (ModelState.IsValid)
+            {
+                //_gameStoreManager.SaveProfile(profile);
+                return RedirectToAction("ViewProfile", profile.User.UserName);
+            }
+            return View("EditProfile", profile);
+        }
+
+        [HttpGet("/account/preferences")]
+        public async Task<IActionResult> ViewPreferences()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User prefUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                prefUser.Platforms = _gameStoreManager.GetFavouritePlatformsById(prefUser.Id);
+                prefUser.Genres = _gameStoreManager.GetFavouriteGenresById(prefUser.Id);
+                prefUser.Languages = _gameStoreManager.GetPreferredLanguagesById(prefUser.Id);
+
+                return View("Preferences", prefUser);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("/account/edit-preferences")]
+        public async Task<IActionResult> EditPreferences()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User prefUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                prefUser.Platforms = _gameStoreManager.GetFavouritePlatformsById(prefUser.Id);
+                prefUser.Genres = _gameStoreManager.GetFavouriteGenresById(prefUser.Id);
+                prefUser.Languages = _gameStoreManager.GetPreferredLanguagesById(prefUser.Id);
+                prefUser.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(prefUser.Id);
+
+                return View("EditPreferences", prefUser);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("/account/edit-preferences")]
+        public async Task<IActionResult> SavePreferences(User prefUser)
+        {
+            if (ModelState.IsValid)
+            {
+                //_gameStoreManager.SavePreferences(prefUser);
+                return RedirectToAction("ViewPreferences");
+            }
+            return View("EditPreferences", prefUser);
+        }
+
+        [HttpGet("/account/addresses")]
+        public async Task<IActionResult> ViewAddresses()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                user.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id);
+                return View("Addresses", user);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("/account/edit-address/{addressId}")]
+        public async Task<IActionResult> EditAddress(int addressId)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                ShippingAddress address = _gameStoreManager.GetAddressById(addressId);
+                return View("EditAddress", address);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("/account/edit-address/{addressId}")]
+        public async Task<IActionResult> SaveAddress(ShippingAddress address)
+        {
+            if (ModelState.IsValid)
+            {
+                //_gameStoreManager.SaveAddress(address);
+                return RedirectToAction("ViewAddresses");
+            }
+            return View("EditAddress", address);
+        }
+
         // private fields for services
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
+        private IGameStoreManager _gameStoreManager;
         private IEmailSender _emailSender;
     }
 }

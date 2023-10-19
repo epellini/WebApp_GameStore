@@ -41,9 +41,9 @@
                         <ul class="list-group list-group-flush rounded-3">
 
                             <li class="bg-night text-snow-bright list-group-item d-flex justify-content-between align-items-center p-2">
-                                <a href="#" type="button" class="btn btn-frost-primary p-2 text-uppercase">Wishlist</a>
-                                <a asp-action="EditProfile" asp-controller="Home" class="btn btn-frost-primary p-2 text-uppercase">Edit Profile</a>
-                                <a asp-action="EditPreferences" asp-controller="Home" class="btn btn-frost-primary p-2 text-uppercase">Preferences</a>
+                                <a asp-action="ViewAddresses" asp-controller="Account" class="btn btn-frost-primary p-2 text-uppercase">Addresses</a>
+                                <a asp-action="EditProfile" asp-controller="Account" class="btn btn-frost-primary p-2 text-uppercase">Edit Profile</a>
+                                <a asp-action="ViewPreferences" asp-controller="Account" class="btn btn-frost-primary p-2 text-uppercase">Preferences</a>
                             </li>
                         </ul>
                     </div>
@@ -56,6 +56,9 @@
             <div class="col-lg-8">
                 <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0">
                     <div class="card-body p-0">
+                        <p class="mb-4">
+                            My Wishliist
+                        </p>
                         <ul class="list-group list-group-flush rounded-3">
                             @* <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                 <p class="mb-0">FRIEND #1</p> <!--Friend Item-->

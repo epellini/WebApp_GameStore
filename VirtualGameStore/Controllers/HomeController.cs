@@ -29,54 +29,6 @@ namespace VirtualGameStore.Controllers
             return View();
         }
 
-        [HttpGet("/users/{username}")]
-		public async Task<IActionResult> Profile(string username)
-		{
-            User user = await _userManager.FindByNameAsync(username);
-            user.Profile = _gameStoreManager.GetProfileById(user.Id);
-
-			return View(user);
-		}
-
-        [HttpGet("/users/{username}/preferences")]
-        public async Task<IActionResult> Preferences(string username)
-        {
-            User prefUser = await _userManager.FindByNameAsync(username);
-            if (_signInManager.IsSignedIn(User))
-            {
-                if (User.Identity.Name == prefUser.UserName)
-                {
-                    prefUser.Platforms = _gameStoreManager.GetFavouritePlatformById(prefUser.Id);
-                    prefUser.Genres = _gameStoreManager.GetFavouriteGenreById(prefUser.Id);
-                    prefUser.Languages = _gameStoreManager.GetPreferredLanguagesById(prefUser.Id);
-                    prefUser.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(prefUser.Id);
-
-                    return View(prefUser);
-                }
-            }
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet("/users/{username}/edit-preferences")]
-        public async Task<IActionResult> EditPreferences(string username)
-        {
-            User prefUser = await _userManager.FindByNameAsync(username);
-            if (_signInManager.IsSignedIn(User))
-            {
-                if (User.Identity.Name == prefUser.UserName)
-                {
-                    prefUser.Platforms = _gameStoreManager.GetFavouritePlatformById(prefUser.Id);
-                    prefUser.Genres = _gameStoreManager.GetFavouriteGenreById(prefUser.Id);
-                    prefUser.Languages = _gameStoreManager.GetPreferredLanguagesById(prefUser.Id);
-                    prefUser.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(prefUser.Id);
-
-                    return View(prefUser);
-                }
-            }
-            return RedirectToAction("Index");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

@@ -1,0 +1,51 @@
+﻿@model Profile
+@{
+    ViewData["Title"] = "Edit Profile Page";
+}
+
+<section>
+    <h1>Edit Profile</h1>
+    <div class="container py-5">
+
+        <!--User Profile Card-->
+        <div class="row g-3">
+            <div class="col">
+
+                <form asp-action="SaveProfile" asp-controller="Account" method="post">
+                    <div class="form-group">
+
+                        <div class="form-group mb-3">
+                            <label for="FirstName">First Name</label>
+                            <input type="text" class="form-control" id="FirstName" name="firstName" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="LastName">Last Name</label>
+                            <input type="text" class="form-control" id="LastName" name="lastName" required>
+                        </div>
+
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Female" aria-label="Gender">
+                        </div>
+
+                        <div class="col">
+                            <label for="BirthDate">Birth Date</label>
+                            <input type="date" class="form-control" id="BirthDate" name="birthDate">
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input" type="checkbox" id="PromoRegistered">
+                            <label class="form-check-label" for="PromoRegistered">
+                                Subscribe to promotions
+                            </label>
+                        </div>
+                        
+                        <div class="form-input my-4">
+                            <button type="submit" class="btn btn-frost-primary col-3 p-2 text-uppercase">Save</button>
+                            <a class="btn btn-frost-primary-outline text-uppercase fw-bold" asp-action="ViewProfile" asp-controller="Account" asp-route-username="@Model.User.UserName">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
