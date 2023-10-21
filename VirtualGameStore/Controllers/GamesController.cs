@@ -13,7 +13,6 @@ namespace VirtualGameStore.Controllers
             _gameStoreManager = gameStoreManager;
             _signInManager = signInManager;
             _userManager = userManager;
-
         }
 
         // GET: /games

@@ -176,6 +176,16 @@ body {
     color: #88c0d0;
 }
 
+.link-frost-primary {
+    color: #88c0d0;
+    text-decoration: none;
+}
+
+.link-frost-primary:hover {
+    color: #5a8996;
+    text-decoration: none;
+}
+
 .btn-frost-primary {
     color: #2E3440;
     background-color: #88c0d0;

@@ -1,5 +1,6 @@
 ﻿﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> _signInManager
+@inject UserManager<User> _userManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +17,26 @@
             <div class="container-sm">
                 <a class="navbar-brand navbar-brand-snow text-snow-bright fw-bold me-0 me-sm-5" asp-area="" asp-controller="Home" asp-action="Index">CVGS</a>
                 <ul class="navbar-nav justify-content-start flex-grow-1">
+                    @{
+                        if (_signInManager.IsSignedIn(User))
+                        {
+                            User user = _userManager.GetUserAsync(User).Result;
+                            List<string> roles = _userManager.GetRolesAsync(user).Result.ToList();
+                            @if (roles.Contains("Admin"))
+                            {
+                                <li class="nav-item">
+                                    @if (ViewData["Title"] == "Admin Panel")
+                                    {
+                                        <a class="nav-link nav-link-snow nav-link-snow-active p-1 px-3 m-2 text-uppercase fw-bold" asp-area="" asp-controller="Admin" asp-action="ViewAdminPanel">Admin</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Admin" asp-action="ViewAdminPanel">Admin</a>
+                                    }
+                                </li>
+                            }
+                        }
+                    }
                     <li class="nav-item">
                         @if (ViewData["Title"] == "All Games")
                         {
@@ -23,7 +44,7 @@
                         }
                         else
                         {
-                            <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames">Games</a>
+                            <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Games" asp-action="ViewAllGames">Games</a>
                         }
                     </li>
                 </ul>
