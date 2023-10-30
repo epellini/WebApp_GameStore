@@ -122,6 +122,13 @@ namespace VirtualGameStore.Controllers
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
+                    Profile profile = new Profile
+                    {
+                        UserId = user.Id,
+                        User = user,
+                        JoinDate = DateTime.Today
+                    };
+                    _gameStoreManager.CreateProfile(profile);
                     return View("SuccessVerification");
                 }
                 else
@@ -387,9 +394,35 @@ namespace VirtualGameStore.Controllers
         public async Task<IActionResult> ViewProfile(string username)
         {
             User user = await _userManager.FindByNameAsync(username);
-            user.Profile = _gameStoreManager.GetProfileById(user.Id);
+            if (user != null)
+            {
+                Profile profile = _gameStoreManager.GetProfileById(user.Id);
 
-            return View("Profile", user);
+                ProfileViewModel profileViewModel = new ProfileViewModel()
+                {
+                    User = user,
+                    Profile = profile,
+                    IsOwner = false,
+                    IsSignedIn = false
+                };
+
+                if (_signInManager.IsSignedIn(User))
+                {
+                    profileViewModel.IsSignedIn = true;
+                    User curUser = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                    if (curUser == user)
+                    {
+                        profileViewModel.IsOwner = true;
+                    }
+                }
+
+                return View("Profile", profileViewModel);
+            }
+            else
+            {
+                ViewBag.errorMessage = "Account not found.";
+            }
+            return View("Error");
         }
 
         [HttpGet("/account/edit-profile")]
@@ -417,8 +450,24 @@ namespace VirtualGameStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                //_gameStoreManager.SaveProfile(profile);
-                return RedirectToAction("ViewProfile", profile.User.UserName);
+                User user = _userManager.FindByIdAsync(profile.UserId).Result;
+                if (user != null)
+                {
+                    Profile existingProfile = _gameStoreManager.GetProfileById(user.Id);
+                    existingProfile.Gender = profile.Gender;
+                    existingProfile.BirthDate = profile.BirthDate;
+                    existingProfile.FirstName = profile.FirstName;
+                    existingProfile.LastName = profile.LastName;
+                    existingProfile.PromoRegistered = profile.PromoRegistered;
+
+                    _gameStoreManager.UpdateProfile(existingProfile);
+                    return RedirectToAction("ViewProfile", new { user.UserName });
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Unfortunately, we were unable to make the changes you requested.";
+                }
+                return View("Error");
             }
             return View("EditProfile", profile);
         }

@@ -12,7 +12,7 @@ using VirtualGameStore.DataAccess;
 namespace VirtualGameStore.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    [Migration("20231013191115_Initial")]
+    [Migration("20231030183049_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -573,6 +573,30 @@ namespace VirtualGameStore.Migrations
                         });
                 });
 
+            modelBuilder.Entity("VirtualGameStore.Entities.Photo", b =>
+                {
+                    b.Property<int?>("PhotoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("PhotoId"), 1L, 1);
+
+                    b.Property<string>("AltText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PhotoId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Photos");
+                });
+
             modelBuilder.Entity("VirtualGameStore.Entities.Picture", b =>
                 {
                     b.Property<int>("PictureId")
@@ -680,6 +704,9 @@ namespace VirtualGameStore.Migrations
 
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("JoinDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -939,6 +966,15 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("Platform");
                 });
 
+            modelBuilder.Entity("VirtualGameStore.Entities.Photo", b =>
+                {
+                    b.HasOne("VirtualGameStore.Entities.Profile", "Profile")
+                        .WithMany("Photos")
+                        .HasForeignKey("ProfileId");
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("VirtualGameStore.Entities.Picture", b =>
                 {
                     b.HasOne("VirtualGameStore.Entities.Game", "Game")
@@ -1011,6 +1047,11 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("Games");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("VirtualGameStore.Entities.Profile", b =>
+                {
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("VirtualGameStore.Entities.User", b =>

@@ -17,5 +17,9 @@
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
         public bool? PromoRegistered { get; set; }
+        public DateTime? JoinDate { get; set; }
+
+        // Reference navigation properties to dependent entities that have ProfileId as a foreign key:
+        public ICollection<Photo>? Photos { get; set; }
     }
 }

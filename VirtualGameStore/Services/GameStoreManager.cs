@@ -18,14 +18,13 @@ namespace VirtualGameStore.Services
 
         // CRUD operations for game entity:
         // Create Game:
-
         public void CreateGame(Game game)
         {
             _gameStoreDbContext.Games.Add(game);
             _gameStoreDbContext.SaveChanges();
         }
 
-        // Read all Games:
+        // Read all Games and sort:
         /// <summary>
         /// Get all the games in the database including their platforms, genres, languages, and pictures.
         /// </summary>
@@ -65,6 +64,7 @@ namespace VirtualGameStore.Services
             }
             return games;
         }
+        // Read all Games by search query:
         public List<Game> GetGamesBySearch(string query)
         {
             if (query != null)
@@ -104,11 +104,6 @@ namespace VirtualGameStore.Services
                 .FirstOrDefault();
         }
 
-        public Profile GetProfileById(string id)
-        {
-            return _gameStoreDbContext.Profiles.Where(p => p.UserId == id).FirstOrDefault();
-        }
-
         // Update Game:
         public void UpdateGame(Game game)
         {
@@ -123,38 +118,72 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
+        // CRUD operations for Profile entity:
+        // Create Profile:
+        public void CreateProfile(Profile profile)
+        {
+            _gameStoreDbContext.Profiles.Add(profile);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read Profile:
+        public Profile GetProfileById(string id)
+        {
+            return _gameStoreDbContext.Profiles.Where(p => p.UserId == id).FirstOrDefault();
+        }
+        // Update Profile:
+        public void UpdateProfile(Profile profile)
+        {
+            if (GetProfileById(profile.UserId) == null)
+            {
+                CreateProfile(profile);
+            }
+            else
+            {
+                _gameStoreDbContext.Profiles.Update(profile);
+                _gameStoreDbContext.SaveChanges();
+            }
+        }
+
+        // Lists of misc user data for preferences/settings:
+        // Read all preferred languages:
+        public List<PreferredLanguage>? GetPreferredLanguagesById(string id)
+        {
+            return _gameStoreDbContext.PreferredLanguages.Include(pl => pl.Language).Where(pl => pl.UserId == id).ToList();
+        }
+        // Read all favourite genres:
+        public List<FavouriteGenre>? GetFavouriteGenresById(string id)
+        {
+            return _gameStoreDbContext.FavouriteGenres.Include(fg => fg.Genre).Where(fg => fg.UserId == id).ToList();
+        }
+        // Read all favourite platforms:
+        public List<FavouritePlatform>? GetFavouritePlatformsById(string id)
+        {
+            return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp  => fp.UserId == id).ToList();
+        }
+        // Read all Shipping addresses:
+        public List<ShippingAddress>? GetShippingAddressesById(string id)
+        {
+            return _gameStoreDbContext.ShippingAddresses.Where(s => s.UserId == id).ToList();
+        }
+        // Read address:
+        public ShippingAddress? GetAddressById(int id)
+        {
+            return _gameStoreDbContext.ShippingAddresses.Where(a => a.ShippingAddressId == id).FirstOrDefault();
+        }
+
+        // Read all Platforms:
         public List<Platform> GetAllPlatforms()
         {
             throw new NotImplementedException();
         }
 
+        // CRUD operations for Picture entity:
+        // Read Picture:
         public Picture GetPictureById(int id)
         {
             return _gameStoreDbContext.Pictures
                 .Where(p => p.PictureId == id)
                 .FirstOrDefault();
-        }
-
-        public List<PreferredLanguage>? GetPreferredLanguagesById(string id)
-        {
-            return _gameStoreDbContext.PreferredLanguages.Include(pl => pl.Language).Where(pl => pl.UserId == id).ToList();
-        }
-        public List<FavouriteGenre>? GetFavouriteGenresById(string id)
-        {
-            return _gameStoreDbContext.FavouriteGenres.Include(fg => fg.Genre).Where(fg => fg.UserId == id).ToList();
-        }
-        public List<FavouritePlatform>? GetFavouritePlatformsById(string id)
-        {
-            return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp  => fp.UserId == id).ToList();
-        }
-        public List<ShippingAddress>? GetShippingAddressesById(string id)
-        {
-            return _gameStoreDbContext.ShippingAddresses.Where(s => s.UserId == id).ToList();
-        }
-
-        public ShippingAddress? GetAddressById(int id)
-        {
-            return _gameStoreDbContext.ShippingAddresses.Where(a => a.ShippingAddressId == id).FirstOrDefault();
         }
 
 

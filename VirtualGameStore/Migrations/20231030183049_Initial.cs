@@ -220,7 +220,8 @@ namespace VirtualGameStore.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PromoRegistered = table.Column<bool>(type: "bit", nullable: true)
+                    PromoRegistered = table.Column<bool>(type: "bit", nullable: true),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -425,6 +426,26 @@ namespace VirtualGameStore.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    PhotoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProfileId = table.Column<int>(type: "int", nullable: true),
+                    AltText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.PhotoId);
+                    table.ForeignKey(
+                        name: "FK_Photos_Profiles_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "Profiles",
+                        principalColumn: "ProfileId");
+                });
+
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameId", "Description", "Developer", "Name", "ReleaseDate", "RetailPrice" },
@@ -605,6 +626,11 @@ namespace VirtualGameStore.Migrations
                 column: "PlatformId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Photos_ProfileId",
+                table: "Photos",
+                column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pictures_GameId",
                 table: "Pictures",
                 column: "GameId");
@@ -665,13 +691,13 @@ namespace VirtualGameStore.Migrations
                 name: "GamePlatform");
 
             migrationBuilder.DropTable(
+                name: "Photos");
+
+            migrationBuilder.DropTable(
                 name: "Pictures");
 
             migrationBuilder.DropTable(
                 name: "PreferredLanguages");
-
-            migrationBuilder.DropTable(
-                name: "Profiles");
 
             migrationBuilder.DropTable(
                 name: "ShippingAddresses");
@@ -684,6 +710,9 @@ namespace VirtualGameStore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Platforms");
+
+            migrationBuilder.DropTable(
+                name: "Profiles");
 
             migrationBuilder.DropTable(
                 name: "Games");
