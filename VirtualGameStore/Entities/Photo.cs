@@ -13,5 +13,6 @@
         // Properties:
         public string? AltText { get; set; }
         public byte[]? Image { get; set; }
+        public bool? isProfilePic { get; set; }
     }
 }

@@ -98,37 +98,4 @@
             }
         });
     });
-
-    jQuery(function () {
-        $('#GenderInput').change(function () {
-            var elements = document.getElementsByClassName("nav-link-snow");
-            for (var i = 0; i < elements.length; i++) {
-                if (elements[i].classList.contains("nav-link-snow-active")) {
-                    elements[i].classList.remove("nav-link-snow-active");
-                }
-                if (elements[i].innerHTML === 'My Gender Is...') {
-                    elements[i].classList.add("nav-link-snow-active");
-                }
-            }
-        });
-    });
-
-    
 });
-
-function selectGender(element) {
-    var elements = document.getElementsByClassName("nav-link-snow");
-    for (var i = 0; i < elements.length; i++) {
-        if (elements[i].classList.contains("nav-link-snow-active")) {
-            elements[i].classList.remove("nav-link-snow-active");
-        }
-    }
-    if (element.innerHTML !== 'My Gender Is...') {
-        element.classList.add("nav-link-snow-active");
-        $('#GenderInput').val(element.innerHTML);
-    }
-    else {
-        $('#GenderInput').val('');
-        $('#GenderInput').focus();
-    }
-}

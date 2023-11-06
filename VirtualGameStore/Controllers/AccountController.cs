@@ -436,9 +436,20 @@ namespace VirtualGameStore.Controllers
                 {
                     profile = new Profile();
                 }
-                profile.User = user;
+                EditProfileViewModel editProfileViewModel = new EditProfileViewModel()
+                {
+                    ProfileId = profile.ProfileId,
+                    UserId = user.Id,
+                    Username = user.UserName,
+                    FirstName = profile.FirstName,
+                    LastName = profile.LastName,
+                    Gender = profile.Gender,
+                    BirthDate = profile.BirthDate,
+                    PromoRegistered = profile.PromoRegistered,
+                    CurrentPhoto = profile.Photos.Where(p => p.isProfilePic == true).FirstOrDefault(),
+                };
 
-                return View("EditProfile", profile);
+                return View("EditProfile", editProfileViewModel);
             }
 
             return RedirectToAction("Login");
@@ -446,19 +457,38 @@ namespace VirtualGameStore.Controllers
         }
 
         [HttpPost("/account/edit-profile")]
-        public async Task<IActionResult> SaveProfile(Profile profile)
+        public async Task<IActionResult> SaveProfile(EditProfileViewModel editProfileViewModel)
         {
+            // Get the image file from the request form keys
+            //IFormFile file = Request.Form.Keys.FirstOrDefault();
+
             if (ModelState.IsValid)
             {
-                User user = _userManager.FindByIdAsync(profile.UserId).Result;
+                User user = _userManager.FindByIdAsync(editProfileViewModel.UserId).Result;
                 if (user != null)
                 {
                     Profile existingProfile = _gameStoreManager.GetProfileById(user.Id);
-                    existingProfile.Gender = profile.Gender;
-                    existingProfile.BirthDate = profile.BirthDate;
-                    existingProfile.FirstName = profile.FirstName;
-                    existingProfile.LastName = profile.LastName;
-                    existingProfile.PromoRegistered = profile.PromoRegistered;
+                    existingProfile.Gender = editProfileViewModel.Gender;
+                    existingProfile.BirthDate = editProfileViewModel.BirthDate;
+                    existingProfile.FirstName = editProfileViewModel.FirstName;
+                    existingProfile.LastName = editProfileViewModel.LastName;
+                    existingProfile.PromoRegistered = editProfileViewModel.PromoRegistered;
+                    if (editProfileViewModel.NewPhoto != null)
+                    {
+                        
+                        foreach (Photo oldPhoto in existingProfile.Photos)
+                        {
+                            oldPhoto.isProfilePic = false;
+                        }
+                        Photo photo = new Photo()
+                        {
+                            ProfileId = existingProfile.ProfileId,
+                            Profile = existingProfile,
+                            AltText = "Profile photo for " + user.UserName,
+                            isProfilePic = true
+                        };
+                        _gameStoreManager.CreatePhoto(editProfileViewModel.NewPhoto, photo);
+                    }
 
                     _gameStoreManager.UpdateProfile(existingProfile);
                     return RedirectToAction("ViewProfile", new { user.UserName });
@@ -469,7 +499,37 @@ namespace VirtualGameStore.Controllers
                 }
                 return View("Error");
             }
-            return View("EditProfile", profile);
+            return View("EditProfile", editProfileViewModel);
+        }
+
+        // GET: /images/user-uploaded/{photoId}
+        [HttpGet("/images/user-uploaded/{photoId}")]
+        public IActionResult ViewPhoto(int photoId)
+        {
+            Photo? photo = _gameStoreManager.GetPhotoById(photoId);
+            if (photo != null)
+            {
+                return File(photo.Image, "image/jpg");
+            }
+            return RedirectToAction("Error", "Home");
+        }
+
+        [HttpPost("/account/upload-photo")]
+        public JsonResult UploadPhoto(EditProfileViewModel editProfileViewModel)
+        {
+            User user = _userManager.FindByIdAsync(editProfileViewModel.UserId).Result;
+            Profile profile = _gameStoreManager.GetProfileById(editProfileViewModel.UserId);
+
+            Photo photo = new Photo()
+            {
+                ProfileId = editProfileViewModel.ProfileId,
+                Profile = profile,
+                AltText = "Profile photo for " + user.UserName,
+                isProfilePic = false
+            };
+
+            _gameStoreManager.CreatePhoto(editProfileViewModel.NewPhoto, photo);
+            return Json(new { photoId = photo.PhotoId });
         }
 
         [HttpGet("/account/preferences")]

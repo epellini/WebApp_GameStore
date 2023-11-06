@@ -9,6 +9,16 @@
         ViewData["Title"] = Model.User.UserName;
     }
 }
+
+<script type="text/javascript">
+    function fileCheck(obj) {
+        var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+        if ($.inArray($(obj).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+            alert("Only '.jpeg','.jpg', '.png', '.gif', '.bmp' formats are allowed.");
+        }
+    }
+</script>
+
 <div class="row justify-content-start text-snow-bright">
     <div class="col-12 py-3">
         <!--User Profile Card-->
@@ -21,7 +31,22 @@
                             <!--Profile picture-->
                             <div class="col-lg-2 col-3">
                                 <div class="row m-0 p-0 rounded ratio ratio-1x1">
-                                    <img src="~/images/blank-profile.png" class="p-0 profile-pic" alt="@Model.User.UserName profile picture" style="object-fit: cover">
+                                    @{
+                                        Photo? photo = null;
+                                    }
+                                    @if (Model.Profile.Photos != null)
+                                    {
+                                        photo = Model.Profile.Photos.Where(p => p.isProfilePic == true).FirstOrDefault();
+                                    }
+                                    @if (photo != null)
+                                    {
+                                        <img src="/images/user-uploaded/@photo.PhotoId" class="profile-pic p-0" alt="@photo.AltText" style="object-fit: cover">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/blank-profile.png" class="p-0 profile-pic" alt="@Model.User.UserName profile picture" style="object-fit: cover">
+                                    }
+                                    
                                 </div>
                             </div>
 
@@ -132,7 +157,7 @@
                                                 </div>
                                             </div>
                                         }
-                                        @if (Model.Profile.Gender != null)
+                                        @if (Model.Profile.Gender != null && Model.Profile.Gender != "Prefer Not To Say")
                                         {
                                             <div class="col-4">
                                                 <div class="row justify-content-center">

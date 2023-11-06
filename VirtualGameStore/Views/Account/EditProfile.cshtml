@@ -1,4 +1,4 @@
-﻿@model Profile
+﻿@model EditProfileViewModel
 @{
     ViewData["Title"] = "Edit Profile";
 }
@@ -10,22 +10,33 @@
                 <h4 class="card-title text-uppercase fw-bold">Edit Profile</h4>
             </div>
             <div class="card-body bg-night">
-                <form asp-action="SaveProfile" asp-controller="Account" method="post">
+                <form asp-action="SaveProfile" asp-controller="Account" enctype="multipart/form-data" method="post">
                     <div class="form-group">
                         <div class="row justify-content-center">
                             <div class="col-4 col-md-3">
-                                <div class="row m-0 p-4 rounded ratio ratio-1x1">
-                                    <img src="~/images/blank-profile.png" class="p-0 profile-pic" alt="@Model.User.UserName profile picture" style="object-fit: cover">
+                                <div class="row m-0 p-4 rounded ratio ratio-1x1" id="ProfilePic">
+                                    
+                                    @if (Model.CurrentPhoto != null)
+                                    {
+                                        <img src="/images/user-uploaded/@Model.CurrentPhoto.PhotoId" class="profile-pic p-0" alt="@Model.CurrentPhoto.AltText" style="object-fit: cover">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/blank-profile.png" class="p-0 profile-pic" alt="@Model.Username profile picture" style="object-fit: cover">
+                                    }
                                 </div>
                                 <div class="row justify-content-center p-2">
-                                    <a role="button" class="link-frost text-uppercase fw-bold col-auto">
+                                    <a role="button" class="link-frost text-uppercase fw-bold col-auto" id="btnChangePhoto">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-camera-fill mb-1" viewBox="0 0 16 16">
                                             <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
                                             <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z" />
                                         </svg>
                                         Change photo
                                     </a>
+                                    <input type="file" asp-for="NewPhoto" hidden="hidden" name="NewPhoto" id="NewPhoto" accept=".bmp, .jpg, .png, image/bmp, image/jpeg, image/png" onchange="fileCheck(this);"/>
                                 </div>
+                                <span id="photoError">
+                                </span>
                                 
                             </div>
                             <div class="col-9">
@@ -103,14 +114,15 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" value="@Model.UserId" asp-for="UserId" />
+                                <input type="hidden" value="@Model.UserId" asp-for="UserId" id="UserId" />
+                                <input type="hidden" value="@Model.ProfileId" asp-for="ProfileId" id="ProfileId" />
                                 
                             </div>
                         </div>
                         
 
                         <div class="row justify-content-end">
-                            <a class="btn btn-aurora-red-outline text-uppercase fw-bold col-3 p-2" asp-action="ViewProfile" asp-controller="Account" asp-route-username="@Model.User.UserName">Cancel</a>
+                            <a class="btn btn-aurora-red-outline text-uppercase fw-bold col-3 p-2" asp-action="ViewProfile" asp-controller="Account" asp-route-username="@Model.Username">Cancel</a>
                             <button type="submit" class="btn btn-frost-primary col-3 p-2 mx-3 text-uppercase">Save</button>
                             
                         </div>
@@ -120,3 +132,5 @@
         </div>
     </div>
 </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/editProfile.js" asp-append-version="true"></script>

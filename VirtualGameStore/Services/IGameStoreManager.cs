@@ -45,7 +45,15 @@ namespace VirtualGameStore.Services
 
         // CRUD operations for Picture entity:
         // Read Picture:
-        public Picture GetPictureById(int id);
+        public Picture? GetPictureById(int id);
+
+        // CRUD operations for Photo entity:
+        // Create Photo:
+        public void CreatePhoto(IFormFile image, Photo photo);
+        // Read Photo:
+        public Photo? GetPhotoById(int photoId);
+
+        public byte[] ConvertImageToBytes(IFormFile image);
 
     }
 }

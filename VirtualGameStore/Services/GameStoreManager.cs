@@ -128,7 +128,9 @@ namespace VirtualGameStore.Services
         // Read Profile:
         public Profile GetProfileById(string id)
         {
-            return _gameStoreDbContext.Profiles.Where(p => p.UserId == id).FirstOrDefault();
+            return _gameStoreDbContext.Profiles
+                .Include(p => p.Photos)
+                .Where(p => p.UserId == id).FirstOrDefault();
         }
         // Update Profile:
         public void UpdateProfile(Profile profile)
@@ -179,11 +181,35 @@ namespace VirtualGameStore.Services
 
         // CRUD operations for Picture entity:
         // Read Picture:
-        public Picture GetPictureById(int id)
+        public Picture? GetPictureById(int id)
         {
             return _gameStoreDbContext.Pictures
                 .Where(p => p.PictureId == id)
                 .FirstOrDefault();
+        }
+
+        // CRUD operations for Photo entity:
+        // Create Photo:
+        public void CreatePhoto(IFormFile image, Photo photo)
+        {
+            photo.Image = ConvertImageToBytes(image);
+            _gameStoreDbContext.Photos.Add(photo);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read Photo:
+        public Photo? GetPhotoById(int photoId)
+        {
+            return _gameStoreDbContext.Photos
+                .Where(p => p.PhotoId == photoId)
+                .FirstOrDefault();
+        }
+
+        public byte[] ConvertImageToBytes(IFormFile image)
+        {
+            byte[] imageBytes;
+            BinaryReader reader = new BinaryReader(image.OpenReadStream());
+            imageBytes = reader.ReadBytes((int)image.Length);
+            return imageBytes;
         }
 
 
