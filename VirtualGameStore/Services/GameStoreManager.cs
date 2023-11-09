@@ -146,21 +146,69 @@ namespace VirtualGameStore.Services
             }
         }
 
-        // Lists of misc user data for preferences/settings:
+        // CRUD operations for preferred languages entity:
+        // Create preferred language:
+        public void CreatePreferredLanguage(PreferredLanguage preferredLanguage)
+        {
+            _gameStoreDbContext.PreferredLanguages.Add(preferredLanguage);
+            _gameStoreDbContext.SaveChanges();
+        }
         // Read all preferred languages:
         public List<PreferredLanguage>? GetPreferredLanguagesById(string id)
         {
             return _gameStoreDbContext.PreferredLanguages.Include(pl => pl.Language).Where(pl => pl.UserId == id).ToList();
+        }
+        // Delete preferred language:
+        public void DeletePreferredLanguage(PreferredLanguage preferredLanguage)
+        {
+            _gameStoreDbContext.PreferredLanguages.Remove(preferredLanguage);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+        // CRUD operations for favourite genres entity:
+        // Create favourite genre:
+        public void CreateFavouriteGenre(FavouriteGenre favouriteGenre)
+        {
+            _gameStoreDbContext.FavouriteGenres.Add(favouriteGenre);
+            _gameStoreDbContext.SaveChanges();
         }
         // Read all favourite genres:
         public List<FavouriteGenre>? GetFavouriteGenresById(string id)
         {
             return _gameStoreDbContext.FavouriteGenres.Include(fg => fg.Genre).Where(fg => fg.UserId == id).ToList();
         }
+        // Delete favourite genre:
+        public void DeleteFavouriteGenre(FavouriteGenre favouriteGenre)
+        {
+            _gameStoreDbContext.FavouriteGenres.Remove(favouriteGenre);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+        // CRUD operations for favourite platforms entity:
+        // Create favourite platform:
+        public void CreateFavouritePlatform(FavouritePlatform favouritePlatform)
+        {
+            _gameStoreDbContext.FavouritePlatforms.Add(favouritePlatform);
+            _gameStoreDbContext.SaveChanges();
+        }
         // Read all favourite platforms:
         public List<FavouritePlatform>? GetFavouritePlatformsById(string id)
         {
             return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp  => fp.UserId == id).ToList();
+        }
+        // Delete favourite platform:
+        public void DeleteFavouritePlatform(FavouritePlatform favouritePlatform)
+        {
+            _gameStoreDbContext.FavouritePlatforms.Remove(favouritePlatform);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+        // CRUD operations for Shipping address entity:
+        // Create Shipping address:
+        public void CreateShippingAddress(ShippingAddress shippingAddress)
+        {
+            _gameStoreDbContext.ShippingAddresses.Add(shippingAddress);
+            _gameStoreDbContext.SaveChanges();
         }
         // Read all Shipping addresses:
         public List<ShippingAddress>? GetShippingAddressesById(string id)
@@ -172,11 +220,33 @@ namespace VirtualGameStore.Services
         {
             return _gameStoreDbContext.ShippingAddresses.Where(a => a.ShippingAddressId == id).FirstOrDefault();
         }
+        // Update Shipping address:
+        public void UpdateShippingAddress(ShippingAddress shippingAddress)
+        {
+            _gameStoreDbContext.ShippingAddresses.Update(shippingAddress);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete Shipping address:
+        public void DeleteShippingAddress(ShippingAddress shippingAddress)
+        {
+            _gameStoreDbContext.ShippingAddresses.Remove(shippingAddress);
+            _gameStoreDbContext.SaveChanges();
+        }
 
         // Read all Platforms:
-        public List<Platform> GetAllPlatforms()
+        public List<Platform>? GetAllPlatforms()
         {
-            throw new NotImplementedException();
+            return _gameStoreDbContext.Platforms.ToList();
+        }
+        // Read all genres:
+        public List<Genre>? GetAllGenres()
+        {
+            return _gameStoreDbContext.Genres.ToList();
+        }
+        // Read all languages:
+        public List<Language>? GetAllLanguages()
+        {
+            return _gameStoreDbContext.Languages.ToList();
         }
 
         // CRUD operations for Picture entity:

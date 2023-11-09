@@ -537,43 +537,237 @@ namespace VirtualGameStore.Controllers
         {
             if (_signInManager.IsSignedIn(User))
             {
-                User prefUser = await _userManager.FindByNameAsync(User.Identity.Name);
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-                prefUser.Platforms = _gameStoreManager.GetFavouritePlatformsById(prefUser.Id);
-                prefUser.Genres = _gameStoreManager.GetFavouriteGenresById(prefUser.Id);
-                prefUser.Languages = _gameStoreManager.GetPreferredLanguagesById(prefUser.Id);
+                user.Platforms = _gameStoreManager.GetFavouritePlatformsById(user.Id);
+                string platformNames = "";
+                foreach (FavouritePlatform platform in user.Platforms)
+                {
+                    platformNames += platform.Platform.PlatformName + ";";
+                }
+                user.Genres = _gameStoreManager.GetFavouriteGenresById(user.Id);
+                string genresNames = "";
+                foreach (FavouriteGenre genre in user.Genres)
+                {
+                    genresNames += genre.Genre.GenreName + ";";
+                }
+                user.Languages = _gameStoreManager.GetPreferredLanguagesById(user.Id);
+                string languageNames = "";
+                foreach (PreferredLanguage language in user.Languages)
+                {
+                    languageNames += language.Language.LanguageName + ";";
+                }
 
-                return View("Preferences", prefUser);
+                List<Platform> allPlatforms = _gameStoreManager.GetAllPlatforms();
+                List<Genre> allGenres = _gameStoreManager.GetAllGenres();
+                List<Language> allLanguages = _gameStoreManager.GetAllLanguages();
+
+                PreferencesViewModel preferenceViewModel = new PreferencesViewModel()
+                {
+                    UserId = user.Id,
+                    Username = user.UserName,
+                    AllPlatforms = allPlatforms,
+                    AllGenres = allGenres,
+                    AllLanguages = allLanguages,
+                    FavPlatforms = user.Platforms.ToList(),
+                    FavGenres = user.Genres.ToList(),
+                    PrefLanguages = user.Languages.ToList(),
+                    Platforms = platformNames,
+                    Genres = genresNames,
+                    Languages = languageNames
+                };
+
+                return View("Preferences", preferenceViewModel);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet("/account/edit-preferences")]
-        public async Task<IActionResult> EditPreferences()
+        [HttpPost("/account/preferences")]
+        public async Task<IActionResult> SavePreferences(PreferencesViewModel preferenceViewModel)
         {
+            
             if (_signInManager.IsSignedIn(User))
             {
-                User prefUser = await _userManager.FindByNameAsync(User.Identity.Name);
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-                prefUser.Platforms = _gameStoreManager.GetFavouritePlatformsById(prefUser.Id);
-                prefUser.Genres = _gameStoreManager.GetFavouriteGenresById(prefUser.Id);
-                prefUser.Languages = _gameStoreManager.GetPreferredLanguagesById(prefUser.Id);
-                prefUser.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(prefUser.Id);
+                // Create "old" lists of preferences to test against
+                List<FavouritePlatform> oldPlats = _gameStoreManager.GetFavouritePlatformsById(user.Id);
+                List<FavouriteGenre> oldGens = _gameStoreManager.GetFavouriteGenresById(user.Id);
+                List<PreferredLanguage> oldLangs = _gameStoreManager.GetPreferredLanguagesById(user.Id);
 
-                return View("EditPreferences", prefUser);
-            }
-            return RedirectToAction("Index");
-        }
+                // Create "new" lists of preferences from the post request
+                List<string> newPlats = new List<string>();
+                if (!string.IsNullOrEmpty(preferenceViewModel.Platforms))
+                {
+                    newPlats = preferenceViewModel.Platforms.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                }
+                List<string> newGens = new List<string>();
+                if (!string.IsNullOrEmpty(preferenceViewModel.Genres))
+                {
+                    newGens = preferenceViewModel.Genres.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                }
+                List<string> newLangs = new List<string>();
+                if (!string.IsNullOrEmpty(preferenceViewModel.Languages))
+                {
+                    newLangs = preferenceViewModel.Languages.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                }
 
-        [HttpPost("/account/edit-preferences")]
-        public async Task<IActionResult> SavePreferences(User prefUser)
-        {
-            if (ModelState.IsValid)
-            {
-                //_gameStoreManager.SavePreferences(prefUser);
+                // Remove any platforms that were just unfavourited (in old list but not in new list):
+                if (oldPlats != null)
+                {
+                    // Loop through the user's old list of favourite platforms
+                    foreach (var plat in oldPlats)
+                    {
+                        // Try to find a match from the new list
+                        if (newPlats.Count > 0)
+                        {
+                            string s = newPlats.Where(p => p.Equals(plat.Platform.PlatformName)).FirstOrDefault();
+
+                            // If no match, the platform should be unfavourited (deleted)
+                            if (s == null)
+                            {
+                                _gameStoreManager.DeleteFavouritePlatform(plat);
+                            }
+                        }
+                        // If the new list has no platforms, all old ones should be deleted
+                        else
+                        {
+                            _gameStoreManager.DeleteFavouritePlatform(plat);
+                        }
+                    }
+                }
+
+                // Add any platforms that were just favourited (in new list but not in old list):
+                if (newPlats != null)
+                {
+                    // Loop through the new list of favourite platforms
+                    foreach (var plat in newPlats)
+                    {
+                        // Try to find a match from the old list
+                        FavouritePlatform fp = oldPlats.Where(fp => fp.Platform.PlatformName == plat).FirstOrDefault();
+                        if (fp == null)
+                        {
+                            Platform p = _gameStoreManager.GetAllPlatforms().Where(a => a.PlatformName == plat).FirstOrDefault();
+
+                            // If no match, the platform should be added (created)
+                            if (p != null)
+                            {
+                                fp = new FavouritePlatform()
+                                {
+                                    UserId = user.Id,
+                                    PlatformId = p.PlatformId,
+                                };
+                                _gameStoreManager.CreateFavouritePlatform(fp);
+                            }
+                        }
+                    }
+                }
+
+                // Remove any genres that were just unfavourited (in old list but not in new list):
+                if (oldGens != null)
+                {
+                    // Loop through the user's old list of favourite genres
+                    foreach (var gen in oldGens)
+                    {
+                        // Try to find a match from the new list
+                        if (newGens.Count > 0)
+                        {
+                            string s = newGens.Where(p => p.Equals(gen.Genre.GenreName)).FirstOrDefault();
+
+                            // If no match, the genre should be unfavourited (deleted)
+                            if (s == null)
+                            {
+                                _gameStoreManager.DeleteFavouriteGenre(gen);
+                            }
+                        }
+                        // If the new list has no genres, all old ones should be deleted
+                        else
+                        {
+                            _gameStoreManager.DeleteFavouriteGenre(gen);
+                        }
+                    }
+                }
+
+                // Add any genres that were just favourited (in new list but not in old list):
+                if (newGens != null)
+                {
+                    // Loop through the new list of favourite genres
+                    foreach (var gen in newGens)
+                    {
+                        // Try to find a match from the old list
+                        FavouriteGenre fg = oldGens.Where(fg => fg.Genre.GenreName == gen).FirstOrDefault();
+                        if (fg == null)
+                        {
+                            Genre g = _gameStoreManager.GetAllGenres().Where(a => a.GenreName == gen).FirstOrDefault();
+
+                            // If no match, the genre should be added (created)
+                            if (g != null)
+                            {
+                                fg = new FavouriteGenre()
+                                {
+                                    UserId = user.Id,
+                                    GenreId = g.GenreId,
+                                };
+                                _gameStoreManager.CreateFavouriteGenre(fg);
+                            }
+                        }
+                    }
+                }
+
+                // Remove any languages that were just deselected (in old list but not in new list):
+                if (oldLangs != null)
+                {
+                    // Loop through the user's old list of preferred languages
+                    foreach (var lang in oldLangs)
+                    {
+                        // Try to find a match from the new list
+                        if (newLangs.Count > 0)
+                        {
+                            string s = newLangs.Where(l => l.Equals(lang.Language.LanguageName)).FirstOrDefault();
+
+                            // If no match, the language should be deselected (deleted)
+                            if (s == null)
+                            {
+                                _gameStoreManager.DeletePreferredLanguage(lang);
+                            }
+                        }
+                        // If the new list has no languages, all old ones should be deleted
+                        else
+                        {
+                            _gameStoreManager.DeletePreferredLanguage(lang);
+                        }
+                    }
+                }
+
+                // Add any languages that were just selected (in new list but not in old list):
+                if (newLangs != null)
+                {
+                    // Loop through the new list of preferred languages
+                    foreach (var lang in newLangs)
+                    {
+                        // Try to find a match from the old list
+                        PreferredLanguage pl = oldLangs.Where(pl => pl.Language.LanguageName == lang).FirstOrDefault();
+                        if (pl == null)
+                        {
+                            Language l = _gameStoreManager.GetAllLanguages().Where(a => a.LanguageName == lang).FirstOrDefault();
+
+                            // If no match, the languge should be added (created)
+                            if (l != null)
+                            {
+                                pl = new PreferredLanguage()
+                                {
+                                    UserId = user.Id,
+                                    LanguageId = l.LanguageId,
+                                };
+                                _gameStoreManager.CreatePreferredLanguage(pl);
+                            }
+                        }
+                    }
+                }
+
                 return RedirectToAction("ViewPreferences");
             }
-            return View("EditPreferences", prefUser);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet("/account/addresses")]
@@ -586,7 +780,7 @@ namespace VirtualGameStore.Controllers
                 user.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id);
                 return View("Addresses", user);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet("/account/edit-address/{addressId}")]
@@ -599,7 +793,7 @@ namespace VirtualGameStore.Controllers
                 ShippingAddress address = _gameStoreManager.GetAddressById(addressId);
                 return View("EditAddress", address);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost("/account/edit-address/{addressId}")]

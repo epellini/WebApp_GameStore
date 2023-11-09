@@ -27,21 +27,49 @@ namespace VirtualGameStore.Services
         // Update Profile:
         public void UpdateProfile(Profile profile);
 
-        // Lists of misc user data for preferences/settings:
+        // LCRUD operations for preferredLanguage entity:
+        // Create preferred language:
+        public void CreatePreferredLanguage(PreferredLanguage preferredLanguage);
         // Read all preferred languages:
         public List<PreferredLanguage>? GetPreferredLanguagesById(string id);
+        // Delete preferred language:
+        public void DeletePreferredLanguage(PreferredLanguage preferredLanguage);
+        
+        // CRUD operations for FavouriteGenre entity:
+        // Create favourite genre:
+        public void CreateFavouriteGenre(FavouriteGenre favouriteGenre);
         // Read all favourite genres:
         public List<FavouriteGenre>? GetFavouriteGenresById(string id);
+        // Delete favourite genre:
+        public void DeleteFavouriteGenre(FavouriteGenre favouriteGenre);
+
+        // CRUD operations for FavouritePlatform entity:
+        // Create favourite platform:
+        public void CreateFavouritePlatform(FavouritePlatform favouritePlatform);
         // Read all favourite platforms:
         public List<FavouritePlatform>? GetFavouritePlatformsById(string id);
+        // Delete favourite platform:
+        public void DeleteFavouritePlatform(FavouritePlatform favouritePlatform);
+
+        // CRUD operations for ShippingAddress entity:
+        // Create shipping address:
+        public void CreateShippingAddress(ShippingAddress shippingAddress);
         // Read all shipping addresses:
         public List<ShippingAddress>? GetShippingAddressesById(string id);
         // Read address:
         public ShippingAddress? GetAddressById(int id);
+        // Update shipping address:
+        public void UpdateShippingAddress(ShippingAddress shippingAddress);
+        // Delete shipping address:
+        public void DeleteShippingAddress(ShippingAddress shippingAddress);
 
 
         // Read all platforms:
-        public List<Platform> GetAllPlatforms();
+        public List<Platform>? GetAllPlatforms();
+        // Read all genres:
+        public List<Genre>? GetAllGenres();
+        // Read all languages:
+        public List<Language>? GetAllLanguages();
 
         // CRUD operations for Picture entity:
         // Read Picture:

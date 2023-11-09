@@ -274,6 +274,30 @@ body {
     border-color: #81a1c1;
 }
 
+.pref-link {
+    color: #eceff4;
+    background-color: #5e81ac;
+    border-radius: .5rem;
+}
+
+.pref-link-new {
+    color: #eceff4;
+    background-color: #b48ead;
+    border-radius: .5rem;
+}
+
+.pref-link:hover {
+    color: #bf616a;
+    background-color: #3B4252;
+    border-radius: .5rem;
+}
+
+.pref-link-new:hover {
+    color: #bf616a;
+    background-color: #3B4252;
+    border-radius: .5rem;
+}
+
 /*Aurora from warmest to coolest*/
 .bg-aurora-red {
     background-color: #bf616a;
