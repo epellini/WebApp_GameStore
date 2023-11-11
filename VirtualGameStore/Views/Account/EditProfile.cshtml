@@ -80,20 +80,6 @@
                                                 <a role="button" onclick="selectGender(this)" class="data-list-input dropdown-item nav-link-snow">Prefer Not To Say</a>
                                             </li>
                                         </ul>
-                                        @* <select type="button" class="dropdown-menu data-list-input form-select form-control col-auto bg-night-deep mt-1">
-                                            <option hidden="true"></option>
-                                            <option value="Woman">Woman</option>
-                                            <option value="Man">Man</option>
-                                            <option value="Non-Binary">Non-Binary</option>
-                                            <option value="">My Gender Is...</option>
-
-                                            <!-- Note that though the select/option allows for a different
-                                            display and internal value, there is no such distinction in the
-                                            text box, so for all the options (except the "none" option) the
-                                            value and content of the option should be identical. -->
-
-                                            <option value="Prefer Not To Say">Prefer Not To Say</option>
-                                        </select> *@
                                     </div>
                                 </div>
 
@@ -107,7 +93,7 @@
 
                                 <div class="row justify-content-center">
                                     <div class="form-group mb-3 col-12 py-3">
-                                        <input class="form-check-input" type="checkbox" id="PromoRegistered">
+                                        <input asp-for="PromoRegistered" class="form-check-input" type="checkbox" id="PromoRegistered">
                                         <label class="form-check-label fw-bold text-uppercase text-snow-deep ps-1" asp-for="PromoRegistered">
                                             Subscribe to promotions
                                         </label>

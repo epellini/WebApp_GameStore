@@ -1,6 +1,6 @@
 ﻿@model ShippingAddress;
 @{
-    ViewData["Title"] = "Edit Address";
+    ViewData["Title"] = "New Address";
 }
 
 @section scripts {
@@ -13,11 +13,11 @@
     <div class="col-lg-10 col-xl-8 col-12">
         <div class="card shadow bg-night text-snow-bright my-4">
             <div class="row text-start p-2 m-0 bg-shade">
-                <h4 class="card-title text-uppercase fw-bold">Edit Shipping Address</h4>
+                <h4 class="card-title text-uppercase fw-bold">New Shipping Address</h4>
             </div>
             <div class="card-body bg-night">
                 <div asp-validation-summary="ModelOnly" class="text-aurora-red"></div>
-                <form asp-action="SaveAddress" asp-route-addressId="@Model.ShippingAddressId" asp-controller="Account" method="post">
+                <form asp-action="SaveNewAddress" asp-controller="Account" method="post">
                     <div class="form-group">
                         <div class="row justify-content-start">
 
@@ -75,7 +75,7 @@
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
-
+                                                
                                                 <div class="col-md-6">
                                                     <label for="country" class="form-label fw-bold text-uppercase text-snow-deep">Country</label>
                                                     <input type="text" class="form-control" id="country" asp-for="Country" value="@Model.Country">

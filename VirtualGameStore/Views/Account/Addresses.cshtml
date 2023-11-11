@@ -1,73 +1,167 @@
-﻿@{
+﻿@model AddressViewModel;
+@{
     ViewData["Title"] = "My Addresses";
+    //string[] a = new string[3];
+    List<ShippingAddress> addresses = new List<ShippingAddress>();
+    addresses.Add(new ShippingAddress()
+            {
+                FullName = "Test Person",
+                Phone = "123-456-7890",
+                Address = "123 Test St",
+                Address2 = "Apt 1",
+                City = "Waterloo",
+                Province = "TE",
+                PostalCode = "T3S T3R",
+                Country = "Testadia",
+                DeliveryInstructions = "Test the buzzer by pressing 123",
+                IsDefault = true
+            });
+    addresses.Add(new ShippingAddress()
+            {
+                FullName = "Human Boy",
+                Phone = "123-456-7890",
+                Address = "123 Test St",
+                Address2 = "Apt 1",
+                City = "Waterloo",
+                Province = "TE",
+                PostalCode = "T3S T3R",
+                Country = "Testadia",
+                DeliveryInstructions = "Test the buzzer by pressing 123",
+                IsDefault = false
+            });
+    addresses.Add(new ShippingAddress()
+            {
+                FullName = "Some Dog",
+                Phone = "123-456-7890",
+                Address = "123 Test St",
+                Address2 = "Apt 1",
+                City = "Waterloo",
+                Province = "TE",
+                PostalCode = "T3S T3R",
+                Country = "Testadia",
+                DeliveryInstructions = "Test the buzzer by pressing 123",
+                IsDefault = false
+            });
 }
-<h2>My Addresses</h2>
-<hr />
 
-<form>
-    <!-- Shipping Address -->
-    <fieldset disabled>
-        <legend>Default Shipping Address:</legend>
-        @if (Model.ShippingAddresses.Count > 0)
-        {
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="fullName" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="fullName" value="@Model.ShippingAddresses.FirstOrDefault().FullName">
-                </div>
-                <div class="col-md-6">
-                    <label for="phoneNumber" class="form-label">Phone Number</label>
-                    <input type="tel" class="form-control" id="phoneNumber" value="@Model.ShippingAddresses.FirstOrDefault().Phone">
-                </div>
+<!--Shipping Addresses Card-->
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8 col-12">
+        <div class="card shadow bg-night text-snow-bright my-4">
+            <div class="row text-start p-2 m-0 bg-shade">
+                <h4 class="card-title text-uppercase fw-bold">My Addresses</h4>
             </div>
-            <div class="mb-3">
-                <label for="addressLine1" class="form-label">Address Line 1</label>
-                <input type="text" class="form-control" id="addressLine1" value="@Model.ShippingAddresses.FirstOrDefault().Address">
-            </div>
-            <div class="mb-3">
-                <label for="addressLine2" class="form-label">Address Line 2</label>
-                <input type="text" class="form-control" id="addressLine2" value="@Model.ShippingAddresses.FirstOrDefault().Address2">
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="city" class="form-label">City</label>
-                    <input type="text" class="form-control" id="city" value="@Model.ShippingAddresses.FirstOrDefault().City">
-                </div>
-                <div class="col-md-6">
-                    <label for="province" class="form-label">Province</label>
-                    <input type="text" class="form-control" id="province" value="@Model.ShippingAddresses.FirstOrDefault().Province">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="postalCode" class="form-label">Postal Code</label>
-                    <input type="text" class="form-control" id="postalCode" value="@Model.ShippingAddresses.FirstOrDefault().PostalCode">
-                </div>
-                <div class="col-md-6">
-                    <label for="country" class="form-label">Country</label>
-                    <input type="text" class="form-control" id="country" value="@Model.ShippingAddresses.FirstOrDefault().Country">
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="deliveryInstructions" class="form-label">Delivery Instructions</label>
-                <textarea class="form-control" id="deliveryInstructions" rows="3">@Model.ShippingAddresses.First().DeliveryInstructions</textarea>
-            </div>
-        }
-        else
-        {
-            <p>None</p>
-        }
+            <div class="card-body bg-night">
+                <div class="form-group">
+                    <div class="row justify-content-start">
 
-        
+                        <!-- All Addresses -->
+                        <div class="mb-4">
+                            <div class="row">
+                                <div class="col-6 col-xl-4 mt-3">
+                                    <div class="row h-100 p-0 m-0">
+                                        @if (Model.ShippingAddresses.Count == 0)
+                                        {
+                                            <a role="button" class="col-12 ratio ratio-1x1 btn btn-frost-primary-outline bg-shade text-uppercase" asp-action="NewAddress" asp-controller="Account">
 
-    </fieldset>
+                                                <div class="row justify-content-center align-items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-plus-circle-fill p-0 me-2 col-auto" viewBox="0 0 16 16">
+                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                                    </svg>
+                                                    <p class="p-0 m-0 col-auto">Add Address</p>
 
-    <!--Edit Button-->
-    <div class="row justify-content-start">
-        <div class="col-3">
-            
+                                                </div>
+
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a role="button" class="col-12 btn btn-frost-primary-outline bg-shade text-uppercase" asp-action="NewAddress" asp-controller="Account">
+
+                                                <div class="row justify-content-center h-100 align-items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-plus-circle-fill p-0 me-2 col-auto" viewBox="0 0 16 16">
+                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                                    </svg>
+                                                    <p class="p-0 m-0 col-auto">Add Address</p>
+
+                                                </div>
+
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                                @foreach (var a in Model.ShippingAddresses.Where(ad => ad.IsDefault == true))
+                                {
+                                    <div class="col-6 col-xl-4 mt-3">
+                                        <div class="row bg-shade rounded rounded-3 p-0 m-0 ">
+                                            <div class="p-2 m-0 col-12">
+
+                                                <div class="row p-0 m-0 ratio ratio-4x3">
+                                                    <div class="col-12 p-0 m-0 overflow-hidden">
+                                                        <div class="row p-0 m-0">
+                                                            <p class="fw-bold text-uppercase mb-1">Default</p>
+                                                            <hr class="mb-1">
+                                                            <p class="m-0 fw-bold mt-2">@a.FullName</p>
+                                                            <p class="m-0 small">@a.Address @a.Address2</p>
+                                                            <p class="m-0 small">@a.City, @a.Province @a.PostalCode</p>
+                                                            <p class="m-0 small">@a.Country</p>
+                                                            <p class="m-0 small">@a.Phone</p>
+                                                            <p class="m-0 small">@a.DeliveryInstructions</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row p-2 m-0">
+                                                    <a class="col-auto link-frost-primary p-0" asp-controller="Account" asp-action="EditAddress" asp-route-id="@a.ShippingAddressId">Edit</a>
+                                                    <div class="vr d-flex h-100 mx-2 mt-1 p-0 text-snow-deep"></div>
+                                                    <a class="col-auto link-frost-primary p-0" asp-action="DeleteAddress" asp-route-id="@a.ShippingAddressId">Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @foreach (var a in Model.ShippingAddresses.Where(ad => ad.IsDefault == false))
+                                {
+                                    <div class="col-6 col-xl-4 mt-3">
+                                        <div class="row bg-shade rounded rounded-3 p-0 m-0 ">
+                                            <div class="p-2 m-0 col-12">
+
+                                                <div class="row p-0 m-0 ratio ratio-4x3">
+                                                    <div class="col-12 p-0 m-0 overflow-hidden">
+                                                        <div class="row p-0 m-0">
+                                                            <p class="m-0 fw-bold mt-2">@a.FullName</p>
+                                                            <p class="m-0 small">@a.Address @a.Address2</p>
+                                                            <p class="m-0 small">@a.City, @a.Province @a.PostalCode</p>
+                                                            <p class="m-0 small">@a.Country</p>
+                                                            <p class="m-0 small">@a.Phone</p>
+                                                            <p class="m-0 small">@a.DeliveryInstructions</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row p-2 m-0">
+                                                    <a class="col-auto link-frost-primary p-0" asp-controller="Account" asp-action="EditAddress" asp-route-addressId="@a.ShippingAddressId">Edit</a>
+                                                    <div class="vr d-flex h-100 mx-2 mt-1 p-0 text-snow-deep"></div>
+                                                    <a class="col-auto link-frost-primary p-0" asp-controller="Account" asp-action="DeleteAddress" asp-route-addressId="@a.ShippingAddressId">Remove</a>
+                                                    <div class="vr d-flex h-100 mx-2 mt-1 p-0 text-snow-deep"></div>
+                                                    <a class="col-auto link-frost-primary p-0" asp-controller="Account" asp-action="UpdateDefaultAddress" asp-route-addressId="@a.ShippingAddressId">Set as Default</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-end">
+                        <a class="btn btn-aurora-red-outline text-uppercase fw-bold col-3 p-2 mx-3" asp-action="ViewProfile" asp-controller="Account" asp-route-username="@Model.Username">Back</a>
+                    </div>
+
+                    <input type="hidden" value="@Model.UserId" asp-for="UserId" id="UserId" />
+                    <input type="hidden" value="@Model.Username" asp-for="Username" id="ProfileId" />
+                </div>
+            </div>
         </div>
-
     </div>
-
-</form>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/addresses.js" asp-append-version="true"></script>
