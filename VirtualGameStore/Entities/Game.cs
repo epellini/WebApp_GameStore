@@ -15,7 +15,8 @@
         // Reference navigation properties to dependent entities that have GameId as a foreign key:
         public ICollection<GameGenre>? Genres { get; set; }
         public ICollection<GameLanguage>? Languages { get; set; }
-        public ICollection<GamePlatform>? Platforms { get; set; } 
+        public ICollection<GamePlatform>? Platforms { get; set; }
         public ICollection<Picture>? Pictures { get; set; }
+        public ICollection<WishedGames>? WishedGames { get; set; }
     }
 }

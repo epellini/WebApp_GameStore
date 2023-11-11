@@ -24,7 +24,7 @@ namespace VirtualGameStore.DataAccess
 
             // Temporarily replace the password validator with my custom validator:
             userManager.PasswordValidators.Clear();
-            userManager.PasswordValidators.Add( new CustomPasswordValidator());
+            userManager.PasswordValidators.Add(new CustomPasswordValidator());
 
             string username = "admin";
             string password = "admin";
@@ -38,7 +38,7 @@ namespace VirtualGameStore.DataAccess
             // if username doesn't exist, create it and add it to role
             if (await userManager.FindByNameAsync(username) == null)
             {
-                User user = new User { UserName = username};
+                User user = new User { UserName = username };
                 var result = await userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
@@ -60,7 +60,7 @@ namespace VirtualGameStore.DataAccess
             {
                 throw new FileNotFoundException("Image not found");
             }
-            
+
             // Read all the bytes and return as byte array:
             return File.ReadAllBytes(path);
         }
@@ -79,6 +79,8 @@ namespace VirtualGameStore.DataAccess
         public DbSet<ShippingAddress>? ShippingAddresses { get; set; }
         public DbSet<Picture>? Pictures { get; set; }
         public DbSet<Photo>? Photos { get; set; }
+        public DbSet<WishedGames> WishedGames { get; set; }
+
 
         // Override base class method OnModelCreating to establish DB relationships
         // or seed the DB or generate primary keys as a composites of 2 foreign keys:
@@ -101,6 +103,20 @@ namespace VirtualGameStore.DataAccess
                 .HasOne(fg => fg.Genre)
                 .WithMany(g => g.Users)
                 .HasForeignKey(fg => fg.GenreId);
+
+            // Establish WishedGames relationships:
+            modelBuilder.Entity<WishedGames>()
+                .HasKey(wg => wg.WishedGameId);
+            // Each WishedGames has 1 user - Each user could have many WishedGames - WishedGames has FK to user:
+            modelBuilder.Entity<WishedGames>()
+                .HasOne(wg => wg.User)
+                .WithMany(u => u.WishedGames)
+                .HasForeignKey(wg => wg.UserId);
+            // Each WishedGames has 1 game - Each game could have many WishedGames - WishedGames has FK to game:
+            modelBuilder.Entity<WishedGames>()
+                .HasOne(wg => wg.Game)
+                .WithMany(g => g.WishedGames)
+                .HasForeignKey(wg => wg.GameId);
 
             // Establish FavouritePlatform relationships:
             // Each FavouritePlatform has 1 user - Each user could have many FavouritePlatforms - FavouritePlatform has FK to user:
@@ -194,9 +210,9 @@ namespace VirtualGameStore.DataAccess
                 .HasForeignKey(p => p.ProfileId);
 
             // Seed the Platforms table:
-            modelBuilder.Entity<Platform>().HasData( 
+            modelBuilder.Entity<Platform>().HasData(
                 new Platform()
-                { 
+                {
                     PlatformId = 1,
                     PlatformName = "Windows"
                 },

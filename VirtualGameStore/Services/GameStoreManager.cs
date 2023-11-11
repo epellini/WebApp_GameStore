@@ -184,6 +184,28 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
+        // CRUD operations for wished games entity:
+        // Create wished game:
+        public void CreateWishedGame(WishedGames wishedGame)
+        {
+            _gameStoreDbContext.WishedGames.Add(wishedGame);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+        // Read all wished games:
+        public List<WishedGames>? GetWishedGamesById(string id)
+        {
+            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.UserId == id).ToList();
+        }
+
+        // Delete wished game:
+        public void DeleteWishedGame(WishedGames wishedGame)
+        {
+            _gameStoreDbContext.WishedGames.Remove(wishedGame);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
         // CRUD operations for favourite platforms entity:
         // Create favourite platform:
         public void CreateFavouritePlatform(FavouritePlatform favouritePlatform)
@@ -194,7 +216,7 @@ namespace VirtualGameStore.Services
         // Read all favourite platforms:
         public List<FavouritePlatform>? GetFavouritePlatformsById(string id)
         {
-            return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp  => fp.UserId == id).ToList();
+            return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp => fp.UserId == id).ToList();
         }
         // Delete favourite platform:
         public void DeleteFavouritePlatform(FavouritePlatform favouritePlatform)
