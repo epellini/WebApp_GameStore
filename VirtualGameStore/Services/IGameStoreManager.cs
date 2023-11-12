@@ -34,7 +34,7 @@ namespace VirtualGameStore.Services
         public List<PreferredLanguage>? GetPreferredLanguagesById(string id);
         // Delete preferred language:
         public void DeletePreferredLanguage(PreferredLanguage preferredLanguage);
-        
+
         // CRUD operations for FavouriteGenre entity:
         // Create favourite genre:
         public void CreateFavouriteGenre(FavouriteGenre favouriteGenre);
@@ -42,6 +42,14 @@ namespace VirtualGameStore.Services
         public List<FavouriteGenre>? GetFavouriteGenresById(string id);
         // Delete favourite genre:
         public void DeleteFavouriteGenre(FavouriteGenre favouriteGenre);
+
+        // LCRUD operations for WishedGame entity:
+        // Create wished game:
+        public void CreateWishedGame(WishedGame wishedGame);
+        // Read all wished games:
+        public List<WishedGame>? GetWishedGamesById(string id);
+        // Delete wished game:
+        public void DeleteWishedGame(WishedGame wishedGame);
 
         // CRUD operations for FavouritePlatform entity:
         // Create favourite platform:

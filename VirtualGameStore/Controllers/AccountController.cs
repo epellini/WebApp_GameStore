@@ -397,6 +397,24 @@ namespace VirtualGameStore.Controllers
             if (user != null)
             {
                 Profile profile = _gameStoreManager.GetProfileById(user.Id);
+
+                List<WishedGame>? wishes = _gameStoreManager.GetWishedGamesById(user.Id);
+
+                //Todo: delete:
+                //For testing purposes only
+                wishes.Add(new WishedGame()
+                {
+                    GameId = 1,
+                    Game = _gameStoreManager.GetGameById(1),
+                    UserId = user.Id
+                });
+                wishes.Add(new WishedGame()
+                {
+                    GameId = 3,
+                    Game = _gameStoreManager.GetGameById(3),
+                    UserId = user.Id
+                });
+
                 if (profile == null)
                 {
                     profile = new Profile
@@ -408,12 +426,14 @@ namespace VirtualGameStore.Controllers
                     _gameStoreManager.CreateProfile(profile);
                 }
 
+
                 ProfileViewModel profileViewModel = new ProfileViewModel()
                 {
                     User = user,
                     Profile = profile,
                     IsOwner = false,
-                    IsSignedIn = false
+                    IsSignedIn = false,
+                    WishedGames = wishes
                 };
 
                 if (_signInManager.IsSignedIn(User))
@@ -425,7 +445,7 @@ namespace VirtualGameStore.Controllers
                         profileViewModel.IsOwner = true;
                     }
                 }
-
+                ViewBag.Section = "Wishlist";
                 return View("Profile", profileViewModel);
             }
             else
