@@ -11,7 +11,7 @@ namespace VirtualGameStore.Models
         public string? LastName { get; set; }
         public string? Gender { get; set; }
         public DateTime? BirthDate { get; set; }
-        public bool? PromoRegistered { get; set; }
+        public bool PromoRegistered { get; set; }
 
         public Photo? CurrentPhoto { get; set; }
 

@@ -24,7 +24,7 @@
                 
                 $('#gamesList').html('');
                 for (var i = 0; i < result.games.length; i++) {
-                    let picture = `<img src="~/images/no-image.png" class="card-img-top p-0" alt="${result.games[i].Name} cover image" style="object-fit: cover">`;
+                    let picture = `<img src="/images/no-image.png" class="card-img-top p-0" alt="${result.games[i].Name} cover image" style="object-fit: cover">`;
                     if (result.pictures[i][0] != null) {
                         picture = `<img src="/images/${result.pictures[i][0].pictureId}" class="card-img-top p-0" alt="${result.pictures[i][0].altText}" style="object-fit: cover">`;
                     }

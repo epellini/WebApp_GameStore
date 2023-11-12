@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualGameStore.DataAccess;
 
@@ -11,9 +12,10 @@ using VirtualGameStore.DataAccess;
 namespace VirtualGameStore.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    partial class GameStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231109230206_Address_Default_Update")]
+    partial class Address_Default_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -712,7 +714,7 @@ namespace VirtualGameStore.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("PromoRegistered")
+                    b.Property<bool?>("PromoRegistered")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserId")
@@ -736,40 +738,33 @@ namespace VirtualGameStore.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShippingAddressId"), 1L, 1);
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Address2")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeliveryInstructions")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDefault")
+                    b.Property<bool?>("IsDefault")
                         .HasColumnType("bit");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Province")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -845,33 +840,6 @@ namespace VirtualGameStore.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("VirtualGameStore.Entities.WishedGame", b =>
-                {
-                    b.Property<int>("WishedGameId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WishedGameId"), 1L, 1);
-
-                    b.Property<DateTime?>("DateWished")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("WishedGameId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WishedGames");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1055,25 +1023,6 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("VirtualGameStore.Entities.WishedGame", b =>
-                {
-                    b.HasOne("VirtualGameStore.Entities.Game", "Game")
-                        .WithMany("WishedGames")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VirtualGameStore.Entities.User", "User")
-                        .WithMany("WishedGames")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("VirtualGameStore.Entities.Game", b =>
                 {
                     b.Navigation("Genres");
@@ -1083,8 +1032,6 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("Pictures");
 
                     b.Navigation("Platforms");
-
-                    b.Navigation("WishedGames");
                 });
 
             modelBuilder.Entity("VirtualGameStore.Entities.Genre", b =>
@@ -1124,8 +1071,6 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("Profile");
 
                     b.Navigation("ShippingAddresses");
-
-                    b.Navigation("WishedGames");
                 });
 #pragma warning restore 612, 618
         }

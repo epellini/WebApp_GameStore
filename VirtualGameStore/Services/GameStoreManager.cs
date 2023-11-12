@@ -32,7 +32,7 @@ namespace VirtualGameStore.Services
         public List<Game> GetAllGames(string sort)
         {
             List<Game> games = new List<Game>();
-            if (sort == null) sort = "New";
+            if (string.IsNullOrEmpty(sort)) sort = "New";
             if (sort == "New")
             {
                 games = _gameStoreDbContext.Games
@@ -60,6 +60,16 @@ namespace VirtualGameStore.Services
                 .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
                 .Include(g => g.Languages).ThenInclude(l => l.Language)
                 .Include(g => g.Pictures)
+                .ToList();
+            }
+            if (sort == "Alphabetical")
+            {
+                games = _gameStoreDbContext.Games
+                .Include(g => g.Platforms).ThenInclude(p => p.Platform)
+                .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
+                .Include(g => g.Languages).ThenInclude(l => l.Language)
+                .Include(g => g.Pictures)
+                .OrderBy(g => g.Name)
                 .ToList();
             }
             return games;

@@ -1,9 +1,147 @@
-﻿
+﻿@model AdminPanelViewModel
 @{
     ViewData["Title"] = "Admin Panel";
 }
+@section scripts {
+    <script src="~/js/adminPanel.js"></script>
+}
 <div class="row justify-content-start text-snow-bright">
     <div class="col-12 py-3">
-        <h6>Admin Panel</h6>
+        <div class="row justify-content-start">
+            <div class="col-12">
+                <div class="card shadow bg-night text-snow-bright mb-4">
+                    <div class="card-header bg-shade border-bottom-0">
+                        <div class="row m-0">
+                            <h5 class="card-title text-uppercase fw-bold">Reports</h5>
+                        </div>
+                    </div>
+                    <div class="card-body bg-night row m-0">
+                        <!--Game List Report-->
+                        <div class="col-6 col-lg-3 mb-3">
+                            <div class="row m-0 p-0">
+                                <a href="#" role="button" class="btn btn-frost text-uppercase ratio ratio-16x9 col-12">
+                                    <div class="row justify-content-center align-items-center">
+                                        <h5 class="p-0 m-0 col-auto fw-bold">Game List</h5>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <!--Member List Report-->
+                        <div class="col-6 col-lg-3 mb-3">
+                            <div class="row m-0 p-0">
+                                <a href="#" role="button" class="btn btn-aurora-purple text-uppercase ratio ratio-16x9 col-12">
+                                    <div class="row justify-content-center align-items-center">
+                                        <h5 class="p-0 m-0 col-auto fw-bold">Member List</h5>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <!--Wish List Report-->
+                        <div class="col-6 col-lg-3 mb-3">
+                            <div class="row m-0 p-0">
+                                <a href="#" role="button" class="btn btn-aurora-yellow text-uppercase ratio ratio-16x9 col-12">
+                                    <div class="row justify-content-center align-items-center">
+                                        <h5 class="p-0 m-0 col-auto fw-bold">Wishlist</h5>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <!--Sales Report-->
+                        <div class="col-6 col-lg-3 mb-3">
+                            <div class="row m-0 p-0">
+                                <a href="#" role="button" class="btn btn-aurora-green text-uppercase ratio ratio-16x9 col-12">
+                                    <div class="row justify-content-center align-items-center">
+                                        <h5 class="p-0 m-0 col-auto fw-bold">Sales</h5>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center justify-content-start m-0 mb-4">
+                    <div class="col-2 p-0">
+                        @if (ViewBag.View == "Games")
+                        {
+                            <a class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames" asp-route-sort="New">Games</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames" asp-route-sort="New">Games</a>
+                        }
+                    </div>
+                    <div class="col-2 p-0">
+                        @if (ViewBag.View == "Events")
+                        {
+                            <a class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames" asp-route-sort="Popular">Events</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames" asp-route-sort="Popular">Events</a>
+                        }
+                    </div>
+                    <div class="col-2 p-0">
+                        @if (ViewBag.View == "Reviews")
+                        {
+                            <a class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames" asp-route-sort="Top">Reviews</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-area="" asp-controller="Games" asp-action="ViewAllGames" asp-route-sort="Top">Reviews</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-lg-3 mb-3">
+                <div class="row m-0 p-0">
+                    <a role="button" class="btn btn-frost-primary-outline bg-shade text-uppercase ratio ratio-16x9 col-12" asp-action="" asp-controller="">
+                        <div class="row justify-content-center align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill p-0 me-2 col-auto" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                            </svg>
+                            <p class="p-0 m-0 col-auto fw-bold">Add Game</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-12 col-lg-9">
+                <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0">
+                    <div class="card-body m-0 p-0">
+                        <ul class="list-group list-group-flush">
+                            @foreach (var game in Model.AllGames)
+                            {
+                                <li class="bg-night text-snow-deep list-group-item d-flex p-2 row justify-content-between align-items-center m-0 p-0">
+                                    <div class="col-6">
+                                        <div class="row align-items-center">
+                                            <div class="col-4 col-lg-3 m-0 p-0">
+                                                <div class="row ratio ratio-21x9 m-0">
+                                                    <img src="~/images/no-image.png" class="rounded-1 p-0" alt="game cover image" style="object-fit: cover">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row">
+                                                    <h6 class="mb-0 col text-uppercase text-snow-bright">@game.Name</h6>
+                                                </div>
+                                                <div class="row">
+                                                    <p class="small mb-0 col text-uppercase text-snow-deep">@game.Developer</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-xl-4">
+                                        <div class="row">
+                                            <a role="button" asp-action="" asp-controller="" asp-route-id="@game.GameId" class="btn btn-frost-outline p-2 mx-1 text-uppercase col">Edit</a>
+                                            <a role="button" asp-action="" asp-controller="" asp-route-id="@game.GameId" class="btn btn-aurora-red-outline p-2 mx-1 text-uppercase col">Delete</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>

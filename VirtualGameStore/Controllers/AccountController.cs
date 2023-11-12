@@ -397,6 +397,7 @@ namespace VirtualGameStore.Controllers
             if (user != null)
             {
                 Profile profile = _gameStoreManager.GetProfileById(user.Id);
+
                 List<WishedGame>? wishes = _gameStoreManager.GetWishedGamesById(user.Id);
 
                 //Todo: delete:
@@ -413,6 +414,18 @@ namespace VirtualGameStore.Controllers
                     Game = _gameStoreManager.GetGameById(3),
                     UserId = user.Id
                 });
+
+                if (profile == null)
+                {
+                    profile = new Profile
+                    {
+                        UserId = user.Id,
+                        User = user,
+                        JoinDate = DateTime.Today
+                    };
+                    _gameStoreManager.CreateProfile(profile);
+                }
+
 
                 ProfileViewModel profileViewModel = new ProfileViewModel()
                 {
@@ -795,33 +808,167 @@ namespace VirtualGameStore.Controllers
                 User user = await _userManager.FindByNameAsync(User.Identity.Name);
 
                 user.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id);
-                return View("Addresses", user);
+
+                AddressViewModel addressViewModel = new AddressViewModel()
+                {
+                    UserId = user.Id,
+                    Username = user.UserName,
+                    ShippingAddresses = user.ShippingAddresses.ToList()
+                };
+                return View("Addresses", addressViewModel);
             }
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet("/account/edit-address/{addressId}")]
+        [HttpGet("/account/addresses/{addressId}")]
         public async Task<IActionResult> EditAddress(int addressId)
         {
             if (_signInManager.IsSignedIn(User))
             {
                 User user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-                ShippingAddress address = _gameStoreManager.GetAddressById(addressId);
-                return View("EditAddress", address);
+                ShippingAddress shippingAddress = _gameStoreManager.GetAddressById(addressId);
+                if (shippingAddress != null)
+                {
+                    return View("EditAddress", shippingAddress);
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Address not found.";
+                }
+                return View("Error");
             }
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost("/account/edit-address/{addressId}")]
-        public async Task<IActionResult> SaveAddress(ShippingAddress address)
+        [HttpPost("/account/addresses/{addressId}")]
+        public async Task<IActionResult> SaveAddress(ShippingAddress shippingAddress)
         {
             if (ModelState.IsValid)
             {
-                //_gameStoreManager.SaveAddress(address);
+                _gameStoreManager.UpdateShippingAddress(shippingAddress);
                 return RedirectToAction("ViewAddresses");
             }
-            return View("EditAddress", address);
+            return View("EditAddress", shippingAddress);
+        }
+
+        [HttpGet("/account/addresses/new-address")]
+        public async Task<IActionResult> NewAddress()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                ShippingAddress shippingAddress = new ShippingAddress()
+                {
+                    UserId = user.Id,
+                    User = user
+                };
+                return View("NewAddress", shippingAddress);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("/account/addresses/new-address")]
+        public async Task<IActionResult> SaveNewAddress(ShippingAddress shippingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                _gameStoreManager.CreateShippingAddress(shippingAddress);
+                return RedirectToAction("ViewAddresses");
+            }
+            return View("NewAddress", shippingAddress);
+        }
+
+        [HttpGet("/account/addresses/{addressId}/set-default")]
+        public async Task<IActionResult> UpdateDefaultAddress(int addressId)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                ShippingAddress shippingAddress = _gameStoreManager.GetAddressById(addressId);
+                List<ShippingAddress> allAddresses = _gameStoreManager.GetShippingAddressesById(user.Id);
+                if (shippingAddress != null)
+                {
+                    foreach (var a in allAddresses)
+                    {
+                        a.IsDefault = false;
+                        _gameStoreManager.UpdateShippingAddress(a);
+                    }
+                    shippingAddress.IsDefault = true;
+                    _gameStoreManager.UpdateShippingAddress(shippingAddress);
+                    return RedirectToAction("ViewAddresses");
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Address not found.";
+                }
+                return View("Error");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("/account/addresses/{addressId}/delete-address")]
+        public async Task<IActionResult> DeleteAddress(int addressId)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                ShippingAddress shippingAddress = _gameStoreManager.GetAddressById(addressId);
+                if (shippingAddress != null)
+                {
+                    _gameStoreManager.DeleteShippingAddress(shippingAddress);
+                    return RedirectToAction("ViewAddresses");
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Address not found.";
+                }
+                return View("Error");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckPhoneNumber(string phone)
+        {
+            Regex emailrx = new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}");
+            if (!emailrx.IsMatch(phone))
+            {
+                return Json("Phone number is not valid.");
+            }
+            else
+            {
+                return Json(true);
+            }
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckAddress(string address)
+        {
+            Regex emailrx = new Regex(@"^[A-Za-z0-9]*\-?[A-Za-z0-9]+(?:\s[A-Za-z0-9'_-]+)+$");
+            if (!emailrx.IsMatch(address))
+            {
+                return Json("Address is not valid.");
+            }
+            else
+            {
+                return Json(true);
+            }
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckPostalCode(string postalCode)
+        {
+            Regex emailrx = new Regex(@"^([a-zA-Z]\d[a-zA-Z]( )?\d[a-zA-Z]\d)$");
+            if (!emailrx.IsMatch(postalCode))
+            {
+                return Json("Postal code is not valid.");
+            }
+            else
+            {
+                return Json(true);
+            }
         }
 
         // private fields for services
