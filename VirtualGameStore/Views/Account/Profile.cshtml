@@ -9,7 +9,8 @@
         ViewData["Title"] = Model.User.UserName;
     }
 }
-
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0" nonce="THjKKVnI"></script>
 <div class="row justify-content-start text-snow-bright">
     <div class="col-12 py-3">
         <!--User Profile Card-->
@@ -252,6 +253,21 @@
                         }
                     </div>
                 </div>
+                @{
+                    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+                    var qsPath = ViewContext.HttpContext.Request.QueryString.Value;
+                    var returnUrl = $"{routeUrl}{qsPath}";
+                    var shareUrl = $"https://www.facebook.com/sharer/sharer.php?u={returnUrl}&amp;src=sdkpreparse";
+                }
+
+                <!-- FB share does not allow local host - The following can be used in actual deployment: -->
+
+                @* <div class="fb-share-button mb-3" data-href=@returnUrl data-layout="button" data-size="large"><a target="_blank" href=@shareUrl class="fb-xfbml-parse-ignore">Share</a></div> *@
+
+                <!-- Dummy link to share for testing purposes when in local development environment - Delete when deployed: -->
+                <div class="fb-share-button mb-3" data-href="https://www.conestogac.on.ca/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.conestogac.on.ca%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+
+                <!-- Wishlist card: -->
                 <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0" id="wishlistCard">
                     <div class="card-body m-0 p-0">
                         @if (Model.WishedGames == null || Model.WishedGames.Count == 0)
