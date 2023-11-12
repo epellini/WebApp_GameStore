@@ -5,6 +5,8 @@ namespace VirtualGameStore.Models
     public class GameDetailsViewModel
     {
         // Properties:
+
+        public Game game { get; set; }
         public int GameId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
