@@ -1,8 +1,19 @@
-﻿@model Game
+﻿@model GameDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <p>Developer: <b>@Model.Developer</b></p>
 <p>Release Date: <b>@Model.ReleaseDate.Value.ToString("d")</b></p>
 <p>Description: <b>@Model.Description</b></p>
+
+
+
+
+
+
 @if (Model.RetailPrice == null || Model.RetailPrice <= 0.0)
 {
     <p>Price: <b>Free to Play</b></p>
@@ -17,7 +28,7 @@ else
     {
         string punct = i + 1 < Model.Platforms.Count() ? "," : "";
 
-        <b>@Model.Platforms.ToList()[i].Platform.PlatformName@punct</b>
+        <b>@Model.Platforms.ToList()[i]</b>
     }
 </p>
 <p>
@@ -26,7 +37,7 @@ else
     {
         string punct = i + 1 < Model.Genres.Count() ? "," : "";
 
-        <b>@Model.Genres.ToList()[i].Genre.GenreName@punct</b>
+        <b>@Model.Genres.ToList()[i]</b>
     }
 </p>
 <p>
@@ -35,6 +46,6 @@ else
     {
         string punct = i + 1 < Model.Languages.Count() ? "," : "";
 
-        <b>@Model.Languages.ToList()[i].Language.LanguageName@punct</b>
+        <b>@Model.Languages.ToList()[i]</b>
     }
 </p>

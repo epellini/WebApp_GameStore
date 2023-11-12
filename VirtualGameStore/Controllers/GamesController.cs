@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VirtualGameStore.Entities;
+using VirtualGameStore.Models;
 using VirtualGameStore.Services;
 
 namespace VirtualGameStore.Controllers
@@ -26,6 +27,29 @@ namespace VirtualGameStore.Controllers
             List<Game> allGames = _gameStoreManager.GetAllGames(sort).ToList();
             ViewBag.Sort = sort;
             return View("AllGames", allGames);
+        }
+
+        // GET: /games/{id}
+        [HttpGet("games/{id}")]
+        public IActionResult GetGameById(int id)
+        {
+            var game = _gameStoreManager.GetGameById(id);
+
+            GameDetailsViewModel gameDetailsViewModel = new GameDetailsViewModel
+            {
+                GameId = game.GameId,
+                Name = game.Name,
+                Description = game.Description,
+                Developer = game.Developer,
+                ReleaseDate = game.ReleaseDate,
+                RetailPrice = game.RetailPrice,
+                PictureUrl = game.Pictures,
+                Genres = game.Genres.First().Genre.GenreName,
+                Languages = game.Languages.First().Language.LanguageName,
+                Platforms = game.Platforms.First().Platform.PlatformName
+            };
+
+            return View("Game", gameDetailsViewModel);
         }
 
         // GET: /images/{id}
@@ -65,7 +89,7 @@ namespace VirtualGameStore.Controllers
             {
                 sort = "New";
             }
-            return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort});
+            return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort });
         }
 
         // Private fields for services
