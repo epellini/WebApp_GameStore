@@ -45,11 +45,11 @@ namespace VirtualGameStore.Services
 
         // LCRUD operations for WishedGame entity:
         // Create wished game:
-        public void CreateWishedGame(WishedGames wishedGame);
+        public void CreateWishedGame(WishedGame wishedGame);
         // Read all wished games:
-        public List<WishedGames>? GetWishedGamesById(string id);
+        public List<WishedGame>? GetWishedGamesById(string id);
         // Delete wished game:
-        public void DeleteWishedGame(WishedGames wishedGame);
+        public void DeleteWishedGame(WishedGame wishedGame);
 
         // CRUD operations for FavouritePlatform entity:
         // Create favourite platform:

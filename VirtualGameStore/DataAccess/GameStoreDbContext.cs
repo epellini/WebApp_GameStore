@@ -79,7 +79,7 @@ namespace VirtualGameStore.DataAccess
         public DbSet<ShippingAddress>? ShippingAddresses { get; set; }
         public DbSet<Picture>? Pictures { get; set; }
         public DbSet<Photo>? Photos { get; set; }
-        public DbSet<WishedGames> WishedGames { get; set; }
+        public DbSet<WishedGame> WishedGames { get; set; }
 
 
         // Override base class method OnModelCreating to establish DB relationships
@@ -105,15 +105,13 @@ namespace VirtualGameStore.DataAccess
                 .HasForeignKey(fg => fg.GenreId);
 
             // Establish WishedGames relationships:
-            modelBuilder.Entity<WishedGames>()
-                .HasKey(wg => wg.WishedGameId);
             // Each WishedGames has 1 user - Each user could have many WishedGames - WishedGames has FK to user:
-            modelBuilder.Entity<WishedGames>()
+            modelBuilder.Entity<WishedGame>()
                 .HasOne(wg => wg.User)
                 .WithMany(u => u.WishedGames)
                 .HasForeignKey(wg => wg.UserId);
             // Each WishedGames has 1 game - Each game could have many WishedGames - WishedGames has FK to game:
-            modelBuilder.Entity<WishedGames>()
+            modelBuilder.Entity<WishedGame>()
                 .HasOne(wg => wg.Game)
                 .WithMany(g => g.WishedGames)
                 .HasForeignKey(wg => wg.GameId);

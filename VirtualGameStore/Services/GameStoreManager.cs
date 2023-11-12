@@ -186,20 +186,20 @@ namespace VirtualGameStore.Services
 
         // CRUD operations for wished games entity:
         // Create wished game:
-        public void CreateWishedGame(WishedGames wishedGame)
+        public void CreateWishedGame(WishedGame wishedGame)
         {
             _gameStoreDbContext.WishedGames.Add(wishedGame);
             _gameStoreDbContext.SaveChanges();
         }
 
         // Read all wished games:
-        public List<WishedGames>? GetWishedGamesById(string id)
+        public List<WishedGame>? GetWishedGamesById(string id)
         {
             return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.UserId == id).ToList();
         }
 
         // Delete wished game:
-        public void DeleteWishedGame(WishedGames wishedGame)
+        public void DeleteWishedGame(WishedGame wishedGame)
         {
             _gameStoreDbContext.WishedGames.Remove(wishedGame);
             _gameStoreDbContext.SaveChanges();

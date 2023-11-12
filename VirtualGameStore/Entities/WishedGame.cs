@@ -1,6 +1,6 @@
 ﻿namespace VirtualGameStore.Entities
 {
-    public class WishedGames
+    public class WishedGame
     {
         // Primary key properties:
         public int WishedGameId { get; set; }
@@ -13,6 +13,6 @@
 
         public User? User { get; set; }
         public Game? Game { get; set; }
-        public DateTime DateWished { get; set; }
+        public DateTime? DateWished { get; set; }
     }
 }

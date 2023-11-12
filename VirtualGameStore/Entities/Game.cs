@@ -17,6 +17,6 @@
         public ICollection<GameLanguage>? Languages { get; set; }
         public ICollection<GamePlatform>? Platforms { get; set; }
         public ICollection<Picture>? Pictures { get; set; }
-        public ICollection<WishedGames>? WishedGames { get; set; }
+        public ICollection<WishedGame>? WishedGames { get; set; }
     }
 }
