@@ -201,6 +201,11 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.WishedGames.Add(wishedGame);
             _gameStoreDbContext.SaveChanges();
         }
+        // Read wished game:
+        public WishedGame? GetWishedGame(int id)
+        {
+            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Include(wg => wg.User).Where(wg => wg.WishedGameId == id).FirstOrDefault();
+        }
 
         // Read all wished games:
         public List<WishedGame>? GetWishedGamesById(string id)

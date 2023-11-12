@@ -317,6 +317,18 @@ body {
     border-color: #bf616a;
 }
 
+.btn-aurora-red {
+    color: #2E3440;
+    background-color: #bf616a;
+    border-color: #bf616a;
+}
+
+.btn-aurora-red:hover {
+    color: #2E3440;
+    background-color: #bf616a;
+    border-color: #bf616a;
+}
+
 .bg-aurora-orange {
     background-color: #d08770;
 }
@@ -409,6 +421,17 @@ body {
 .svg-icon-shade:hover > path {
     fill: #434c5e;
     stroke: #434c5e;
+}
+
+.btn-icon-aurora-red svg path {
+    fill: #bf616a;
+    stroke: #bf616a;
+    stroke-width: 1%;
+}
+
+.btn-icon-aurora-red:hover > svg > path {
+    fill: #8c474d;
+    stroke: #8c474d;
 }
 
 .btn {

@@ -402,18 +402,27 @@ namespace VirtualGameStore.Controllers
 
                 //Todo: delete:
                 //For testing purposes only
-                wishes.Add(new WishedGame()
+                if (wishes == null || wishes.Count == 0)
                 {
-                    GameId = 1,
-                    Game = _gameStoreManager.GetGameById(1),
-                    UserId = user.Id
-                });
-                wishes.Add(new WishedGame()
-                {
-                    GameId = 3,
-                    Game = _gameStoreManager.GetGameById(3),
-                    UserId = user.Id
-                });
+                    WishedGame insertWish = new WishedGame()
+                    {
+                        GameId = 3,
+                        Game = _gameStoreManager.GetGameById(3),
+                        UserId = user.Id,
+                        DateWished = DateTime.Now,
+                    };
+                    wishes.Add(insertWish);
+                    _gameStoreManager.CreateWishedGame(insertWish);
+                    insertWish = new WishedGame()
+                    {
+                        GameId = 1,
+                        Game = _gameStoreManager.GetGameById(1),
+                        UserId = user.Id,
+                        DateWished = DateTime.Now,
+                    };
+                    wishes.Add(insertWish);
+                    _gameStoreManager.CreateWishedGame(insertWish);
+                }
 
                 if (profile == null)
                 {
@@ -451,6 +460,22 @@ namespace VirtualGameStore.Controllers
             else
             {
                 ViewBag.errorMessage = "Account not found.";
+            }
+            return View("Error");
+        }
+
+        [HttpGet("/wished-games/{id}")]
+        public IActionResult RemoveFromWishlist(int id)
+        {
+            WishedGame? wish = _gameStoreManager.GetWishedGame(id);
+            if (wish != null)
+            {
+                _gameStoreManager.DeleteWishedGame(wish);
+                return RedirectToAction("ViewProfile", new { username = wish.User.UserName });
+            }
+            else
+            {
+                ViewBag.errorMessage = "Wishlisted item not found.";
             }
             return View("Error");
         }
