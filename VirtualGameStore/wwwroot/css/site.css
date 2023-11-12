@@ -434,6 +434,17 @@ body {
     stroke: #8c474d;
 }
 
+.btn-icon-frost-primary svg path {
+    fill: #88c0d0;
+    stroke: #88c0d0;
+    stroke-width: 1%;
+}
+
+.btn-icon-frost-primary:hover > svg > path {
+    fill: #5a8996;
+    stroke: #5a8996;
+}
+
 .btn {
     font-weight: bold;
 }
