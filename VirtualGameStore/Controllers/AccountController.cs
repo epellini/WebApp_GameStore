@@ -397,6 +397,16 @@ namespace VirtualGameStore.Controllers
             if (user != null)
             {
                 Profile profile = _gameStoreManager.GetProfileById(user.Id);
+                if (profile == null)
+                {
+                    profile = new Profile
+                    {
+                        UserId = user.Id,
+                        User = user,
+                        JoinDate = DateTime.Today
+                    };
+                    _gameStoreManager.CreateProfile(profile);
+                }
 
                 ProfileViewModel profileViewModel = new ProfileViewModel()
                 {
