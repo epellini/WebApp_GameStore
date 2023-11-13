@@ -1,40 +1,60 @@
-﻿@model Game
+﻿@model GameDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
 
 <p>Developer: <b>@Model.Developer</b></p>
 <p>Release Date: <b>@Model.ReleaseDate.Value.ToString("d")</b></p>
 <p>Description: <b>@Model.Description</b></p>
-@if (Model.RetailPrice == null || Model.RetailPrice <= 0.0)
-{
-    <p>Price: <b>Free to Play</b></p>
-}
-else
-{
-    <p>Price: <b>$@Model.RetailPrice CAD</b></p>
-}
-<p>
-    Platforms:
-    @for (int i = 0; i < Model.Platforms.Count(); i++)
-    {
-        string punct = i + 1 < Model.Platforms.Count() ? "," : "";
 
-        <b>@Model.Platforms.ToList()[i].Platform.PlatformName@punct</b>
-    }
-</p>
-<p>
-    Genres:
-    @for (int i = 0; i < Model.Genres.Count(); i++)
-    {
-        string punct = i + 1 < Model.Genres.Count() ? "," : "";
 
-        <b>@Model.Genres.ToList()[i].Genre.GenreName@punct</b>
-    }
-</p>
-<p>
-    Languages:
-    @for (int i = 0; i < Model.Languages.Count(); i++)
-    {
-        string punct = i + 1 < Model.Languages.Count() ? "," : "";
 
-        <b>@Model.Languages.ToList()[i].Language.LanguageName@punct</b>
+
+
+<div class="row">
+    @if (Model.RetailPrice == null || Model.RetailPrice <= 0.0)
+    {
+        <p>Price: <b>Free to Play</b></p>
     }
-</p>
+    else
+    {
+        <p>Price: <b>$@Model.RetailPrice CAD</b></p>
+    }
+</div>
+
+<div class="row">
+    Platform(s):
+    <p class="fw-bold">
+        @for (int i = 0; i < Model.Platforms.Count(); i++)
+        {
+            string punct = i + 1 < Model.Platforms.Count() ? "," : "";
+
+            @Model.Platforms.ToList()[i]
+        }
+    </p>
+</div>
+
+<div class="row">
+    Genre(s):
+    <p class="fw-bold">
+        @for (int i = 0; i < Model.Genres.Count(); i++)
+        {
+            string punct = i + 1 < Model.Genres.Count() ? "," : "";
+
+            @Model.Genres.ToList()[i]
+        }
+    </p>
+</div>
+<div class="row">
+    Language(s):
+    <p class="fw-bold">
+        @for (int i = 0; i < Model.Languages.Count(); i++)
+        {
+            string punct = i + 1 < Model.Languages.Count() ? "," : "";
+
+            @Model.Languages.ToList()[i]
+        }
+    </p>
+</div>
+
