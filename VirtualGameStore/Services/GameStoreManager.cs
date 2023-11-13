@@ -292,16 +292,35 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.GameGenres.Add(gameGenre);
             _gameStoreDbContext.SaveChanges();
         }
+        // Delete GameGenre:
+        public void DeleteGameGenre(GameGenre gameGenre)
+        {
+            _gameStoreDbContext.GameGenres.Remove(gameGenre);
+            _gameStoreDbContext.SaveChanges();
+        }
+
         // Create GameLanguage:
         public void CreateGameLanguage(GameLanguage gameLanguage)
         {
             _gameStoreDbContext.GameLanguages.Add(gameLanguage);
             _gameStoreDbContext.SaveChanges();
         }
+        // Delete GameLanguage:
+        public void DeleteGameLanguage(GameLanguage gameLanguage)
+        {
+            _gameStoreDbContext.GameLanguages.Remove(gameLanguage);
+            _gameStoreDbContext.SaveChanges();
+        }
         // Create GamePlatform:
         public void CreateGamePlatform(GamePlatform gamePlatform)
         {
             _gameStoreDbContext.GamePlatforms.Add(gamePlatform);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete GamePlatform:
+        public void DeleteGamePlatform(GamePlatform gamePlatform)
+        {
+            _gameStoreDbContext.GamePlatforms.Remove(gamePlatform);
             _gameStoreDbContext.SaveChanges();
         }
 

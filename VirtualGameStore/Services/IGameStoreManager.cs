@@ -83,10 +83,16 @@ namespace VirtualGameStore.Services
 
         // Create GameGenre:
         public void CreateGameGenre(GameGenre gameGenre);
+        // Delete GameGenre:
+        public void DeleteGameGenre(GameGenre gameGenre);
         // Create GameLanguage:
         public void CreateGameLanguage(GameLanguage gameLanguage);
+        // Delete GameLanguage:
+        public void DeleteGameLanguage(GameLanguage gameLanguage);
         // Create GamePlatform:
         public void CreateGamePlatform(GamePlatform gamePlatform);
+        // Delete GamePlatform:
+        public void DeleteGamePlatform(GamePlatform gamePlatform);
 
         // CRUD operations for Picture entity:
         // Create Picture:

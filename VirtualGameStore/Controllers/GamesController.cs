@@ -138,12 +138,297 @@ namespace VirtualGameStore.Controllers
                 }
 
                 // Redirect to game list
-                return RedirectToAction("ViewAllGames");
+                return RedirectToAction("ViewAdminPanel", "Admin");
             }
             editGameViewModel.AllGenres = _gameStoreManager.GetAllGenres();
             editGameViewModel.AllLanguages = _gameStoreManager.GetAllLanguages();
             editGameViewModel.AllPlatforms = _gameStoreManager.GetAllPlatforms();
             return View("AddGame", editGameViewModel);
+        }
+
+        // GET: /games/{gameId}/edit
+        [HttpGet("games/{gameId}/edit-game")]
+        public IActionResult EditGame(int gameId)
+        {
+            Game game = _gameStoreManager.GetGameById(gameId);
+
+            string platformNames = "";
+            foreach (GamePlatform platform in game.Platforms)
+            {
+                platformNames += platform.PlatformId + ";";
+            }
+            string genresNames = "";
+            foreach (GameGenre genre in game.Genres)
+            {
+                genresNames += genre.GenreId + ";";
+            }
+            string languageNames = "";
+            foreach (GameLanguage language in game.Languages)
+            {
+                languageNames += language.LanguageId + ";";
+            }
+
+            List<Platform> allPlatforms = _gameStoreManager.GetAllPlatforms();
+            List<Genre> allGenres = _gameStoreManager.GetAllGenres();
+            List<Language> allLanguages = _gameStoreManager.GetAllLanguages();
+
+            EditGameViewModel editGameViewModel = new EditGameViewModel()
+            {
+                GameId = gameId,
+                Name = game.Name,
+                Description = game.Description,
+                Developer = game.Developer,
+                ReleaseDate = game.ReleaseDate,
+                RetailPrice = game.RetailPrice,
+                AllPlatforms = allPlatforms,
+                AllGenres = allGenres,
+                AllLanguages = allLanguages,
+                GameGenres = game.Genres.ToList(),
+                GameLanguages = game.Languages.ToList(),
+                GamePlatforms = game.Platforms.ToList(),
+                Platforms = platformNames,
+                Genres = genresNames,
+                Languages = languageNames
+            };
+            return View("EditGame", editGameViewModel);
+        }
+
+        [HttpPost("games/{gameId}/edit-game")]
+        public async Task<IActionResult> UpdateGame(EditGameViewModel editGameViewModel)
+        {
+            List<string> newPlats = new List<string>();
+            if (!string.IsNullOrEmpty(editGameViewModel.Platforms))
+            {
+                editGameViewModel.GamePlatforms = new List<GamePlatform>();
+                newPlats = editGameViewModel.Platforms.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                foreach (string plat in newPlats)
+                {
+                    GamePlatform gamePlatform = new GamePlatform()
+                    {
+                        PlatformId = int.Parse(plat)
+                    };
+                    editGameViewModel.GamePlatforms.Add(gamePlatform);
+                }
+            }
+            List<string> newGens = new List<string>();
+            if (!string.IsNullOrEmpty(editGameViewModel.Genres))
+            {
+                editGameViewModel.GameGenres = new List<GameGenre>();
+                newGens = editGameViewModel.Genres.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                foreach (string gens in newGens)
+                {
+                    GameGenre gameGenre = new GameGenre()
+                    {
+                        GenreId = int.Parse(gens)
+                    };
+                    editGameViewModel.GameGenres.Add(gameGenre);
+                }
+            }
+            List<string> newLangs = new List<string>();
+            if (!string.IsNullOrEmpty(editGameViewModel.Languages))
+            {
+                editGameViewModel.GameLanguages = new List<GameLanguage>();
+                newLangs = editGameViewModel.Languages.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                foreach (var lang in newLangs)
+                {
+                    GameLanguage gameLanguage = new GameLanguage()
+                    {
+                        LanguageId = lang
+                    };
+                    editGameViewModel.GameLanguages.Add(gameLanguage);
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                // Create "old" lists of preferences to test against
+                Game game = _gameStoreManager.GetGameById(editGameViewModel.GameId);
+
+                game.Name = editGameViewModel.Name;
+                game.Description = editGameViewModel.Description;
+                game.Developer = editGameViewModel.Developer;
+                game.ReleaseDate = editGameViewModel.ReleaseDate;
+                game.RetailPrice = editGameViewModel.RetailPrice;
+
+                // Remove any platforms that were just unselected (in old list but not in new list):
+                if (game.Platforms != null)
+                {
+                    // Loop through the game's old list of platforms
+                    foreach (var plat in game.Platforms)
+                    {
+                        // Try to find a match from the new list
+                        if (newPlats.Count > 0)
+                        {
+                            string s = newPlats.Where(p => p.Equals(plat.PlatformId.ToString())).FirstOrDefault();
+
+                            // If no match, the platform should be deleted
+                            if (s == null)
+                            {
+                                _gameStoreManager.DeleteGamePlatform(plat);
+                            }
+                        }
+                        // If the new list has no platforms, all old ones should be deleted
+                        else
+                        {
+                            _gameStoreManager.DeleteGamePlatform(plat);
+                        }
+                    }
+                }
+
+                // Add any platforms that were just selected (in new list but not in old list):
+                if (newPlats != null)
+                {
+                    // Loop through the new list of favourite platforms
+                    foreach (var plat in newPlats)
+                    {
+                        // Try to find a match from the old list
+                        GamePlatform gp = game.Platforms.Where(p => p.PlatformId.ToString() == plat).FirstOrDefault();
+                        if (gp == null)
+                        {
+                            Platform p = _gameStoreManager.GetAllPlatforms().Where(a => a.PlatformId.ToString() == plat).FirstOrDefault();
+
+                            // If no match, the platform should be added (created)
+                            if (p != null)
+                            {
+                                gp = new GamePlatform()
+                                {
+                                    GameId = game.GameId,
+                                    PlatformId = p.PlatformId,
+                                };
+                                _gameStoreManager.CreateGamePlatform(gp);
+                            }
+                        }
+                    }
+                }
+
+                // Remove any genres that were just unselected (in old list but not in new list):
+                if (game.Genres != null)
+                {
+                    // Loop through the game's old list of genres
+                    foreach (var gen in game.Genres)
+                    {
+                        // Try to find a match from the new list
+                        if (newGens.Count > 0)
+                        {
+                            string s = newGens.Where(p => p.Equals(gen.GenreId.ToString())).FirstOrDefault();
+
+                            // If no match, the genre should be deleted
+                            if (s == null)
+                            {
+                                _gameStoreManager.DeleteGameGenre(gen);
+                            }
+                        }
+                        // If the new list has no genres, all old ones should be deleted
+                        else
+                        {
+                            _gameStoreManager.DeleteGameGenre(gen);
+                        }
+                    }
+                }
+
+                // Add any genres that were just selected (in new list but not in old list):
+                if (newGens != null)
+                {
+                    // Loop through the new list of favourite genres
+                    foreach (var gen in newGens)
+                    {
+                        // Try to find a match from the old list
+                        GameGenre gg = game.Genres.Where(fg => fg.GenreId.ToString() == gen).FirstOrDefault();
+                        if (gg == null)
+                        {
+                            Genre g = _gameStoreManager.GetAllGenres().Where(a => a.GenreId.ToString() == gen).FirstOrDefault();
+
+                            // If no match, the genre should be added (created)
+                            if (g != null)
+                            {
+                                gg = new GameGenre()
+                                {
+                                    GameId = game.GameId,
+                                    GenreId = g.GenreId,
+                                };
+                                _gameStoreManager.CreateGameGenre(gg);
+                            }
+                        }
+                    }
+                }
+
+                // Remove any languages that were just deselected (in old list but not in new list):
+                if (game.Languages != null)
+                {
+                    // Loop through the games's old list of languages
+                    foreach (var lang in game.Languages)
+                    {
+                        // Try to find a match from the new list
+                        if (newLangs.Count > 0)
+                        {
+                            string s = newLangs.Where(l => l.Equals(lang.LanguageId)).FirstOrDefault();
+
+                            // If no match, the language should be deselected (deleted)
+                            if (s == null)
+                            {
+                                _gameStoreManager.DeleteGameLanguage(lang);
+                            }
+                        }
+                        // If the new list has no languages, all old ones should be deleted
+                        else
+                        {
+                            _gameStoreManager.DeleteGameLanguage(lang);
+                        }
+                    }
+                }
+
+                // Add any languages that were just selected (in new list but not in old list):
+                if (newLangs != null)
+                {
+                    // Loop through the new list of languages
+                    foreach (var lang in newLangs)
+                    {
+                        // Try to find a match from the old list
+                        GameLanguage gl = game.Languages.Where(pl => pl.LanguageId == lang).FirstOrDefault();
+                        if (gl == null)
+                        {
+                            Language l = _gameStoreManager.GetAllLanguages().Where(a => a.LanguageId == lang).FirstOrDefault();
+
+                            // If no match, the languge should be added (created)
+                            if (l != null)
+                            {
+                                gl = new GameLanguage()
+                                {
+                                    GameId = game.GameId,
+                                    LanguageId = l.LanguageId,
+                                };
+                                _gameStoreManager.CreateGameLanguage(gl);
+                            }
+                        }
+                    }
+                }
+
+                _gameStoreManager.UpdateGame(game);
+
+                return RedirectToAction("ViewAdminPanel", "Admin");
+            }
+            editGameViewModel.AllGenres = _gameStoreManager.GetAllGenres();
+            editGameViewModel.AllLanguages = _gameStoreManager.GetAllLanguages();
+            editGameViewModel.AllPlatforms = _gameStoreManager.GetAllPlatforms();
+            return View("EditGame", editGameViewModel);
+        }
+
+        // GET: /games/{gameId}/delete
+        [HttpGet("games/{gameId}/delete")]
+        public IActionResult DeleteGame(int gameId)
+        {
+            Game game = _gameStoreManager.GetGameById(gameId);
+
+            if (game != null)
+            {
+                _gameStoreManager.DeleteGame(game);
+                return RedirectToAction("ViewAdminPanel", "Admin");
+            }
+            else
+            {
+                ViewBag.errorMessage = "Game not found.";
+            }
+            return View("Error", "Account");
+
         }
 
         // GET: /images/{id}
