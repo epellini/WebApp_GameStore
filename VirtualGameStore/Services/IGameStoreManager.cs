@@ -81,7 +81,16 @@ namespace VirtualGameStore.Services
         // Read all languages:
         public List<Language>? GetAllLanguages();
 
+        // Create GameGenre:
+        public void CreateGameGenre(GameGenre gameGenre);
+        // Create GameLanguage:
+        public void CreateGameLanguage(GameLanguage gameLanguage);
+        // Create GamePlatform:
+        public void CreateGamePlatform(GamePlatform gamePlatform);
+
         // CRUD operations for Picture entity:
+        // Create Picture:
+        public void CreatePicture(IFormFile image, Picture picture);
         // Read Picture:
         public Picture? GetPictureById(int id);
 

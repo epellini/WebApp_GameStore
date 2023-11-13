@@ -286,7 +286,33 @@ namespace VirtualGameStore.Services
             return _gameStoreDbContext.Languages.ToList();
         }
 
+        // Create GameGenre:
+        public void CreateGameGenre(GameGenre gameGenre)
+        {
+            _gameStoreDbContext.GameGenres.Add(gameGenre);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Create GameLanguage:
+        public void CreateGameLanguage(GameLanguage gameLanguage)
+        {
+            _gameStoreDbContext.GameLanguages.Add(gameLanguage);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Create GamePlatform:
+        public void CreateGamePlatform(GamePlatform gamePlatform)
+        {
+            _gameStoreDbContext.GamePlatforms.Add(gamePlatform);
+            _gameStoreDbContext.SaveChanges();
+        }
+
         // CRUD operations for Picture entity:
+        // Create Picture:
+        public void CreatePicture(IFormFile image, Picture picture)
+        {
+            picture.Image = ConvertImageToBytes(image);
+            _gameStoreDbContext.Pictures.Add(picture);
+            _gameStoreDbContext.SaveChanges();
+        }
         // Read Picture:
         public Picture? GetPictureById(int id)
         {

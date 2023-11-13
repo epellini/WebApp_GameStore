@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VirtualGameStore.Entities;
+using VirtualGameStore.Models;
 using VirtualGameStore.Services;
 
 namespace VirtualGameStore.Controllers
@@ -33,23 +34,142 @@ namespace VirtualGameStore.Controllers
         [HttpGet("games/add")]
         public IActionResult AddGame()
         {
-            ViewBag.Genres = _gameStoreManager.GetAllGenres().ToList();
-            ViewBag.Languages = _gameStoreManager.GetAllLanguages().ToList();
-            ViewBag.Platforms = _gameStoreManager.GetAllPlatforms().ToList();
-            return View("AddGame", new Game());
+            List<Platform> allPlatforms = _gameStoreManager.GetAllPlatforms();
+            List<Genre> allGenres = _gameStoreManager.GetAllGenres();
+            List<Language> allLanguages = _gameStoreManager.GetAllLanguages();
+
+            EditGameViewModel editGameViewModel = new EditGameViewModel()
+            {
+                AllPlatforms = allPlatforms,
+                AllGenres = allGenres,
+                AllLanguages = allLanguages,
+
+            };
+            return View("AddGame", editGameViewModel);
         }
 
+        // Post the game
+        [HttpPost("games/add")]
+        public async Task<IActionResult> SaveGame(EditGameViewModel editGameViewModel)
+        {
+            List<string> newPlats = new List<string>();
+            if (!string.IsNullOrEmpty(editGameViewModel.Platforms))
+            {
+                editGameViewModel.GamePlatforms = new List<GamePlatform>();
+                newPlats = editGameViewModel.Platforms.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                foreach (string plat in newPlats)
+                {
+                    GamePlatform gamePlatform = new GamePlatform()
+                    {
+                        PlatformId = int.Parse(plat)
+                    };
+                    editGameViewModel.GamePlatforms.Add(gamePlatform);
+                }
+            }
+            List<string> newGens = new List<string>();
+            if (!string.IsNullOrEmpty(editGameViewModel.Genres))
+            {
+                editGameViewModel.GameGenres = new List<GameGenre>();
+                newGens = editGameViewModel.Genres.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                foreach(string gens in newGens)
+                {
+                    GameGenre gameGenre = new GameGenre()
+                    {
+                        GenreId = int.Parse(gens)
+                    };
+                    editGameViewModel.GameGenres.Add(gameGenre);
+                }
+            }
+            List<string> newLangs = new List<string>();
+            if (!string.IsNullOrEmpty(editGameViewModel.Languages))
+            {
+                editGameViewModel.GameLanguages = new List<GameLanguage>();
+                newLangs = editGameViewModel.Languages.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
+                foreach (var lang in newLangs)
+                {
+                    GameLanguage gameLanguage = new GameLanguage()
+                    {
+                        LanguageId = lang
+                    };
+                    editGameViewModel.GameLanguages.Add(gameLanguage);
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                Game game = new Game();
+
+                // Assign game properties
+                game.Name = editGameViewModel.Name;
+                game.Description = editGameViewModel.Description;
+                game.Developer = editGameViewModel.Developer;
+                game.ReleaseDate = editGameViewModel.ReleaseDate;
+                game.RetailPrice = editGameViewModel.RetailPrice;
+
+                if (editGameViewModel.NewPicture != null)
+                {
+                    Picture picture = new Picture()
+                    {
+                        GameId = game.GameId,
+                        Game = game,
+                        AltText = "Cover image for " + game.Name,
+                        IsCoverArt = true
+                    };
+                    _gameStoreManager.CreatePicture(editGameViewModel.NewPicture, picture);
+                }
+
+                // Create game in the database
+                _gameStoreManager.CreateGame(game);
+
+                // Link genres, languages, and platforms to the game
+                foreach (GameGenre gen in editGameViewModel.GameGenres)
+                {
+                    gen.GameId = game.GameId;
+                    _gameStoreManager.CreateGameGenre(gen);
+                }
+                foreach (GameLanguage lang in editGameViewModel.GameLanguages)
+                {
+                    lang.GameId = game.GameId;
+                    _gameStoreManager.CreateGameLanguage(lang);
+                }
+                foreach (GamePlatform plat in editGameViewModel.GamePlatforms)
+                {
+                    plat.GameId = game.GameId;
+                    _gameStoreManager.CreateGamePlatform(plat);
+                }
+
+                // Redirect to game list
+                return RedirectToAction("ViewAllGames");
+            }
+            editGameViewModel.AllGenres = _gameStoreManager.GetAllGenres();
+            editGameViewModel.AllLanguages = _gameStoreManager.GetAllLanguages();
+            editGameViewModel.AllPlatforms = _gameStoreManager.GetAllPlatforms();
+            return View("AddGame", editGameViewModel);
+        }
 
         // GET: /images/{id}
         [HttpGet("images/{id}")]
         public IActionResult ViewImage(int id)
         {
-            Picture picture = _gameStoreManager.GetPictureById(id);
+            Picture? picture = _gameStoreManager.GetPictureById(id);
             if (picture != null)
             {
                 return File(picture.Image, "image/jpg");
             }
             return RedirectToAction("Error", "Home");
+        }
+
+        [HttpPost("/account/upload-game-cover")]
+        public JsonResult UploadPhoto(EditGameViewModel editGameViewModel)
+        {
+            Game? game = _gameStoreManager.GetGameById(editGameViewModel.GameId);
+
+            Picture picture = new Picture()
+            {
+
+            };
+
+            //_gameStoreManager.CreatePicture(editProfileViewModel.NewPhoto, photo);
+            return Json(new { pictureId = picture.PictureId });
         }
 
         [HttpGet("games/search")]
@@ -78,43 +198,6 @@ namespace VirtualGameStore.Controllers
                 sort = "New";
             }
             return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort});
-        }
-
-
-
-        // Post the game
-        [HttpPost]
-        public async Task<IActionResult> SaveGame(Game game, IFormFile picture, int[] Genres, int[] Languages, int[] Platforms)
-        {
-            if (ModelState.IsValid)
-            {
-                // Process and save game cover photo
-                if (picture != null && picture.Length > 0)
-                {
-                    byte[] imageData = null;
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await picture.CopyToAsync(memoryStream);
-                        imageData = memoryStream.ToArray();
-                    }
-
-                    var gamePicture = new Picture { Image = imageData };
-                    // Assuming you need to add this picture to a collection in the Game entity
-                    game.Pictures = new List<Picture> { gamePicture };
-                }
-
-                // Link genres, languages, and platforms to the game
-                game.Genres = Genres.Select(genreId => new GameGenre { GameId = game.GameId, GenreId = genreId }).ToList();
-                game.Languages = Languages.Select(languageId => new GameLanguage { GameId = game.GameId, LanguageId = languageId.ToString() }).ToList();
-                game.Platforms = Platforms.Select(platformId => new GamePlatform { GameId = game.GameId, PlatformId = platformId }).ToList();
-
-                // Create game in the database
-                _gameStoreManager.CreateGame(game);
-
-                // Redirect to game list
-                return RedirectToAction("ViewAllGames");
-            }
-            return View("AddGame", game);
         }
 
         // Private fields for services

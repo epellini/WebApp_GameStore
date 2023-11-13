@@ -27,3 +27,39 @@
         });
     }
 }
+
+$(document).on('click', '.form-check-input',
+    function () {
+        let data = '';
+
+        if ($(this).hasClass('genre-check')) {
+            let collection = $('.genre-check');
+            for (var i = 0; i < collection.length; i++) {
+                if (collection[i].checked) {
+                    data += collection[i].value + ';'
+                }
+            }
+            console.log(data);
+            $('#Genres').val(data);
+        }
+        if ($(this).hasClass('platform-check')) {
+            let collection = $('.platform-check');
+            for (var i = 0; i < collection.length; i++) {
+                if (collection[i].checked) {
+                    data += collection[i].value + ';'
+                }
+            }
+            console.log(data);
+            $('#Platforms').val(data);
+        }
+        if ($(this).hasClass('language-check')) {
+            let collection = $('.language-check');
+            for (var i = 0; i < collection.length; i++) {
+                if (collection[i].checked) {
+                    data += collection[i].value + ';'
+                }
+            }
+            console.log(data);
+            $('#Languages').val(data);
+        }
+    });
