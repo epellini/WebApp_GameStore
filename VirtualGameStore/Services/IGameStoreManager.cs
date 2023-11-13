@@ -19,6 +19,7 @@ namespace VirtualGameStore.Services
         // Delete Game:
         public void DeleteGame(Game game);
 
+
         // CRUD operations for Profile entity:
         // Create Profile:
         public void CreateProfile(Profile profile);
@@ -27,6 +28,7 @@ namespace VirtualGameStore.Services
         // Update Profile:
         public void UpdateProfile(Profile profile);
 
+
         // LCRUD operations for preferredLanguage entity:
         // Create preferred language:
         public void CreatePreferredLanguage(PreferredLanguage preferredLanguage);
@@ -34,7 +36,8 @@ namespace VirtualGameStore.Services
         public List<PreferredLanguage>? GetPreferredLanguagesById(string id);
         // Delete preferred language:
         public void DeletePreferredLanguage(PreferredLanguage preferredLanguage);
-        
+
+
         // CRUD operations for FavouriteGenre entity:
         // Create favourite genre:
         public void CreateFavouriteGenre(FavouriteGenre favouriteGenre);
@@ -43,6 +46,31 @@ namespace VirtualGameStore.Services
         // Delete favourite genre:
         public void DeleteFavouriteGenre(FavouriteGenre favouriteGenre);
 
+
+        // LCRUD operations for WishedGame entity:
+        // Create wished game:
+        public void CreateWishedGame(WishedGame wishedGame);
+        // Read wished game:
+        public WishedGame? GetWishedGame(int id);
+        // Read all wished games:
+        public List<WishedGame>? GetWishedGamesById(string id);
+        // Delete wished game:
+        public void DeleteWishedGame(WishedGame wishedGame);
+
+
+        // CRUD operations for FriendConnect entity:
+        // Create friend connect:
+        public void CreateFriendConnect(FriendConnect friendConnect);
+        // Read friend connect:
+        public FriendConnect? GetFriendConnect(int id);
+        // Read all friend connects:
+        public List<FriendConnect>? GetFriendConnectsById(string id);
+        // Update friend connect:
+        public void UpdateFriendConnect(FriendConnect friendConnect);
+        // Delete friend connect:
+        public void DeleteFriendConnect(FriendConnect friendConnect);
+
+
         // CRUD operations for FavouritePlatform entity:
         // Create favourite platform:
         public void CreateFavouritePlatform(FavouritePlatform favouritePlatform);
@@ -50,6 +78,7 @@ namespace VirtualGameStore.Services
         public List<FavouritePlatform>? GetFavouritePlatformsById(string id);
         // Delete favourite platform:
         public void DeleteFavouritePlatform(FavouritePlatform favouritePlatform);
+
 
         // CRUD operations for ShippingAddress entity:
         // Create shipping address:
@@ -71,15 +100,18 @@ namespace VirtualGameStore.Services
         // Read all languages:
         public List<Language>? GetAllLanguages();
 
+
         // CRUD operations for Picture entity:
         // Read Picture:
         public Picture? GetPictureById(int id);
+
 
         // CRUD operations for Photo entity:
         // Create Photo:
         public void CreatePhoto(IFormFile image, Photo photo);
         // Read Photo:
         public Photo? GetPhotoById(int photoId);
+
 
         public byte[] ConvertImageToBytes(IFormFile image);
 

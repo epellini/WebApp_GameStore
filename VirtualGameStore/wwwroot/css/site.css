@@ -371,6 +371,18 @@ fw-bold {
         border-color: #bf616a;
     }
 
+.btn-aurora-red {
+    color: #2E3440;
+    background-color: #bf616a;
+    border-color: #bf616a;
+}
+
+.btn-aurora-red:hover {
+    color: #2E3440;
+    background-color: #bf616a;
+    border-color: #bf616a;
+}
+
 .bg-aurora-orange {
     background-color: #d08770;
 }
@@ -378,6 +390,19 @@ fw-bold {
 .text-aurora-orange {
     color: #d08770;
 }
+
+
+.btn-aurora-orange {
+    color: #2E3440;
+    background-color: #d08770;
+    border-color: #d08770;
+}
+.btn-aurora-orange:hover {
+    color: #2E3440;
+    background-color: #d08770;
+    border-color: #d08770;
+}
+
 
 .bg-aurora-yellow {
     background-color: #ebcb8b;
@@ -387,6 +412,19 @@ fw-bold {
     color: #ebcb8b;
 }
 
+
+.btn-aurora-yellow {
+    color: #2E3440;
+    background-color: #ebcb8b;
+    border-color: #ebcb8b;
+}
+.btn-aurora-yellow:hover {
+    color: #2E3440;
+    background-color: #b79e6c;
+    border-color: #b79e6c;
+}
+
+
 .bg-aurora-green {
     background-color: #a3be8c;
 }
@@ -395,12 +433,36 @@ fw-bold {
     color: #a3be8c;
 }
 
+
+.btn-aurora-green {
+    color: #2E3440;
+    background-color: #a3be8c;
+    border-color: #a3be8c;
+}
+.btn-aurora-green:hover {
+    color: #2E3440;
+    background-color: #778b66;
+    border-color: #778b66;
+}
+
+
 .bg-aurora-purple {
     background-color: #b48ead;
 }
 
 .text-aurora-purple {
     color: #b48ead;
+}
+
+.btn-aurora-purple {
+    color: #2E3440;
+    background-color: #b48ead;
+    border-color: #b48ead;
+}
+.btn-aurora-purple:hover {
+    color: #2E3440;
+    background-color: #81657b;
+    border-color: #81657b;
 }
 
 .svg-icon-snow path {
@@ -423,6 +485,28 @@ fw-bold {
 .svg-icon-shade:hover > path {
     fill: #434c5e;
     stroke: #434c5e;
+}
+
+.btn-icon-aurora-red svg path {
+    fill: #bf616a;
+    stroke: #bf616a;
+    stroke-width: 1%;
+}
+
+.btn-icon-aurora-red:hover > svg > path {
+    fill: #8c474d;
+    stroke: #8c474d;
+}
+
+.btn-icon-frost-primary svg path {
+    fill: #88c0d0;
+    stroke: #88c0d0;
+    stroke-width: 1%;
+}
+
+.btn-icon-frost-primary:hover > svg > path {
+    fill: #5a8996;
+    stroke: #5a8996;
 }
 
 .btn {

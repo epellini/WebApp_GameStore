@@ -1,47 +1,6 @@
 ﻿@model AddressViewModel;
 @{
     ViewData["Title"] = "My Addresses";
-    //string[] a = new string[3];
-    List<ShippingAddress> addresses = new List<ShippingAddress>();
-    addresses.Add(new ShippingAddress()
-            {
-                FullName = "Test Person",
-                Phone = "123-456-7890",
-                Address = "123 Test St",
-                Address2 = "Apt 1",
-                City = "Waterloo",
-                Province = "TE",
-                PostalCode = "T3S T3R",
-                Country = "Testadia",
-                DeliveryInstructions = "Test the buzzer by pressing 123",
-                IsDefault = true
-            });
-    addresses.Add(new ShippingAddress()
-            {
-                FullName = "Human Boy",
-                Phone = "123-456-7890",
-                Address = "123 Test St",
-                Address2 = "Apt 1",
-                City = "Waterloo",
-                Province = "TE",
-                PostalCode = "T3S T3R",
-                Country = "Testadia",
-                DeliveryInstructions = "Test the buzzer by pressing 123",
-                IsDefault = false
-            });
-    addresses.Add(new ShippingAddress()
-            {
-                FullName = "Some Dog",
-                Phone = "123-456-7890",
-                Address = "123 Test St",
-                Address2 = "Apt 1",
-                City = "Waterloo",
-                Province = "TE",
-                PostalCode = "T3S T3R",
-                Country = "Testadia",
-                DeliveryInstructions = "Test the buzzer by pressing 123",
-                IsDefault = false
-            });
 }
 
 <!--Shipping Addresses Card-->

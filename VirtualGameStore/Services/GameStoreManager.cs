@@ -23,7 +23,6 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.Games.Add(game);
             _gameStoreDbContext.SaveChanges();
         }
-
         // Read all Games and sort:
         /// <summary>
         /// Get all the games in the database including their platforms, genres, languages, and pictures.
@@ -32,7 +31,7 @@ namespace VirtualGameStore.Services
         public List<Game> GetAllGames(string sort)
         {
             List<Game> games = new List<Game>();
-            if (sort == null) sort = "New";
+            if (string.IsNullOrEmpty(sort)) sort = "New";
             if (sort == "New")
             {
                 games = _gameStoreDbContext.Games
@@ -62,6 +61,16 @@ namespace VirtualGameStore.Services
                 .Include(g => g.Pictures)
                 .ToList();
             }
+            if (sort == "Alphabetical")
+            {
+                games = _gameStoreDbContext.Games
+                .Include(g => g.Platforms).ThenInclude(p => p.Platform)
+                .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
+                .Include(g => g.Languages).ThenInclude(l => l.Language)
+                .Include(g => g.Pictures)
+                .OrderBy(g => g.Name)
+                .ToList();
+            }
             return games;
         }
         // Read all Games by search query:
@@ -86,7 +95,6 @@ namespace VirtualGameStore.Services
                 .ToList();
             }
         }
-
         // Read Game:
         /// <summary>
         /// Get a single game from the database including its platforms, genres, languages, and pictures.
@@ -103,20 +111,19 @@ namespace VirtualGameStore.Services
                 .Where(g => g.GameId == id)
                 .FirstOrDefault();
         }
-
         // Update Game:
         public void UpdateGame(Game game)
         {
             _gameStoreDbContext.Games.Update(game);
             _gameStoreDbContext.SaveChanges();
         }
-
         // Delete Game:
         public void DeleteGame(Game game)
         {
             _gameStoreDbContext.Remove(game);
             _gameStoreDbContext.SaveChanges();
         }
+
 
         // CRUD operations for Profile entity:
         // Create Profile:
@@ -146,6 +153,7 @@ namespace VirtualGameStore.Services
             }
         }
 
+
         // CRUD operations for preferred languages entity:
         // Create preferred language:
         public void CreatePreferredLanguage(PreferredLanguage preferredLanguage)
@@ -164,6 +172,7 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.PreferredLanguages.Remove(preferredLanguage);
             _gameStoreDbContext.SaveChanges();
         }
+
 
         // CRUD operations for favourite genres entity:
         // Create favourite genre:
@@ -184,6 +193,63 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
+
+        // CRUD operations for wished games entity:
+        // Create wished game:
+        public void CreateWishedGame(WishedGame wishedGame)
+        {
+            _gameStoreDbContext.WishedGames.Add(wishedGame);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read wished game:
+        public WishedGame? GetWishedGame(int id)
+        {
+            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Include(wg => wg.User).Where(wg => wg.WishedGameId == id).FirstOrDefault();
+        }
+        // Read all wished games:
+        public List<WishedGame>? GetWishedGamesById(string id)
+        {
+            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.UserId == id).ToList();
+        }
+        // Delete wished game:
+        public void DeleteWishedGame(WishedGame wishedGame)
+        {
+            _gameStoreDbContext.WishedGames.Remove(wishedGame);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+        // CRUD operations for friendConnect entity:
+        // Create friendConnect:
+        public void CreateFriendConnect(FriendConnect friendConnect)
+        {
+            _gameStoreDbContext.FriendConnects.Add(friendConnect);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read friendConnect:
+        public FriendConnect? GetFriendConnect(int id)
+        {
+            return _gameStoreDbContext.FriendConnects.Include(fc => fc.User).Include(fc => fc.Friend).ThenInclude(f => f.Profile).ThenInclude(p => p .Photos).Where(fc => fc.FriendConnectId == id).FirstOrDefault();
+        }
+        // Read all friendConnects:
+        public List<FriendConnect>? GetFriendConnectsById(string id)
+        {
+            return _gameStoreDbContext.FriendConnects.Include(fc => fc.User).Include(fc => fc.Friend).ThenInclude(f => f.Profile).ThenInclude(p => p.Photos).Where(fc => fc.UserId == id).ToList();
+        }
+        // Update friendConnect:
+        public void UpdateFriendConnect(FriendConnect friendConnect)
+        {
+            _gameStoreDbContext.FriendConnects.Update(friendConnect);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete friendConnect:
+        public void DeleteFriendConnect(FriendConnect friendConnect)
+        {
+            _gameStoreDbContext.FriendConnects.Remove(friendConnect);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
         // CRUD operations for favourite platforms entity:
         // Create favourite platform:
         public void CreateFavouritePlatform(FavouritePlatform favouritePlatform)
@@ -194,7 +260,7 @@ namespace VirtualGameStore.Services
         // Read all favourite platforms:
         public List<FavouritePlatform>? GetFavouritePlatformsById(string id)
         {
-            return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp  => fp.UserId == id).ToList();
+            return _gameStoreDbContext.FavouritePlatforms.Include(fp => fp.Platform).Where(fp => fp.UserId == id).ToList();
         }
         // Delete favourite platform:
         public void DeleteFavouritePlatform(FavouritePlatform favouritePlatform)
@@ -202,6 +268,7 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.FavouritePlatforms.Remove(favouritePlatform);
             _gameStoreDbContext.SaveChanges();
         }
+
 
         // CRUD operations for Shipping address entity:
         // Create Shipping address:
@@ -233,6 +300,7 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
+        
         // Read all Platforms:
         public List<Platform>? GetAllPlatforms()
         {
@@ -249,6 +317,7 @@ namespace VirtualGameStore.Services
             return _gameStoreDbContext.Languages.ToList();
         }
 
+
         // CRUD operations for Picture entity:
         // Read Picture:
         public Picture? GetPictureById(int id)
@@ -257,6 +326,7 @@ namespace VirtualGameStore.Services
                 .Where(p => p.PictureId == id)
                 .FirstOrDefault();
         }
+
 
         // CRUD operations for Photo entity:
         // Create Photo:
@@ -273,6 +343,7 @@ namespace VirtualGameStore.Services
                 .Where(p => p.PhotoId == photoId)
                 .FirstOrDefault();
         }
+
 
         public byte[] ConvertImageToBytes(IFormFile image)
         {

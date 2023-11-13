@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using VirtualGameStore.Entities;
+using VirtualGameStore.Models;
 using VirtualGameStore.Services;
 
 namespace VirtualGameStore.Controllers
@@ -26,11 +28,23 @@ namespace VirtualGameStore.Controllers
                 List<string> roles = (List<string>) _userManager.GetRolesAsync(user).Result;
                 if (roles.Contains("Admin"))
                 {
-                    return View("Panel");
+                    ViewBag.View = "Games";
+                    AdminPanelViewModel adminPanelViewModel = new AdminPanelViewModel()
+                    {
+                        AllGames = _gameStoreManager.GetAllGames("Alphabetical")
+                    };
+                    return View("Panel", adminPanelViewModel);
                 }
                 
             }
             return View("AccessDenied");
+        }
+
+        [HttpGet("/admin/games")]
+        public JsonResult ViewGames()
+        {
+            List<Game> allGames = _gameStoreManager.GetAllGames("Alphabetical");
+            return Json(new { games = JsonSerializer.Serialize(allGames) });
         }
 
         // Private fields for services

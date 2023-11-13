@@ -398,12 +398,29 @@ namespace VirtualGameStore.Controllers
             {
                 Profile profile = _gameStoreManager.GetProfileById(user.Id);
 
+                List<WishedGame>? wishes = _gameStoreManager.GetWishedGamesById(user.Id);
+
+                List<FriendConnect>? friends = _gameStoreManager.GetFriendConnectsById(user.Id);
+
+                if (profile == null)
+                {
+                    profile = new Profile
+                    {
+                        UserId = user.Id,
+                        User = user,
+                        JoinDate = DateTime.Today
+                    };
+                    _gameStoreManager.CreateProfile(profile);
+                }
+
                 ProfileViewModel profileViewModel = new ProfileViewModel()
                 {
                     User = user,
                     Profile = profile,
                     IsOwner = false,
-                    IsSignedIn = false
+                    IsSignedIn = false,
+                    WishedGames = wishes,
+                    Friends = friends
                 };
 
                 if (_signInManager.IsSignedIn(User))
@@ -414,8 +431,15 @@ namespace VirtualGameStore.Controllers
                     {
                         profileViewModel.IsOwner = true;
                     }
+                    else
+                    {
+                        if (profileViewModel.Friends != null)
+                        {
+                            profileViewModel.ExistingFriend = profileViewModel.Friends.Where(f => f.FriendId == curUser.Id).FirstOrDefault();
+                        }
+                    }
                 }
-
+                ViewBag.Section = "Wishlist";
                 return View("Profile", profileViewModel);
             }
             else
@@ -423,6 +447,219 @@ namespace VirtualGameStore.Controllers
                 ViewBag.errorMessage = "Account not found.";
             }
             return View("Error");
+        }
+
+        [HttpGet("/wished-games/{id}/unwish")]
+        public IActionResult RemoveFromWishlist(int id)
+        {
+            WishedGame? wish = _gameStoreManager.GetWishedGame(id);
+            if (wish != null)
+            {
+                _gameStoreManager.DeleteWishedGame(wish);
+                return RedirectToAction("ViewProfile", new { username = wish.User.UserName });
+            }
+            else
+            {
+                ViewBag.errorMessage = "Wishlisted item not found.";
+            }
+            return View("Error");
+        }
+
+        [HttpGet("account/friend-requests/new-request/{id}")]
+        public IActionResult SendFriendRequest(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                if (_signInManager.IsSignedIn(User))
+                {
+                    User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+
+                    FriendConnect testConnect = _gameStoreManager.GetFriendConnectsById(user.Id).Where(f => f.FriendId == id).FirstOrDefault();
+
+                    if (testConnect == null)
+                    {
+                        User friend = _userManager.FindByIdAsync(id).Result;
+                        if (friend != null)
+                        {
+                            FriendConnect friendConnect = new FriendConnect()
+                            {
+                                UserId = user.Id,
+                                User = user,
+                                FriendId = friend.Id,
+                                Friend = friend,
+                                Status = "Pending",
+                                DateConnected = DateTime.Now
+                            };
+                            FriendConnect friendRequest = new FriendConnect()
+                            {
+                                UserId = friend.Id,
+                                User = friend,
+                                FriendId = user.Id,
+                                Friend = user,
+                                Status = "Requested",
+                                DateConnected = DateTime.Now
+                            };
+                            _gameStoreManager.CreateFriendConnect(friendConnect);
+                            _gameStoreManager.CreateFriendConnect(friendRequest);
+                            return RedirectToAction("ViewProfile", new { username = friend.UserName });
+                        }
+                        else
+                        {
+                            ViewBag.errorMessage = "User not found.";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Friend request already sent.";
+                    }
+
+                    return View("Error");
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("account/friend-requests/{id}/accept")]
+        public IActionResult AcceptFriendRequest(int id)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+
+                FriendConnect? friend = _gameStoreManager.GetFriendConnect(id);
+                if (friend != null)
+                {
+                    if (user.Id == friend.UserId)
+                    {
+                        FriendConnect? connect = _gameStoreManager.GetFriendConnectsById(friend.FriendId).Where(f => f.FriendId == friend.UserId).FirstOrDefault();
+
+                        if (connect != null)
+                        {
+                            friend.Status = "Confirmed";
+                            connect.Status = "Confirmed";
+                            _gameStoreManager.UpdateFriendConnect(friend);
+                            _gameStoreManager.UpdateFriendConnect(connect);
+                            return RedirectToAction("ViewProfile", new { username = friend.User.UserName });
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Access Denied. You do not have permission do make changes to this friend request.";
+                    }
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Friend request not found.";
+                }
+                return View("Error");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpGet("account/friend-requests/{id}/confirm")]
+        public IActionResult ConfirmFriendRequest(int id)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+
+                FriendConnect? friend = _gameStoreManager.GetFriendConnect(id);
+                if (friend != null)
+                {
+                    if (user.Id == friend.FriendId)
+                    {
+                        FriendConnect? connect = _gameStoreManager.GetFriendConnectsById(user.Id).Where(f => f.FriendId == friend.UserId).FirstOrDefault();
+
+                        if (connect != null)
+                        {
+                            friend.Status = "Confirmed";
+                            connect.Status = "Confirmed";
+                            _gameStoreManager.UpdateFriendConnect(friend);
+                            _gameStoreManager.UpdateFriendConnect(connect);
+                            return RedirectToAction("ViewProfile", new { username = friend.User.UserName });
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Access Denied. You do not have permission do make changes to this friend request.";
+                    }
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Friend request not found.";
+                }
+                return View("Error");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("account/friend-requests/{id}/delete")]
+        public IActionResult RemoveFriendRequest(int id)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+
+                FriendConnect? friend = _gameStoreManager.GetFriendConnect(id);
+                if (friend != null)
+                {
+                    if (user.Id == friend.UserId)
+                    {
+                        FriendConnect? connect = _gameStoreManager.GetFriendConnectsById(friend.FriendId).Where(f => f.FriendId == friend.UserId).FirstOrDefault();
+
+                        if (connect != null)
+                        {
+                            _gameStoreManager.DeleteFriendConnect(friend);
+                            _gameStoreManager.DeleteFriendConnect(connect);
+                            return RedirectToAction("ViewProfile", new { username = friend.User.UserName });
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Access Denied. You do not have permission do make changes to this friend request.";
+                    }
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Friend request not found.";
+                }
+                return View("Error");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("account/friend-requests/{id}/remove")]
+        public IActionResult CancelFriendRequest(int id)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+
+                FriendConnect? friend = _gameStoreManager.GetFriendConnect(id);
+                if (friend != null)
+                {
+                    if (user.Id == friend.FriendId)
+                    {
+                        FriendConnect? connect = _gameStoreManager.GetFriendConnectsById(friend.FriendId).Where(f => f.FriendId == friend.UserId).FirstOrDefault();
+
+                        if (connect != null)
+                        {
+                            _gameStoreManager.DeleteFriendConnect(friend);
+                            _gameStoreManager.DeleteFriendConnect(connect);
+                            return RedirectToAction("ViewProfile", new { username = friend.User.UserName });
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Access Denied. You do not have permission do make changes to this friend request.";
+                    }
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Friend request not found.";
+                }
+                return View("Error");
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet("/account/edit-profile")]
