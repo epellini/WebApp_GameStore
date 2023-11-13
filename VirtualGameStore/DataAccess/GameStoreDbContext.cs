@@ -75,6 +75,7 @@ namespace VirtualGameStore.DataAccess
         public DbSet<PreferredLanguage>? PreferredLanguages { get; set; }
         public DbSet<GameGenre>? GameGenres { get; set; }
         public DbSet<GameLanguage>? GameLanguages { get; set; }
+        public DbSet<GamePlatform>? GamePlatforms { get; set; }
         public DbSet<Profile>? Profiles { get; set; }
         public DbSet<ShippingAddress>? ShippingAddresses { get; set; }
         public DbSet<Picture>? Pictures { get; set; }

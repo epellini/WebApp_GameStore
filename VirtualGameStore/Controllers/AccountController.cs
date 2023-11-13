@@ -712,7 +712,6 @@ namespace VirtualGameStore.Controllers
                     existingProfile.PromoRegistered = editProfileViewModel.PromoRegistered;
                     if (editProfileViewModel.NewPhoto != null)
                     {
-                        
                         foreach (Photo oldPhoto in existingProfile.Photos)
                         {
                             oldPhoto.isProfilePic = false;

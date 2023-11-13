@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualGameStore.DataAccess;
 
@@ -11,9 +12,10 @@ using VirtualGameStore.DataAccess;
 namespace VirtualGameStore.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    partial class GameStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231113025137_Update_Games")]
+    partial class Update_Games
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,37 +201,6 @@ namespace VirtualGameStore.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("FavouritePlatforms");
-                });
-
-            modelBuilder.Entity("VirtualGameStore.Entities.FriendConnect", b =>
-                {
-                    b.Property<int>("FriendConnectId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FriendConnectId"), 1L, 1);
-
-                    b.Property<DateTime?>("DateConnected")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FriendId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("FriendConnectId");
-
-                    b.HasIndex("FriendId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FriendConnects");
                 });
 
             modelBuilder.Entity("VirtualGameStore.Entities.Game", b =>
@@ -986,25 +957,6 @@ namespace VirtualGameStore.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("VirtualGameStore.Entities.FriendConnect", b =>
-                {
-                    b.HasOne("VirtualGameStore.Entities.User", "Friend")
-                        .WithMany("Connects")
-                        .HasForeignKey("FriendId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("VirtualGameStore.Entities.User", "User")
-                        .WithMany("Friends")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Friend");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("VirtualGameStore.Entities.GameGenre", b =>
                 {
                     b.HasOne("VirtualGameStore.Entities.Game", "Game")
@@ -1165,10 +1117,6 @@ namespace VirtualGameStore.Migrations
 
             modelBuilder.Entity("VirtualGameStore.Entities.User", b =>
                 {
-                    b.Navigation("Connects");
-
-                    b.Navigation("Friends");
-
                     b.Navigation("Genres");
 
                     b.Navigation("Languages");

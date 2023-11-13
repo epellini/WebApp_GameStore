@@ -1,0 +1,228 @@
+﻿@model EditGameViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add Game";
+}
+
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/addGame.js"></script>
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8 col-12">
+        <div class="card shadow bg-night text-snow-bright my-4">
+            <div class="row text-start p-2 m-0 bg-shade">
+                <h4 class="card-title text-uppercase fw-bold">Add Game</h4>
+            </div>
+            <div class="card-body">
+                <!-- Game form starts here -->
+                <div asp-validation-summary="ModelOnly" class="text-aurora-red"></div>
+                <form asp-action="SaveGame" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <!-- Left column for image -->
+                        <div class="col-md-4 p-4">
+                            <img id="picture" src="~/images/no-image.png" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;">
+                            <div class="mt-2">
+                                <label for="picture" class="link-frost text-uppercase fw-bold">Upload picture</label>
+                                <input type="file" id="picture" name="picture" hidden accept=".bmp, .jpg, .png, image/bmp, image/jpeg, image/png" onchange="fileCheck(this);">
+                                <span id="pictureError"></span>
+                            </div>
+                        </div>
+
+                        <!-- Right column for input fields -->
+                        <div class="col-md-8">
+                            <div class="row">
+                                <!-- Game name and developer inputs -->
+                                <div class="col-12 mb-3">
+                                    <label for="Name" class="fw-bold text-uppercase text-snow-deep">Game Name</label>
+                                    <input type="text" class="form-control" id="Name" name="Name" asp-for="Name">
+                                    <div class="row">
+                                        <span asp-validation-for="Name" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="Developer" class="fw-bold text-uppercase text-snow-deep">Developer</label>
+                                    <input type="text" class="form-control" id="Developer" name="Developer" asp-for="Developer">
+                                    <div class="row">
+                                        <span asp-validation-for="Developer" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Game description input -->
+                                <div class="col-12 mb-3">
+                                    <label for="Description" class="fw-bold text-uppercase text-snow-deep">Description</label>
+                                    <textarea class="form-control" id="Description" name="Description" asp-for="Description"></textarea>
+                                    <div class="row">
+                                        <span asp-validation-for="Description" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Release date and price inputs -->
+                                <div class="col-6 mb-3">
+                                    <label for="ReleaseDate" class="fw-bold text-uppercase text-snow-deep">Release Date</label>
+                                    <input type="date" class="form-control" id="ReleaseDate" name="ReleaseDate" asp-for="ReleaseDate">
+                                    <div class="row">
+                                        <span asp-validation-for="ReleaseDate" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="RetailPrice" class="fw-bold text-uppercase text-snow-deep">Retail Price</label>
+                                    <input type="number" class="form-control" id="RetailPrice" name="RetailPrice" asp-for="RetailPrice" step="0.01">
+                                    <div class="row">
+                                        <span asp-validation-for="RetailPrice" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Genres  -->
+                                <div class="col-12 mb-3">
+                                    <label class="fw-bold text-uppercase text-snow-deep">Genres</label>
+                                    <div class="row">
+                                        @if(Model.AllGenres != null)
+                                        {
+                                            @foreach (var genre in Model.AllGenres)
+                                            {
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        @{
+                                                            bool isGenreChecked = false;
+                                                        }
+                                                        @if (Model.GameGenres != null && Model.GameGenres.Count > 0)
+                                                        {
+                                                            foreach (var g in Model.GameGenres)
+                                                            {
+                                                                if (g.GenreId == genre.GenreId)
+                                                                {
+                                                                    isGenreChecked = true;
+                                                                }
+                                                            }
+                                                        }
+                                                        @if (isGenreChecked)
+                                                        {
+                                                            <input class="form-check-input genre-check" type="checkbox" value="@genre.GenreId" id="check-@genre.GenreId" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="form-check-input genre-check" type="checkbox" value="@genre.GenreId" id="check-@genre.GenreId">
+                                                        }
+                                                        <label class="form-check-label">
+                                                            @genre.GenreName
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <span asp-validation-for="Genres" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+                                <!--Language-->
+                                <div class="col-12 mb-3">
+                                    <label class="fw-bold text-uppercase text-snow-deep">Languages</label>
+                                    <div class="row">
+                                        @if(Model.AllLanguages != null)
+                                        {
+                                            @foreach (var language in Model.AllLanguages)
+                                            {
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        @{
+                                                            bool isLanguageChecked = false;
+                                                        }
+                                                        @if (Model.GameLanguages != null && Model.GameLanguages.Count > 0)
+                                                        {
+                                                            foreach (var l in Model.GameLanguages)
+                                                            {
+                                                                if (l.LanguageId == language.LanguageId)
+                                                                {
+                                                                    isLanguageChecked = true;
+                                                                }
+                                                            }
+                                                        }
+                                                        @if (isLanguageChecked)
+                                                        {
+                                                            <input class="form-check-input language-check" type="checkbox" value="@language.LanguageId" id="check-@language.LanguageId" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="form-check-input language-check" type="checkbox" value="@language.LanguageId" id="check-@language.LanguageId">
+                                                        }
+                                                        <label class="form-check-label">
+                                                            @language.LanguageName
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                       
+                                    </div>
+                                    <div class="row">
+                                        <span asp-validation-for="Languages" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Platforms  -->
+                                <div class="col-12 mb-3">
+                                    <label class="fw-bold text-uppercase text-snow-deep">Platforms</label>
+                                    <div class="row">
+                                        @if(Model.AllPlatforms != null)
+                                        {
+                                            @foreach (var platform in Model.AllPlatforms)
+                                            {
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        @{
+                                                            bool isPlatformChecked = false;
+                                                        }
+                                                        @if (Model.GamePlatforms != null && Model.GamePlatforms.Count > 0)
+                                                        {
+                                                            foreach (var p in Model.GamePlatforms)
+                                                            {
+                                                                if (p.PlatformId == platform.PlatformId)
+                                                                {
+                                                                    isPlatformChecked = true;
+                                                                }
+                                                            }
+                                                        }
+                                                        @if (isPlatformChecked)
+                                                        {
+                                                            <input class="form-check-input platform-check" type="checkbox" value="@platform.PlatformId" id="check-@platform.PlatformId" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="form-check-input platform-check" type="checkbox" value="@platform.PlatformId" id="check-@platform.PlatformId">
+                                                        }
+                                                        <label class="form-check-label">
+                                                            @platform.PlatformName
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <span asp-validation-for="Platforms" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" value="@Model.Platforms" asp-for="Platforms" id="Platforms" />
+                    <input type="hidden" value="@Model.Genres" asp-for="Genres" id="Genres" />
+                    <input type="hidden" value="@Model.Languages" asp-for="Languages" id="Languages" />
+
+                    <!-- Submit and cancel buttons -->
+                    <div class="row justify-content-end">
+                        <a class="btn btn-aurora-red-outline text-uppercase fw-bold col-3 p-2" asp-action="ViewAdminPanel" asp-controller="Admin">Cancel</a>
+                        <button type="submit" class="btn btn-frost-primary col-3 p-2 mx-3 text-uppercase">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
