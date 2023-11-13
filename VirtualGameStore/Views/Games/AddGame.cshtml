@@ -1,0 +1,133 @@
+﻿@model Game
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add Game";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8 col-12">
+        <div class="card shadow bg-night text-snow-bright my-4">
+            <div class="row text-start p-2 m-0 bg-shade">
+                <h4 class="card-title text-uppercase fw-bold">Add Game</h4>
+            </div>
+            <div class="card-body">
+                <!-- Game form starts here -->
+                <form asp-action="SaveGame" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <!-- Left column for image -->
+                        <div class="col-md-4 p-4">
+                            <img id="picture" src="~/images/no-image.png" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;">
+                            <div class="mt-2">
+                                <label for="picture" class="link-frost text-uppercase fw-bold">Upload picture</label>
+                                <input type="file" id="picture" name="picture" hidden accept=".bmp, .jpg, .png, image/bmp, image/jpeg, image/png" onchange="fileCheck(this);">
+                                <span id="pictureError"></span>
+                            </div>
+                        </div>
+
+                        <!-- Right column for input fields -->
+                        <div class="col-md-8">
+                            <div class="row">
+                                <!-- Game name and developer inputs -->
+                                <div class="col-12 mb-3">
+                                    <label for="Name" class="fw-bold text-uppercase text-snow-deep">Game Name</label>
+                                    <input type="text" class="form-control" id="Name" name="Name" asp-for="Name">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="Developer" class="fw-bold text-uppercase text-snow-deep">Developer</label>
+                                    <input type="text" class="form-control" id="Developer" name="Developer" asp-for="Developer">
+                                </div>
+
+                                <!-- Game description input -->
+                                <div class="col-12 mb-3">
+                                    <label for="Description" class="fw-bold text-uppercase text-snow-deep">Description</label>
+                                    <textarea class="form-control" id="Description" name="Description" asp-for="Description"></textarea>
+                                </div>
+
+                                <!-- Release date and price inputs -->
+                                <div class="col-6 mb-3">
+                                    <label for="ReleaseDate" class="fw-bold text-uppercase text-snow-deep">Release Date</label>
+                                    <input type="date" class="form-control" id="ReleaseDate" name="ReleaseDate" asp-for="ReleaseDate">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="RetailPrice" class="fw-bold text-uppercase text-snow-deep">Retail Price</label>
+                                    <input type="number" class="form-control" id="RetailPrice" name="RetailPrice" asp-for="RetailPrice" step="0.01">
+                                </div>
+
+                                <!-- Genres  -->
+                                <div class="col-12 mb-3">
+                                    <label class="fw-bold text-uppercase text-snow-deep">Genres</label>
+                                    <div class="row">
+                                        @if(ViewBag.Genres != null)
+                                        {
+                                            @foreach (var genre in ViewBag.Genres)
+                                            {
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="@genre.GenreId" id="genre@genre.GenreId" name="Genres">
+                                                        <label class="form-check-label" for="genre@genre.GenreId">
+                                                            @genre.GenreName
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        
+                                    </div>
+                                </div>
+                                <!--Language-->
+                                <div class="col-12 mb-3">
+                                    <label class="fw-bold text-uppercase text-snow-deep">Languages</label>
+                                    <div class="row">
+                                        @if(ViewBag.Languages != null)
+                                        {
+                                            @foreach (var language in ViewBag.Languages)
+                                            {
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="@language.LanguageId"    id="language@language.LanguageId" name="Languages">
+                                                        <label class="form-check-label" for="language@language.LanguageId">
+                                                            @language.LanguageName
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                       
+                                    </div>
+                                </div>
+
+                                <!-- Platforms  -->
+                                <div class="col-12 mb-3">
+                                    <label class="fw-bold text-uppercase text-snow-deep">Platforms</label>
+                                    <div class="row">
+                                        @if(ViewBag.Platforms != null)
+                                        {
+                                            @foreach (var platform in ViewBag.Platforms)
+                                            {
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="@platform.PlatformId" id="platform@platform.PlatformId" name="Platforms">
+                                                        <label class="form-check-label" for="platform@platform.PlatformId">
+                                                            @platform.PlatformName
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit and cancel buttons -->
+                    <div class="row justify-content-end">
+                        <a class="btn btn-aurora-red-outline text-uppercase fw-bold col-3 p-2" asp-action="ViewAdminPanel" asp-controller="Admin">Cancel</a>
+                        <button type="submit" class="btn btn-frost-primary col-3 p-2 mx-3 text-uppercase">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

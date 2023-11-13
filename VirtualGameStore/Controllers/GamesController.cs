@@ -28,6 +28,18 @@ namespace VirtualGameStore.Controllers
             return View("AllGames", allGames);
         }
 
+        //adding game through the admin panel
+        // GET: /games/add
+        [HttpGet("games/add")]
+        public IActionResult AddGame()
+        {
+            ViewBag.Genres = _gameStoreManager.GetAllGenres().ToList();
+            ViewBag.Languages = _gameStoreManager.GetAllLanguages().ToList();
+            ViewBag.Platforms = _gameStoreManager.GetAllPlatforms().ToList();
+            return View("AddGame", new Game());
+        }
+
+
         // GET: /images/{id}
         [HttpGet("images/{id}")]
         public IActionResult ViewImage(int id)
@@ -68,9 +80,50 @@ namespace VirtualGameStore.Controllers
             return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort});
         }
 
+
+
+        // Post the game
+        [HttpPost]
+        public async Task<IActionResult> SaveGame(Game game, IFormFile picture, int[] Genres, int[] Languages, int[] Platforms)
+        {
+            if (ModelState.IsValid)
+            {
+                // Process and save game cover photo
+                if (picture != null && picture.Length > 0)
+                {
+                    byte[] imageData = null;
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await picture.CopyToAsync(memoryStream);
+                        imageData = memoryStream.ToArray();
+                    }
+
+                    var gamePicture = new Picture { Image = imageData };
+                    // Assuming you need to add this picture to a collection in the Game entity
+                    game.Pictures = new List<Picture> { gamePicture };
+                }
+
+                // Link genres, languages, and platforms to the game
+                game.Genres = Genres.Select(genreId => new GameGenre { GameId = game.GameId, GenreId = genreId }).ToList();
+                game.Languages = Languages.Select(languageId => new GameLanguage { GameId = game.GameId, LanguageId = languageId.ToString() }).ToList();
+                game.Platforms = Platforms.Select(platformId => new GamePlatform { GameId = game.GameId, PlatformId = platformId }).ToList();
+
+                // Create game in the database
+                _gameStoreManager.CreateGame(game);
+
+                // Redirect to game list
+                return RedirectToAction("ViewAllGames");
+            }
+            return View("AddGame", game);
+        }
+
         // Private fields for services
         private IGameStoreManager _gameStoreManager;
         private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
+
     }
+
+
+
 }
