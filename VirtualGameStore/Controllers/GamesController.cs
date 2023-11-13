@@ -441,6 +441,7 @@ namespace VirtualGameStore.Controllers
                 GameId = game.GameId,
                 PictureUrl = game.Pictures,
                 Genres = game.Genres.First().Genre.GenreName,
+                ReleaseDate = game.ReleaseDate,
                 Languages = game.Languages.First().Language.LanguageName,
                 Platforms = game.Platforms.First().Platform.PlatformName
             };
