@@ -13,5 +13,7 @@ namespace VirtualGameStore.Models
         public List<Game>? Library { get; set; }
 
         public List<WishedGame>? WishedGames { get; set; }
+        public List<FriendConnect>? Friends { get; set; }
+        public FriendConnect? ExistingFriend { get; set; }
     }
 }

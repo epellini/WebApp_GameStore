@@ -428,7 +428,24 @@ namespace VirtualGameStore.Controllers
                 ViewBag.errorMessage = "Game not found.";
             }
             return View("Error", "Account");
+        }
+        
+        // GET: /games/{id}
+        [HttpGet("games/{id}")]
+        public IActionResult GetGameById(int id)
+        {
+            var game = _gameStoreManager.GetGameById(id);
 
+            GameDetailsViewModel gameDetailsViewModel = new GameDetailsViewModel
+            {
+                GameId = game.GameId,
+                PictureUrl = game.Pictures,
+                Genres = game.Genres.First().Genre.GenreName,
+                Languages = game.Languages.First().Language.LanguageName,
+                Platforms = game.Platforms.First().Platform.PlatformName
+            };
+
+            return View("Game", gameDetailsViewModel);
         }
 
         // GET: /images/{id}
@@ -482,7 +499,7 @@ namespace VirtualGameStore.Controllers
             {
                 sort = "New";
             }
-            return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort});
+            return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort });
         }
 
         // Private fields for services

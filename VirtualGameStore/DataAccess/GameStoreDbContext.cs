@@ -81,6 +81,7 @@ namespace VirtualGameStore.DataAccess
         public DbSet<Picture>? Pictures { get; set; }
         public DbSet<Photo>? Photos { get; set; }
         public DbSet<WishedGame> WishedGames { get; set; }
+        public DbSet<FriendConnect> FriendConnects { get; set; }
 
 
         // Override base class method OnModelCreating to establish DB relationships
@@ -105,17 +106,31 @@ namespace VirtualGameStore.DataAccess
                 .WithMany(g => g.Users)
                 .HasForeignKey(fg => fg.GenreId);
 
-            // Establish WishedGames relationships:
-            // Each WishedGames has 1 user - Each user could have many WishedGames - WishedGames has FK to user:
+            // Establish WishedGame relationships:
+            // Each WishedGame has 1 user - Each user could have many WishedGames - WishedGame has FK to user:
             modelBuilder.Entity<WishedGame>()
                 .HasOne(wg => wg.User)
                 .WithMany(u => u.WishedGames)
                 .HasForeignKey(wg => wg.UserId);
-            // Each WishedGames has 1 game - Each game could have many WishedGames - WishedGames has FK to game:
+            // Each WishedGame has 1 game - Each game could have many WishedGames - WishedGame has FK to game:
             modelBuilder.Entity<WishedGame>()
                 .HasOne(wg => wg.Game)
                 .WithMany(g => g.WishedGames)
                 .HasForeignKey(wg => wg.GameId);
+
+            // Establish FriendConnect relationships:
+            // Each FriendConnect has 1 user - Each user could have many Friends - FriendConnect has FK to user:
+            modelBuilder.Entity<FriendConnect>()
+                .HasOne(fc => fc.User)
+                .WithMany(ui => ui.Friends)
+                .HasForeignKey(fc => fc.UserId);
+            // Each FriendConnect has 1 friend - Each friend could have many connects - FriendConnect has FK to friend:
+            modelBuilder.Entity<FriendConnect>()
+                .HasOne(fc => fc.Friend)
+                .WithMany(uii => uii.Connects)
+                .HasForeignKey(fc => fc.FriendId)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
             // Establish FavouritePlatform relationships:
             // Each FavouritePlatform has 1 user - Each user could have many FavouritePlatforms - FavouritePlatform has FK to user:
