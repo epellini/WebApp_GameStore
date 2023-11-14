@@ -18,7 +18,7 @@ namespace VirtualGameStore.Controllers
 
         // GET: /games
         [HttpGet("games")]
-        public IActionResult ViewAllGames(string sort)
+        public async Task<IActionResult> ViewAllGames(string sort)
         {
             if (string.IsNullOrEmpty(sort))
             {
@@ -26,7 +26,25 @@ namespace VirtualGameStore.Controllers
             }
             List<Game> allGames = _gameStoreManager.GetAllGames(sort).ToList();
             ViewBag.Sort = sort;
-            return View("AllGames", allGames);
+            AllGamesViewModel viewModel = new AllGamesViewModel()
+            {
+                Games = allGames,
+                WishedGames = new List<WishedGame>()
+            };
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user != null)
+                {
+                    List<WishedGame>? wishes = _gameStoreManager.GetWishedGamesById(user.Id);
+                    if (wishes != null)
+                    {
+                        viewModel.WishedGames = wishes;
+                    }
+                }
+            }
+
+            return View("AllGames", viewModel);
         }
 
         //adding game through the admin panel
@@ -432,21 +450,117 @@ namespace VirtualGameStore.Controllers
         
         // GET: /games/{id}
         [HttpGet("games/{id}")]
-        public IActionResult GetGameById(int id)
+        public async Task<IActionResult> GetGameById(int id)
         {
             var game = _gameStoreManager.GetGameById(id);
 
-            GameDetailsViewModel gameDetailsViewModel = new GameDetailsViewModel
+            if (game != null)
             {
-                GameId = game.GameId,
-                PictureUrl = game.Pictures,
-                Genres = game.Genres.First().Genre.GenreName,
-                ReleaseDate = game.ReleaseDate,
-                Languages = game.Languages.First().Language.LanguageName,
-                Platforms = game.Platforms.First().Platform.PlatformName
-            };
+                GameDetailsViewModel gameDetailsViewModel = new GameDetailsViewModel
+                {
+                    Game = game,
+                    Name = game.Name,
+                    GameId = game.GameId,
+                    Description = game.Description,
+                    Developer = game.Developer,
+                    Pictures = game.Pictures.ToList(),
+                    ReleaseDate = game.ReleaseDate,
+                    RetailPrice = game.RetailPrice,
+                    Genres = new List<Genre>(),
+                    Platforms = new List<Platform>(),
+                    Languages = new List<Language>()
+                };
 
-            return View("Game", gameDetailsViewModel);
+                if (game.Genres != null)
+                {
+                    foreach (var genre in game.Genres)
+                    {
+                        if (genre.Genre != null)
+                        {
+                            gameDetailsViewModel.Genres.Add(genre.Genre);
+                        }
+                    }
+                    foreach (var platform in game.Platforms)
+                    {
+                        if (platform.Platform != null)
+                        {
+                            gameDetailsViewModel.Platforms.Add(platform.Platform);
+                        }
+                    }
+                    foreach (var language in game.Languages)
+                    {
+                        if (language.Language != null)
+                        {
+                            gameDetailsViewModel.Languages.Add(language.Language);
+                        }
+                    }
+                }
+                if (_signInManager.IsSignedIn(User))
+                {
+                    User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                    if (user != null)
+                    {
+                        List<WishedGame>? wishes = _gameStoreManager.GetWishedGamesById(user.Id);
+                        if (wishes != null)
+                        {
+                            gameDetailsViewModel.Wishlist = wishes;
+                        }
+                    }
+                }
+
+                return View("Game", gameDetailsViewModel);
+            }
+            else
+            {
+                ViewBag.errorMessage = "Game not found.";
+            }
+            return View("Error", "Account");
+        }
+
+        [HttpPost("games/{id}/add-to-wishlist")]
+        public JsonResult AddToWishlist(int id)
+        {
+            bool loggedIn = false;
+            bool added = false;
+
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                if (user != null)
+                {
+                    loggedIn = true;
+                    Game game = _gameStoreManager.GetGameById(id);
+                    if (game != null)
+                    {
+                        user.WishedGames = _gameStoreManager.GetWishedGamesById(user.Id);
+                        bool alreadyWished = false;
+                        if (user.WishedGames != null && user.WishedGames.Count > 0)
+                        {
+                            foreach (var wishedGame in user.WishedGames)
+                            {
+                                if (wishedGame.GameId == id)
+                                {
+                                    _gameStoreManager.DeleteWishedGame(wishedGame);
+                                    alreadyWished = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!alreadyWished)
+                        {
+                            WishedGame wish = new WishedGame()
+                            {
+                                GameId = game.GameId,
+                                UserId = user.Id,
+                            };
+
+                            _gameStoreManager.CreateWishedGame(wish);
+                        }
+                        added = true;
+                    }
+                }
+            }
+            return Json(new { loggedIn = loggedIn, added = added, id = id });
         }
 
         // GET: /images/{id}
@@ -461,7 +575,7 @@ namespace VirtualGameStore.Controllers
             return RedirectToAction("Error", "Home");
         }
 
-        [HttpPost("/account/upload-game-cover")]
+        [HttpPost("/games/upload-game-cover")]
         public JsonResult UploadPhoto(EditGameViewModel editGameViewModel)
         {
             Game? game = _gameStoreManager.GetGameById(editGameViewModel.GameId);

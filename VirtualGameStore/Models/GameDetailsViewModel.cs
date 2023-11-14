@@ -5,17 +5,17 @@ namespace VirtualGameStore.Models
     public class GameDetailsViewModel
     {
         // Properties:
-
-        public Game game { get; set; }
+        public Game Game { get; set; }
         public int GameId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? Developer { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public double? RetailPrice { get; set; }
-        public ICollection<Picture>? PictureUrl { get; set; }
-        public string? Genres { get; set; }
-        public string? Languages { get; set; }
-        public string? Platforms { get; set; }
+        public List<Picture>? Pictures { get; set; }
+        public List<Genre>? Genres { get; set; }
+        public List<Language>? Languages { get; set; }
+        public List<Platform>? Platforms { get; set; }
+        public List<WishedGame>? Wishlist { get; set; }
     }
 }

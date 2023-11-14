@@ -450,19 +450,28 @@ namespace VirtualGameStore.Controllers
         }
 
         [HttpGet("/wished-games/{id}/unwish")]
-        public IActionResult RemoveFromWishlist(int id)
+        public async Task<IActionResult> RemoveFromWishlist(int id)
         {
-            WishedGame? wish = _gameStoreManager.GetWishedGame(id);
-            if (wish != null)
+            if (_signInManager.IsSignedIn(User))
             {
-                _gameStoreManager.DeleteWishedGame(wish);
-                return RedirectToAction("ViewProfile", new { username = wish.User.UserName });
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user != null)
+                {
+                    WishedGame? wish = _gameStoreManager.GetWishedGame(id);
+                    if (wish != null)
+                    {
+                        _gameStoreManager.DeleteWishedGame(wish);
+                        return RedirectToAction("ViewProfile", new { username = wish.User.UserName });
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Wishlisted item not found.";
+                    }
+                    return View("Error");
+                }
             }
-            else
-            {
-                ViewBag.errorMessage = "Wishlisted item not found.";
-            }
-            return View("Error");
+            
+            return RedirectToAction("LogIn", "Account");
         }
 
         [HttpGet("account/friend-requests/new-request/{id}")]

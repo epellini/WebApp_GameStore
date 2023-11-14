@@ -63,7 +63,7 @@
                                 <div class="col-2 p-0">
                                     <div class="row justify-content-end p-0 m-0">
                                         <span role="button" class="col-auto p-0 pe-1" id="" onclick="">
-                                            <svg class="svg-icon svg-icon-snow" id="" fill="" width="16" height="16" viewBox="0 0 16 16"> <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" /></svg>
+                                            <svg class="svg-icon svg-icon-snow" id="" fill="" width="18" height="18" viewBox="0 0 16 16"> <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.178.178 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.178.178 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.178.178 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.178.178 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.178.178 0 0 0 .134-.098L7.84 4.1z"/><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/></svg>
                                         </span>
                                     </div>
 
@@ -100,3 +100,32 @@
         });
     });
 });
+
+function addGameToWishlist(id) {
+    //console.log("Game: " + id + " is being wishlisted.");
+
+    url = `/games/${id}/add-to-wishlist`;
+    $.ajax({
+        type: "Post",
+        url: url,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: true,
+        success: function (result) {
+            //console.log(result);
+            if (result.added) {
+                if ($("#WishlistBtn").hasClass('btn-frost-outline')) {
+                    $("#WishlistBtn").text('Remove from Wishlist');
+                    $("#WishlistBtn").removeClass('btn-frost-outline');
+                    $("#WishlistBtn").addClass('btn-aurora-red-outline');
+                }
+                else if ($("#WishlistBtn").hasClass('btn-aurora-red-outline')) {
+                    $("#WishlistBtn").text('Add to Wishlist');
+                    $("#WishlistBtn").removeClass('btn-aurora-red-outline');
+                    $("#WishlistBtn").addClass('btn-frost-outline');
+                }
+                $(`.WishlistIcon-${id}`).toggleClass('d-none');
+            }
+        }
+    });
+}
