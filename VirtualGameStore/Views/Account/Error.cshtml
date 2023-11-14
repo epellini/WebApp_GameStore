@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="row justify-content-center" style="margin-top: 10%;">
+    <div class="col-md-6">
+        <div class="card shadow bg-night text-snow-bright m-2">
+            <div class="card-header bg-shade text-uppercase fw-bold text-center text-snow-bright">Error</div>
+            <div class="card-body">
+                @if (String.IsNullOrEmpty(ViewBag.errorMessage))
+                {
+                    <p class="text-aurora-red">Unfortunately, we were not able to process your request.</p>
+                }
+                else
+                {
+                    <p class="text-aurora-red">@ViewBag.errorMessage</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

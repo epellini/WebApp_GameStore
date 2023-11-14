@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Success";
+}
+<div class="row justify-content-center" style="margin-top: 10%;">
+    <div class="col-md-6">
+        <div class="card shadow bg-night text-snow-bright m-2">
+            <div class="card-header bg-shade text-uppercase fw-bold text-center">Success</div>
+            <div class="card-body text-center">
+                <!-- Displaying the checkmark icon -->
+                <img src="~/images/checked.png" alt="Success Icon" class="mb-3" style="width: 100px; height: 100px;">
+
+                <p>Thank you for confirming your registration! You can now <a asp-action="Login" asp-controller="Account" class="link-frost-primary fw-bold">log in</a> to your account.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,189 @@
+﻿@model PreferencesViewModel
+@{
+    ViewData["Title"] = "My Preferences";
+}
+
+<!--My Preferences Card-->
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8 col-12">
+        <div class="card shadow bg-night text-snow-bright my-4">
+            <div class="row text-start p-2 m-0 bg-shade">
+                <h4 class="card-title text-uppercase fw-bold">My Preferences</h4>
+            </div>
+            <div class="card-body bg-night">
+                <form asp-action="SavePreferences" asp-controller="Account" method="post">
+                    <div class="form-group">
+                        <div class="row justify-content-start">
+                            <!--Favourite Platform-->
+                            <div class="mb-4">
+                                <label class="fw-bold text-uppercase text-snow-deep">Favourite Platforms</label>
+                                <div class="p-1 my-2 col-auto selected-list">
+                                    <div class="row p-0 m-0">
+                                        @if (Model.FavPlatforms.Count == 0)
+                                        {
+                                            <div class="col-auto p-0 m-0">
+                                                <p class="ms-2 mb-0">None...</p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var platform in Model.FavPlatforms)
+                                            {
+                                                <div class="col-auto p-0 m-0">
+
+
+                                                    <a role="button" onclick="" class="nav-link platform-link pref-link p-1 px-4 my-2 m-1 text-uppercase fw-bold">
+                                                        @platform.Platform.PlatformName
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-caret-right-fill mb-1 d-none" viewBox="0 0 16 16">
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                        </svg>
+                                                    </a>
+
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <a role="button" class="link-frost text-uppercase fw-bold col-auto ms-2" onclick="togglePlatforms()" id="TogglePlatformsBtn">
+                                    Add More
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill mb-1" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                    </svg>
+                                </a>
+                                <div class="bg-night-deep rounded rounded-3 p-1 mt-2 col-auto d-none unselected-list" id="AllPlatformsList">
+                                    <div class="row p-0 m-0">
+                                        @foreach (var platform in Model.AllPlatforms)
+                                        {
+                                            @if (Model.FavPlatforms.Where(f => f.Platform == platform).FirstOrDefault() == null)
+                                            {
+                                                <div class="col-auto p-0 m-0">
+                                                    <a role="button" onclick="" class="nav-link platform-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">@platform.PlatformName</a>
+                                                </div>
+                                            }
+                                            
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Favourite Genre -->
+                            <div class="mb-4">
+                                <label class="fw-bold text-uppercase text-snow-deep">Favourite Genres</label>
+                                <div class="p-1 my-2 col-auto selected-list">
+                                    <div class="row p-0 m-0">
+                                        @if (Model.FavGenres.Count == 0)
+                                        {
+                                            <div class="col-auto p-0 m-0">
+                                                <p class="ms-2 mb-0">None...</p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var genre in Model.FavGenres)
+                                            {
+                                                <div class="col-auto p-0 m-0">
+
+                                                    <a role="button" onclick="" class="nav-link genre-link pref-link p-1 px-4 my-2 m-1 text-uppercase fw-bold">
+                                                        @genre.Genre.GenreName
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-caret-right-fill mb-1 d-none" viewBox="0 0 16 16">
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                        </svg>
+                                                    </a>
+
+                                                </div>
+                                            }
+                                        }
+                                        
+                                    </div>
+                                </div>
+                                <a role="button" class="link-frost text-uppercase fw-bold col-auto ms-2" onclick="toggleGenres()" id="ToggleGenresBtn">
+                                    Add More
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill mb-1" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                    </svg>
+                                </a>
+                                <div class="bg-night-deep rounded rounded-3 p-1 my-2 col-auto d-none unselected-list" id="AllGenresList">
+                                    <div class="row p-0 m-0">
+                                        @foreach (var genre in Model.AllGenres)
+                                        {
+                                            @if (Model.FavGenres.Where(f => f.Genre == genre).FirstOrDefault() == null)
+                                            {
+                                                <div class="col-auto p-0 m-0">
+                                                    <a role="button" onclick="" class="nav-link genre-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">@genre.GenreName</a>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Preferred Language -->
+                            <div class="mb-4">
+                                <label class="fw-bold text-uppercase text-snow-deep">Preferred Languages</label>
+                                <div class="p-1 my-2 col-auto selected-list">
+                                    <div class="row p-0 m-0">
+                                        @if (Model.PrefLanguages.Count == 0)
+                                        {
+                                            <div class="col-auto p-0 m-0">
+                                                <p class="ms-2 mb-0">None...</p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var lang in Model.PrefLanguages)
+                                            {
+                                                <div class="col-auto p-0 m-0">
+                                                    <a role="button" onclick="" class="nav-link language-link pref-link p-1 px-4 my-2 m-1 text-uppercase fw-bold">
+                                                        @lang.Language.LanguageName
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-caret-right-fill mb-1 d-none" viewBox="0 0 16 16">
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                        </svg>
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <a role="button" class="link-frost text-uppercase fw-bold col-auto ms-2" onclick="toggleLanguages()" id="ToggleLanguagesBtn">
+                                    Add More
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill mb-1" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                    </svg>
+                                </a>
+                                <div class="bg-night-deep rounded rounded-3 p-1 my-2 col-auto d-none unselected-list" id="AllLanguagesList">
+                                    <div class="row p-0 m-0">
+                                        @foreach (var language in Model.AllLanguages)
+                                        {
+                                            @if (Model.PrefLanguages.Where(p => p.Language == language).FirstOrDefault() == null)
+                                            {
+                                                <div class="col-auto p-0 m-0">
+                                                    <a role="button" onclick="" class="nav-link language-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">@language.LanguageName</a>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row justify-content-end">
+                            <a class="btn btn-aurora-red-outline text-uppercase fw-bold col-3 p-2 mx-3" asp-action="ViewProfile" asp-controller="Account" asp-route-username="@Model.Username">Back</a>
+                            <button type="submit" class="btn btn-frost-primary col-3 p-2 mx-3 text-uppercase d-none">Save</button>
+                        </div>
+
+                        <input type="hidden" value="@Model.UserId" asp-for="UserId" id="UserId" />
+                        <input type="hidden" value="@Model.Username" asp-for="Username" id="ProfileId" />
+
+                        <input type="hidden" value="@Model.Platforms" asp-for="Platforms" id="Platforms" />
+                        <input type="hidden" value="@Model.Genres" asp-for="Genres" id="Genres" />
+                        <input type="hidden" value="@Model.Languages" asp-for="Languages" id="Languages" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/preferences.js" asp-append-version="true"></script>

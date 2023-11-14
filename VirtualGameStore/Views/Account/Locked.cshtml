@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Locked";
+}
+<div class="row justify-content-center" style="margin-top: 10%;">
+    <div class="col-md-6">
+        <div class="card shadow bg-night text-snow-bright m-2">
+            <div class="card-header bg-shade text-uppercase fw-bold text-center">Account Locked</div>
+            <div class="card-body text-center">
+                <p>Your account has been locked due to multiple incorrect password attempts.</p>
+                <p>A verification email has been sent to your registered email address. Please check your email and follow the instructions to unlock your account.</p>
+                <a asp-action="Login" asp-controller="Account" class="btn btn-frost-primary col-12 p-2 text-uppercase">Return to Login</a>
+            </div>
+        </div>
+    </div>
+</div>

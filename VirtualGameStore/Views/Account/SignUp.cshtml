@@ -1,0 +1,67 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+<div class="row justify-content-center" style="margin-top: 10%;">
+    <div class="col-md-6">
+        <div class="card shadow bg-night text-snow-bright m-2">
+            <div class="card-header bg-shade text-uppercase fw-bold text-center">Sign Up</div>
+            <div class="card-body">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.Error
+                    </div>
+                }
+                <div asp-validation-summary="ModelOnly" class="text-aurora-red"></div>
+
+                <form asp-action="Register" asp-controller="Account" method="post">
+                    <div class="form-group mb-3">
+                        <label for="email">Email</label>
+                        <input asp-for="Email" type="text" class="form-control" id="email" />
+                        <div class="row">
+                            <span asp-validation-for="Email" class="text-aurora-red"></span>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="username">Username</label>
+                        <input asp-for="Username" type="text" class="form-control" id="username"/>
+                        <div class="row">
+                            <span asp-validation-for="Username" class="text-aurora-red"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="password">Password</label>
+                        <input type="password" asp-for="Password" class="form-control" id="password"/>
+                        <div class="row">
+                            <span asp-validation-for="Password" class="text-aurora-red"></span>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="confirmPassword">Confrim Password</label>
+                        <input type="password" asp-for="ConfirmPassword" class="form-control" id="confirmPassword"/>
+                        <div class="row">
+                            <span asp-validation-for="ConfirmPassword" class="text-aurora-red"></span>
+                        </div>
+                    </div>
+                    <div class="form-input my-4">
+                        <button type="submit" class="btn btn-frost-primary col-12 p-2 text-uppercase">
+                            Sign Up
+                        </button>
+                    </div>
+                    <div class="mt-2">
+                        Already registered? <a asp-action="Login" asp-controller="Account" class="link-frost-primary fw-bold">Log in now</a>.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

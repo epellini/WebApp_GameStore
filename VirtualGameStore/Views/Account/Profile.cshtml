@@ -1,0 +1,540 @@
+﻿@model ProfileViewModel
+@{
+    if (Model.IsOwner)
+    {
+        ViewData["Title"] = "My Profile";
+    }
+    else
+    {
+        ViewData["Title"] = Model.User.UserName;
+    }
+}
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0" nonce="THjKKVnI"></script>
+<div class="row justify-content-start text-snow-bright">
+    <div class="col-12 py-3">
+        <!--User Profile Card-->
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card shadow bg-night text-snow-bright mb-4">
+                    <div class="card-header bg-shade border-bottom-0">
+                        <div class="row m-0">
+
+                            <!--Profile picture-->
+                            <div class="col-lg-2 col-3">
+                                <div class="row m-0 p-0 rounded ratio ratio-1x1">
+                                    @{
+                                        Photo? photo = null;
+                                    }
+                                    @if (Model.Profile.Photos != null)
+                                    {
+                                        photo = Model.Profile.Photos.Where(p => p.isProfilePic == true).FirstOrDefault();
+                                    }
+                                    @if (photo != null)
+                                    {
+                                        <img src="/images/user-uploaded/@photo.PhotoId" class="profile-pic p-0" alt="@photo.AltText" style="object-fit: cover">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/blank-profile.png" class="p-0 profile-pic" alt="@Model.User.UserName profile picture" style="object-fit: cover">
+                                    }
+                                    
+                                </div>
+                            </div>
+
+                            <div class="col align-self-end">
+                                <div class="row m-0 mt-2">
+
+                                    <!--Username-->
+                                    <h1 class="fw-bold ps-1 col-auto">
+                                        @Model.User.UserName
+                                    </h1>
+
+                                    <!--Display user options button if profile belongs to user-->
+                                    @if (Model.IsOwner)
+                                    {
+                                        <div class="col-auto p-0">
+                                            <svg role="button" data-bs-toggle="dropdown" aria-expanded="false" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill svg-icon-snow" viewBox="0 0 16 16">
+                                                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+                                            </svg>
+                                            <ul id="userOptionList" class="dropdown-menu col-auto bg-night-deep">
+                                                <li>
+                                                    <a class="dropdown-item nav-link-snow text-uppercase fw-bold" asp-action="ViewPreferences" asp-controller="Account">Preferences</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item nav-link-snow text-uppercase fw-bold" asp-action="ViewAddresses" asp-controller="Account">Addresses</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    }
+
+                                    <!--Display user first and last name if data is found-->
+                                    @if (Model.Profile != null)
+                                    {
+                                        @if (!string.IsNullOrEmpty(Model.Profile.FirstName) && !string.IsNullOrEmpty(Model.Profile.LastName))
+                                        {
+                                            <h6 class="text-snow-deep m-0 my-1 ps-1">@Model.Profile.FirstName @Model.Profile.LastName</h6>
+                                        }
+                                    }
+                                </div>
+
+                                <!--Display a button if user is logged in-->
+                                @if (Model.IsSignedIn)
+                                {
+                                    <div class="row justify-content-end mt-4">
+                                        <div class="col-md-8 col-lg-6 col-xl-4 col-12">
+
+                                            <!--If profile belongs to user: Edit profile button-->
+                                            @if (Model.IsOwner)
+                                            {
+                                                <a asp-action="EditProfile" asp-controller="Account" class="btn btn-frost-primary p-2 text-uppercase col-12">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2E3440" class="bi bi-pencil-fill me-1 mb-1" viewBox="0 0 16 16">
+                                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                    </svg>
+                                                    Edit Profile
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <!--If friend connection exists: -->
+                                                @if (Model.ExistingFriend != null)
+                                                {
+                                                    <!--If friend request sent: display cancel button-->
+                                                    @if (Model.ExistingFriend.Status == "Requested")
+                                                    {
+                                                        <a asp-action="CancelFriendRequest" asp-controller="Account" asp-route-id="@Model.ExistingFriend.FriendConnectId" class="btn btn-aurora-red-outline p-2 text-uppercase col-12">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill mb-1 me-1" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                            Cancel Friend Request
+                                                        </a>
+                                                    }
+                                                    else if (Model.ExistingFriend.Status == "Pending")
+                                                    {
+                                                        <div class="row m-0">
+                                                            <div class="col-6 m-0 px-1">
+                                                                <a asp-action="CancelFriendRequest" asp-controller="Account" asp-route-id="@Model.ExistingFriend.FriendConnectId" class="btn btn-aurora-red-outline p-2 m-0 text-uppercase col-12">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill mb-1 me-1" viewBox="0 0 16 16">
+                                                                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z" />
+                                                                    </svg>
+                                                                    Deny Friend Request
+                                                                </a>
+                                                            </div>
+                                                            <div class="col-6 m-0 px-1">
+                                                                <a asp-action="ConfirmFriendRequest" asp-controller="Account" asp-route-id="@Model.ExistingFriend.FriendConnectId" class="btn btn-frost-primary p-2 text-uppercase m-0 col-12">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill mb-1 me-1" viewBox="0 0 16 16">
+                                                                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                                                        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
+                                                                    </svg>
+                                                                    Accept Friend Request
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-action="CancelFriendRequest" asp-controller="Account" asp-route-id="@Model.ExistingFriend.FriendConnectId" class="btn btn-aurora-red-outline p-2 text-uppercase col-12">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill mb-1 me-1" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                            Remove Friend
+                                                        </a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <!--Otherwise: Add friend button-->
+                                                    <a asp-action="SendFriendRequest" asp-controller="Account" asp-route-id="@Model.User.Id" class="btn btn-frost-primary p-2 text-uppercase col-12">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill mb-1 me-1" viewBox="0 0 16 16">
+                                                            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                                            <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
+                                                        </svg>
+                                                        Add Friend
+                                                    </a>
+                                                }
+                                                
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body bg-night">
+                        @if (Model.Profile != null)
+                        {
+                            <div class="row">
+                                <div class="col-md-10 col-lg-8 col-xl-6 col-12">
+                                    <div class="row m-0 justify-content-start">
+                                        @if (Model.Profile.JoinDate != null)
+                                        {
+                                            <div class="col-4">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-auto">
+                                                        <div class="row">
+                                                            <p class="fw-bold fs-5 text-uppercase m-0 col-auto">Joined</p>
+                                                        </div>
+                                                        <div class="row">
+                                                            <p class="text-snow-deep col-auto m-0">@Model.Profile.JoinDate?.ToString("yyyy")</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.Profile.BirthDate != null)
+                                        {
+                                            <div class="col-4">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-auto">
+                                                        <div class="row">
+                                                            <p class="fw-bold fs-5 text-uppercase m-0 col-auto">Birth Date</p>
+                                                        </div>
+                                                        <div class="row">
+                                                            <p class="text-snow-deep col-auto m-0">@Model.Profile.BirthDate?.ToString("MMMM dd, yyyy")</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.Profile.Gender != null && Model.Profile.Gender != "Prefer Not To Say")
+                                        {
+                                            <div class="col-4">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-auto">
+                                                        <div class="row">
+                                                            <p class="fw-bold fs-5 text-uppercase m-0 col-auto">Gender</p>
+                                                        </div>
+                                                        <div class="row">
+                                                            <p class="text-snow-deep col-auto m-0">@Model.Profile.Gender</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <!--Friend List-->
+            <div class="col-lg-4 col-12">
+                <div class="card shadow bg-night text-snow-bright mb-4">
+                    
+                    @if ((Model.Friends.Where(f => f.Status == "Requested").Count() == 0 && Model.Friends.Where(f => f.Status == "Pending").Count() == 0) || !Model.IsOwner)
+                    {
+                        <div class="row text-start p-2 m-0 bg-shade">
+                            <h5 class="p-1 m-0 card-title text-uppercase fw-bold">Friends</h5>
+                            @{
+                                int numOfFriends = 0;
+                                if (Model.Friends != null)
+                                {
+                                    numOfFriends = Model.Friends.Where(f => f.Status == "Confirmed").Count();
+                                }
+                            }
+                        
+                            @if (numOfFriends == 1)
+                            {
+                                <p class="small text-snow-deep col-auto m-0 px-1">@numOfFriends friend</p>
+                            }
+                            else
+                            {
+                                <p class="small text-snow-deep col-auto m-0 px-1">@numOfFriends friends</p>
+                            }
+                        </div>
+                    }
+                    <div class="card-body text-start m-0 p-0">
+                        @if (Model.Friends == null || Model.Friends.Count == 0)
+                        {
+                            <p class="m-3 col text-uppercase fw-bold text-snow-deep">None...</p>
+                        }
+                        else
+                        {
+                            <ul class="list-group list-group-flush">
+                                @if (Model.IsOwner)
+                                {
+                                    @foreach (var friend in Model.Friends.Where(f => f.Status == "Requested"))
+                                    {
+                                        <li class="bg-shade text-snow-deep list-group-item d-flex p-2">
+                                            <div class="col-12">
+                                                <div class="row m-0 p-0">
+                                                    <h5 class="p-1 m-0 text-uppercase fw-bold">Friend Requests</h5>
+                                                </div>
+                                                <div class="row m-0 p-0">
+                                                    @{
+                                                        int numOfRequests = 0;
+                                                        if (Model.Friends != null)
+                                                        {
+                                                            numOfRequests = Model.Friends.Where(f => f.Status == "Requested").Count();
+                                                        }
+                                                    }
+                                                    <p class="small text-snow-deep m-0 px-1">@numOfRequests requested</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="bg-night text-snow-deep list-group-item d-flex p-2">
+                                            <a asp-action="ViewProfile" asp-controller="Account" asp-route-username="@friend.Friend.UserName" class="m-0 p-0 fw-bold col nav-link-snow text-decoration-none">
+                                                <div class="row align-items-center">
+                                                    @{
+                                                        Photo? pfp = null;
+                                                    }
+                                                    @if (friend.Friend.Profile.Photos != null)
+                                                    {
+                                                        pfp = friend.Friend.Profile.Photos.Where(p => p.isProfilePic == true).FirstOrDefault();
+                                                    }
+                                                    @if (pfp != null)
+                                                    {
+                                                        <img src="/images/user-uploaded/@pfp.PhotoId" class="profile-pic p-1 ms-3 col-1 col-lg-2" alt="@pfp.AltText" style="object-fit: cover">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/images/blank-profile.png" class="profile-pic p-1 ms-3 col-1 col-lg-2" alt="@Model.User.UserName profile picture" style="object-fit: cover">
+                                                    }
+                                                    <p class="m-2 p-0 fw-bold col">@friend.Friend.UserName</p>
+                                                </div>
+                                            </a>
+                                            <a role="button" asp-action="RemoveFriendRequest" asp-controller="Account" asp-route-id="@friend.FriendConnectId" class="col-auto align-self-center m-2 btn-icon-aurora-red">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                                                </svg>
+                                            </a>
+                                            <a role="button" asp-action="AcceptFriendRequest" asp-controller="Account" asp-route-id="@friend.FriendConnectId" class="col-auto align-self-center m-2 btn-icon-frost-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                </svg>
+                                            </a>
+                                        </li>
+                                    }
+                                    @foreach (var friend in Model.Friends.Where(f => f.Status == "Pending"))
+                                    {
+                                        <li class="bg-shade text-snow-deep list-group-item d-flex p-2">
+                                            <div class="col-12">
+                                                <div class="row m-0 p-0">
+                                                    <h5 class="p-1 m-0 text-uppercase fw-bold">Pending Friend Requests</h5>
+                                                </div>
+                                                <div class="row m-0 p-0">
+                                                    @{
+                                                        int numOfPending = 0;
+                                                        if (Model.Friends != null)
+                                                        {
+                                                            numOfPending = Model.Friends.Where(f => f.Status == "Pending").Count();
+                                                        }
+                                                    }
+                                                    <p class="small text-snow-deep m-0 px-1">@numOfPending pending</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="bg-night text-snow-deep list-group-item d-flex p-2">
+                                            <a asp-action="ViewProfile" asp-controller="Account" asp-route-username="@friend.Friend.UserName" class="m-0 p-0 fw-bold col nav-link-snow text-decoration-none">
+                                                <div class="row align-items-center">
+                                                    @{
+                                                        Photo? pfp = null;
+                                                    }
+                                                    @if (friend.Friend.Profile.Photos != null)
+                                                    {
+                                                        pfp = friend.Friend.Profile.Photos.Where(p => p.isProfilePic == true).FirstOrDefault();
+                                                    }
+                                                    @if (pfp != null)
+                                                    {
+                                                        <img src="/images/user-uploaded/@pfp.PhotoId" class="profile-pic p-1 ms-3 col-1 col-lg-2" alt="@pfp.AltText" style="object-fit: cover">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/images/blank-profile.png" class="profile-pic p-1 ms-3 col-1 col-lg-2" alt="@Model.User.UserName profile picture" style="object-fit: cover">
+                                                    }
+                                                    <p class="m-2 p-0 fw-bold col">@friend.Friend.UserName</p>
+                                                </div>
+                                            </a>
+                                            <a role="button" asp-action="RemoveFriendRequest" asp-controller="Account" asp-route-id="@friend.FriendConnectId" class="col-auto align-self-center m-2 btn-icon-aurora-red">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                                                </svg>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (Model.Friends.Where(f => f.Status == "Requested").Count() != 0 || Model.Friends.Where(f => f.Status == "Pending").Count() != 0)
+                                    {
+                                        <li class="bg-shade text-snow-deep list-group-item d-flex p-2">
+                                            <div class="col-12">
+                                                <div class="row m-0 p-0">
+                                                    <h5 class="p-1 m-0 card-title text-uppercase fw-bold">Friends</h5>
+                                                </div>
+                                                <div class="row m-0 p-0">
+                                                    @{
+                                                        int numOfFriends = 0;
+                                                        if (Model.Friends != null)
+                                                        {
+                                                            numOfFriends = Model.Friends.Where(f => f.Status == "Confirmed").Count();
+                                                        }
+                                                    }
+
+                                                    @if (numOfFriends == 1)
+                                                    {
+                                                        <p class="small text-snow-deep col-auto m-0 px-1">@numOfFriends friend</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="small text-snow-deep col-auto m-0 px-1">@numOfFriends friends</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                @foreach (var friend in Model.Friends.Where(f => f.Status == "Confirmed"))
+                                {
+                                    <li class="bg-night text-snow-deep list-group-item d-flex p-2">
+                                        <a asp-action="ViewProfile" asp-controller="Account" asp-route-username="@friend.Friend.UserName" class="m-0 p-0 fw-bold nav-link-snow text-decoration-none">
+                                            <div class="row align-items-center">
+                                                @{
+                                                    Photo? pfp = null;
+                                                }
+                                                @if (friend.Friend.Profile.Photos != null)
+                                                {
+                                                    pfp = friend.Friend.Profile.Photos.Where(p => p.isProfilePic == true).FirstOrDefault();
+                                                }
+                                                @if (pfp != null)
+                                                {
+                                                    <img src="/images/user-uploaded/@pfp.PhotoId" class="profile-pic p-1 ms-3 col-1 col-lg-2" alt="@pfp.AltText" style="object-fit: cover">
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/blank-profile.png" class="profile-pic p-1 ms-3 col-1 col-lg-2" alt="@Model.User.UserName profile picture" style="object-fit: cover">
+                                                }
+                                                <p class="m-2 p-0 fw-bold col">@friend.Friend.UserName</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                            if (Model.Friends.Where(f => f.Status == "Confirmed") == null || Model.Friends.Where(f => f.Status == "Confirmed").Count() == 0)
+                            {
+                                <p class="m-3 col text-uppercase fw-bold text-snow-deep">None...</p>
+                            }
+                        }
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-12">
+                <div class="row text-center justify-content-between m-0 mb-4">
+                    <div class="col p-0 m-0">
+                        @if (ViewBag.Section == "Library")
+                        {
+
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold">Library</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Library</a>
+                        }
+                    </div>
+                    <div class="col p-0">
+                        @if (ViewBag.Section == "Favourites")
+                        {
+
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold">Favourites</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Favourites</a>
+                        }
+                    </div>
+                    <div class="col p-0">
+                        @if (ViewBag.Section == "Wishlist")
+                        {
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold">Wishlist</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Wishlist</a>
+                        }
+                    </div>
+                    <div class="col p-0">
+                        @if (ViewBag.Section == "Reviews")
+                        {
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold">Reviews</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Reviews</a>
+                        }
+                    </div>
+                </div>
+                @if (Model.IsOwner)
+                {
+                    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+                    var qsPath = ViewContext.HttpContext.Request.QueryString.Value;
+                    var returnUrl = $"{routeUrl}{qsPath}";
+                    var shareUrl = $"https://www.facebook.com/sharer/sharer.php?u={returnUrl}&amp;src=sdkpreparse";
+
+                    <!-- FB share does not allow local host - The following can be used in actual deployment: -->
+
+                    @* <div class="fb-share-button mb-3" data-href=@returnUrl data-layout="button" data-size="large"><a target="_blank" href=@shareUrl class="fb-xfbml-parse-ignore">Share</a></div> *@
+
+                    <!-- Dummy link to share for testing purposes when in local development environment - Delete when deployed: -->
+                    <div class="fb-share-button mb-3" data-href="https://www.conestogac.on.ca/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.conestogac.on.ca%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                }
+
+                <!-- Wishlist card: -->
+                <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0" id="wishlistCard">
+                    <div class="card-body m-0 p-0">
+                        @if (Model.WishedGames == null || Model.WishedGames.Count == 0)
+                        {
+                            <p class="m-3 col text-uppercase fw-bold text-snow-deep">Empty...</p>
+                        }
+                        else
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var wish in Model.WishedGames)
+                                {
+                                    <li class="bg-night text-snow-deep list-group-item d-flex p-2">
+                                        <a asp-controller="Games" asp-action="GetGameById" asp-route-id="@wish.GameId" class="m-0 p-0 col fw-bold nav-link-snow text-decoration-none">
+                                            <div class="row align-items-center">
+                                                <div class="col-4 col-lg-3">
+                                                    <div class="row ratio ratio-21x9 m-0">
+                                                        @{
+                                                            Picture? picture = null;
+                                                        }
+                                                        @if (wish.Game.Pictures != null)
+                                                        {
+                                                            picture = wish.Game.Pictures.Where(p => p.IsCoverArt == true).FirstOrDefault();
+                                                        }
+                                                        @if (picture != null)
+                                                        {
+                                                            <img src="/images/@picture.PictureId" class="rounded-2 p-0" alt="@picture.AltText" style="object-fit: cover">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/images/no-image.png" class="rounded-2 p-0" alt="@wish.Game.Name cover image" style="object-fit: cover">
+                                                        }
+                                                    </div>
+
+                                                </div>
+                                                <div class="col">
+                                                    <h5 class="mb-0 col text-uppercase fw-bold text-snow-bright">@wish.Game.Name</h5>
+                                                    <p class="small mb-0 col text-uppercase fw-bold text-snow-deep">@wish.Game.Developer</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        @if (Model.IsOwner)
+                                        {
+                                            <a role="button" asp-action="RemoveFromWishlist" asp-controller="Account" asp-route-id="@wish.WishedGameId" class="col-auto align-self-center m-2 btn-icon-aurora-red">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                                                </svg>
+                                            </a>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

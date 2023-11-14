@@ -1,0 +1,47 @@
+﻿@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Log In";
+}
+
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+<div class="row justify-content-center" style="margin-top: 10%;">
+    <div class="col-md-6">
+        <div class="card shadow bg-night text-snow-bright m-2">
+            <div class="card-header bg-shade text-uppercase fw-bold text-center">Login</div>
+            <div class="card-body">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.Error
+                    </div>
+                }
+                <div asp-validation-summary="ModelOnly" class="text-aurora-red"></div>
+
+                <form asp-action="Login" asp-controller="Account" method="post">
+                    <div class="form-group mb-3">
+                        <label for="UserName">Username</label>
+                        <input type="text" class="form-control" id="UserName" name="userName" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="Password">Password</label>
+                        <input type="password" class="form-control" id="Password" name="password" required>
+                    </div>
+                    <div class="mt-2 mb-3">
+                        <a asp-action="ForgotPassword" asp-controller="Account" class="link-frost-primary fw-bold">Forgot Password?</a>
+                    </div>
+                    <div class="form-input my-4">
+                        <button type="submit" class="btn btn-frost-primary col-12 p-2 text-uppercase">Login</button>
+                    </div>
+                    <div class="mt-2">
+                        Not registered? <a asp-action="Register" asp-controller="Account" class="link-frost-primary fw-bold">Sign up now</a>.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

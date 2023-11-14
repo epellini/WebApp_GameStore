@@ -1,18 +1,514 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+.profile-pic {
+    border-radius: 50%;
+}
+
+fw-bold {
+    letter-spacing: 0.1em;
+}
+
+
+/*Nord Theme Colors*/
+/*Polar Night from darkest to lightest*/
+.bg-night-deep {
+    background-color: #242933;
+}
+
+.text-night-deep {
+    color: #242933;
+}
+
+.bg-night {
+    background-color: #2E3440;
+}
+
+.text-night {
+    color: #2E3440;
+}
+
+.bg-night-bright {
+    background-color: #3B4252;
+}
+
+.text-night-bright {
+    color: #3B4252;
+}
+
+.bg-shade {
+    background-color: #434c5e;
+}
+
+.text-shade {
+    color: #434c5e;
+}
+
+.bg-shade-bright {
+    background-color: #4c566a;
+}
+
+.text-shade-bright {
+    color: #4c566a;
+}
+
+.btn-shade {
+    color: #d8dee9;
+    background-color: #4c566a;
+    border-color: #4c566a;
+}
+
+    .btn-shade:hover {
+        color: #d8dee9;
+        background-color: #434c5e;
+        border-color: #434c5e;
+    }
+
+
+/*Snow Storm from darkest to lightest*/
+.bg-snow-deep {
+    background-color: #d8dee9;
+}
+
+.text-snow-deep {
+    color: #d8dee9;
+}
+
+.bg-snow {
+    background-color: #e5e9f0;
+}
+
+.text-snow {
+    color: #e5e9f0;
+}
+
+.bg-snow-bright {
+    background-color: #eceff4;
+}
+
+.text-snow-bright {
+    color: #eceff4;
+}
+
+.nav-link-snow {
+    color: #d8dee9;
+    border-radius: .5rem;
+}
+
+.sort-link-snow {
+    color: #4c566a;
+    border-radius: .5rem;
+}
+
+.nav-link-snow:hover {
+    color: #eceff4;
+    background-color: #3B4252;
+    border-radius: .5rem;
+}
+
+.sort-link-snow:hover {
+    color: #d8dee9;
+    background-color: #2E3440;
+    border-radius: .5rem;
+}
+
+.nav-link-snow:focus {
+    color: #2E3440;
+    background-color: #8fbcbb;
+}
+
+.sort-link-snow:focus {
+    color: #88c0d0;
+}
+
+.nav-link-snow-active {
+    color: #2E3440;
+    background-color: #8fbcbb;
+}
+
+.sort-link-snow-active {
+    color: #eceff4;
+    background-color: #5e81ac;
+    border-radius: .5rem;
+}
+
+.nav-link-snow-active:hover {
+    color: #eceff4;
+    background-color: #8fbcbb;
+    border-radius: .5rem;
+}
+
+.sort-link-snow-active:hover {
+    color: #eceff4;
+    background-color: #81a1c1;
+    border-radius: .5rem;
+}
+
+.nav-link-snow:focus:hover {
+    color: #eceff4;
+}
+
+.navbar-brand-snow {
+    color: #d8dee9;
+}
+
+    .navbar-brand-snow:hover {
+        color: #eceff4;
+    }
+
+.searchBar {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-radius: 2rem;
+    border: none;
+}
+
+    .searchBar:focus {
+        color: #242933;
+        background-color: #d8dee9;
+        border-radius: 2rem;
+        border: none;
+    }
+
+    .searchBar::placeholder {
+        color: #4c566a;
+    }
+
+/*Frost from greenest to bluest*/
+.bg-frost-accent {
+    background-color: #8fbcbb;
+}
+
+.text-frost-accent {
+    color: #8fbcbb;
+}
+
+.btn-frost-accent {
+    color: #2E3440;
+    background-color: #8fbcbb;
+    border-color: #8fbcbb;
+}
+
+    .btn-frost-accent:hover {
+        color: #2E3440;
+        background-color: #688988;
+        border-color: #688988;
+    }
+
+.btn-frost-accent-outline {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-color: #eceff4;
+}
+
+    .btn-frost-accent-outline:hover {
+        color: #8fbcbb;
+        background-color: #2E3440;
+        border-color: #8fbcbb;
+    }
+
+.bg-frost-primary {
+    background-color: #88c0d0;
+}
+
+.text-frost-primary {
+    color: #88c0d0;
+}
+
+.link-frost-primary {
+    color: #88c0d0;
+    text-decoration: none;
+}
+
+    .link-frost-primary:hover {
+        color: #5a8996;
+        text-decoration: none;
+    }
+
+.btn-frost-primary {
+    color: #2E3440;
+    background-color: #88c0d0;
+    border-color: #88c0d0;
+}
+
+    .btn-frost-primary:hover {
+        color: #2E3440;
+        background-color: #5a8996;
+        border-color: #5a8996;
+    }
+
+.btn-frost-primary-outline {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-color: #eceff4;
+}
+
+    .btn-frost-primary-outline:hover {
+        color: #88c0d0;
+        background-color: #2E3440;
+        border-color: #88c0d0;
+    }
+
+.link-frost {
+    color: #81a1c1;
+    text-decoration: none;
+}
+
+    .link-frost:hover {
+        color: #5e81ac;
+        text-decoration: none;
+    }
+
+.bg-frost {
+    background-color: #81a1c1;
+}
+
+.text-frost {
+    color: #81a1c1;
+}
+
+.bg-frost-deep {
+    background-color: #5e81ac;
+}
+
+.text-frost-deep {
+    color: #5e81ac;
+}
+
+.btn-frost {
+    color: #2E3440;
+    background-color: #81a1c1;
+    border-color: #81a1c1;
+}
+
+    .btn-frost:hover {
+        color: #2E3440;
+        background-color: #5e81ac;
+        border-color: #5e81ac;
+    }
+
+.svg-icon-frost path {
+    fill: #81a1c1;
+    stroke: #81a1c1;
+    stroke-width: 2%;
+}
+
+.svg-icon-frost:hover > path {
+    fill: #5e81ac;
+    stroke: #5e81ac;
+}
+
+.btn-frost-outline {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-color: #eceff4;
+}
+
+    .btn-frost-outline:hover {
+        color: #81a1c1;
+        background-color: #2E3440;
+        border-color: #81a1c1;
+    }
+
+.pref-link {
+    color: #eceff4;
+    background-color: #5e81ac;
+    border-radius: .5rem;
+}
+
+.pref-link-new {
+    color: #eceff4;
+    background-color: #b48ead;
+    border-radius: .5rem;
+}
+
+.pref-link:hover {
+    color: #bf616a;
+    background-color: #3B4252;
+    border-radius: .5rem;
+}
+
+.pref-link-new:hover {
+    color: #bf616a;
+    background-color: #3B4252;
+    border-radius: .5rem;
+}
+
+/*Aurora from warmest to coolest*/
+.bg-aurora-red {
+    background-color: #bf616a;
+}
+
+.text-aurora-red {
+    color: #bf616a;
+}
+
+.btn-aurora-red-outline {
+    color: #eceff4;
+    background-color: #2E3440;
+    border-color: #eceff4;
+}
+
+    .btn-aurora-red-outline:hover {
+        color: #bf616a;
+        background-color: #2E3440;
+        border-color: #bf616a;
+    }
+
+.btn-aurora-red {
+    color: #2E3440;
+    background-color: #bf616a;
+    border-color: #bf616a;
+}
+
+.btn-aurora-red:hover {
+    color: #2E3440;
+    background-color: #bf616a;
+    border-color: #bf616a;
+}
+
+.bg-aurora-orange {
+    background-color: #d08770;
+}
+
+.text-aurora-orange {
+    color: #d08770;
+}
+
+
+.btn-aurora-orange {
+    color: #2E3440;
+    background-color: #d08770;
+    border-color: #d08770;
+}
+.btn-aurora-orange:hover {
+    color: #2E3440;
+    background-color: #d08770;
+    border-color: #d08770;
+}
+
+
+.bg-aurora-yellow {
+    background-color: #ebcb8b;
+}
+
+.text-aurora-yellow {
+    color: #ebcb8b;
+}
+
+
+.btn-aurora-yellow {
+    color: #2E3440;
+    background-color: #ebcb8b;
+    border-color: #ebcb8b;
+}
+.btn-aurora-yellow:hover {
+    color: #2E3440;
+    background-color: #b79e6c;
+    border-color: #b79e6c;
+}
+
+
+.bg-aurora-green {
+    background-color: #a3be8c;
+}
+
+.text-aurora-green {
+    color: #a3be8c;
+}
+
+
+.btn-aurora-green {
+    color: #2E3440;
+    background-color: #a3be8c;
+    border-color: #a3be8c;
+}
+.btn-aurora-green:hover {
+    color: #2E3440;
+    background-color: #778b66;
+    border-color: #778b66;
+}
+
+
+.bg-aurora-purple {
+    background-color: #b48ead;
+}
+
+.text-aurora-purple {
+    color: #b48ead;
+}
+
+.btn-aurora-purple {
+    color: #2E3440;
+    background-color: #b48ead;
+    border-color: #b48ead;
+}
+.btn-aurora-purple:hover {
+    color: #2E3440;
+    background-color: #81657b;
+    border-color: #81657b;
+}
+
+.svg-icon-snow path {
+    fill: #d8dee9;
+    stroke: #d8dee9;
+    stroke-width: 2%;
+}
+
+.svg-icon-snow:hover > path {
+    fill: #eceff4;
+    stroke: #eceff4;
+}
+
+.svg-icon-shade path {
+    fill: #4c566a;
+    stroke: #4c566a;
+    stroke-width: 2%;
+}
+
+.svg-icon-shade:hover > path {
+    fill: #434c5e;
+    stroke: #434c5e;
+}
+
+.btn-icon-aurora-red svg path {
+    fill: #bf616a;
+    stroke: #bf616a;
+    stroke-width: 1%;
+}
+
+.btn-icon-aurora-red:hover > svg > path {
+    fill: #8c474d;
+    stroke: #8c474d;
+}
+
+.btn-icon-frost-primary svg path {
+    fill: #88c0d0;
+    stroke: #88c0d0;
+    stroke-width: 1%;
+}
+
+.btn-icon-frost-primary:hover > svg > path {
+    fill: #5a8996;
+    stroke: #5a8996;
+}
+
+.btn {
+    font-weight: bold;
 }

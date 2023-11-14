@@ -1,0 +1,22 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Verify";
+}
+<div class="row justify-content-center" style="margin-top: 10%;">
+    <div class="col-md-6">
+        <div class="card shadow bg-night text-snow-bright m-2">
+            <div class="card-header bg-shade text-uppercase fw-bold text-center">Check Your Email!</div>
+            <div class="card-body text-center">
+                <div class="row">
+                    <p class="m-0">We've sent an email to</p>
+                    <p><b>@Model</b></p>
+                </div>
+                <div class="row">
+                    <p>If you have not received the verification email, make sure the email address above is correct and check your junk or spam folder.</p>
+                </div>
+
+                <p>Still not seeing it? <a asp-action="SendVerification" asp-controller="Account" asp-route-email="@Model.ToString()" class="link-frost-primary fw-bold">Resend Verification</a></p>
+            </div>
+        </div>
+    </div>
+</div>
