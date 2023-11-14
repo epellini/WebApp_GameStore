@@ -209,7 +209,7 @@ namespace VirtualGameStore.Services
         // Read all wished games:
         public List<WishedGame>? GetWishedGamesById(string id)
         {
-            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.UserId == id).ToList();
+            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).ThenInclude(g => g.Pictures).Where(wg => wg.UserId == id).ToList();
         }
         // Delete wished game:
         public void DeleteWishedGame(WishedGame wishedGame)

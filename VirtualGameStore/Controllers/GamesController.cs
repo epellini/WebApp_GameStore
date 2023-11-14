@@ -206,7 +206,8 @@ namespace VirtualGameStore.Controllers
                 GamePlatforms = game.Platforms.ToList(),
                 Platforms = platformNames,
                 Genres = genresNames,
-                Languages = languageNames
+                Languages = languageNames,
+                CurrentPicture = game.Pictures.Where(p => p.IsCoverArt == true).FirstOrDefault()
             };
             return View("EditGame", editGameViewModel);
         }

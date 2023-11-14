@@ -116,7 +116,21 @@
                                         <div class="row align-items-center">
                                             <div class="col-4 col-lg-3 m-0 p-0">
                                                 <div class="row ratio ratio-21x9 m-0">
-                                                    <img src="~/images/no-image.png" class="rounded-1 p-0" alt="game cover image" style="object-fit: cover">
+                                                    @{
+                                                        Picture? picture = null;
+                                                    }
+                                                    @if (game.Pictures != null)
+                                                    {
+                                                        picture = game.Pictures.Where(p => p.IsCoverArt == true).FirstOrDefault();
+                                                    }
+                                                    @if (picture != null)
+                                                    {
+                                                        <img src="/images/@picture.PictureId" class="rounded p-0" alt="@picture.AltText" style="object-fit: cover">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/images/no-image.png" class="rounded p-0" alt="@game.Name cover image" style="object-fit: cover">
+                                                    }
                                                 </div>
                                             </div>
                                             <div class="col">
