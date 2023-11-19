@@ -89,6 +89,16 @@
                             <a class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-controller="Admin" asp-action="ViewAdminPanel">Reviews</a>
                         }
                     </div>
+                    <div class="col-2 p-0">
+                        @if (ViewBag.View == "Orders")
+                        {
+                            <a class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-controller="Admin" asp-action="ViewAdminPanel">Orders</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold" asp-controller="Admin" asp-action="ViewAdminPanel">Orders</a>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

@@ -45,5 +45,7 @@ namespace VirtualGameStore.Entities
 
         public bool IsDefault { get; set; } = false;
 
+        public ICollection<Order>? Orders { get; set; }
+
     }
 }

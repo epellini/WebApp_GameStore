@@ -18,5 +18,7 @@
         public ICollection<GamePlatform>? Platforms { get; set; }
         public ICollection<Picture>? Pictures { get; set; }
         public ICollection<WishedGame>? WishedGames { get; set; }
+        public ICollection<Rating>? Ratings { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
     }
 }

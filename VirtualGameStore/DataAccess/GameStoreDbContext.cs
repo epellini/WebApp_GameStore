@@ -82,6 +82,16 @@ namespace VirtualGameStore.DataAccess
         public DbSet<Photo>? Photos { get; set; }
         public DbSet<WishedGame> WishedGames { get; set; }
         public DbSet<FriendConnect> FriendConnects { get; set; }
+        public DbSet<Event>? Events { get; set; }
+        public DbSet<EventRegistration>? EventRegistrations { get; set; }
+        public DbSet<Rating>? Ratings { get; set; }
+        public DbSet<Review>? Reviews { get; set; }
+        public DbSet<Order>? Orders { get; set; }
+        public DbSet<OrderItem>? OrderItems { get; set; }
+        public DbSet<Cart>? Carts { get; set; }
+        public DbSet<CartItem>? CartItems { get; set; }
+        public DbSet<Province>? Provinces { get; set; }
+        public DbSet<Country>? Country { get; set; }
 
 
         // Override base class method OnModelCreating to establish DB relationships
@@ -130,7 +140,6 @@ namespace VirtualGameStore.DataAccess
                 .WithMany(uii => uii.Connects)
                 .HasForeignKey(fc => fc.FriendId)
                 .OnDelete(DeleteBehavior.NoAction);
-
 
             // Establish FavouritePlatform relationships:
             // Each FavouritePlatform has 1 user - Each user could have many FavouritePlatforms - FavouritePlatform has FK to user:
@@ -222,6 +231,75 @@ namespace VirtualGameStore.DataAccess
                 .HasOne(p => p.Profile)
                 .WithMany(pr => pr.Photos)
                 .HasForeignKey(p => p.ProfileId);
+
+            // Establish Cart relationships:
+            // Each Cart has 1 user - Each user could have only one Cart - Cart has FK to user:
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.User)
+                .WithOne(u => u.Cart)
+                .HasForeignKey<Cart>(c => c.UserId);
+
+            // Establish CartItem relationships:
+            // Each CartItem has 1 cart - Each cart could have many CartItems - CartItem has FK to cart:
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.Items)
+                .HasForeignKey(ci => ci.CartId);
+
+            // Establish Order relationships:
+            // Each Order has 1 user - Each user could have many Orders - Order has FK to user:
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId);
+            // Each Order has 1 shipping address - Each shipping address could have many Orders - Order has FK to shipping address:
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.ShippingAddress)
+                .WithMany(sa => sa.Orders)
+                .HasForeignKey(o => o.ShippingAddressId);
+
+            // Establish OrderItem relationships:
+            // Each OrderItem has 1 order - Each order could have many OrderItems - OrderItem has FK to order:
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Order)
+                .WithMany(o => o.Items)
+                .HasForeignKey(oi => oi.OrderId);
+
+            // Establish Review relationships:
+            // Each Review has 1 game - Each game could have many Reviews - Review has FK to game:
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Game)
+                .WithMany(g => g.Reviews)
+                .HasForeignKey(r => r.GameId);
+            // Each Review has 1 user - Each user could have many Reviews - Review has FK to user:
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.UserId);
+
+            // Establish Rating relationships:
+            // Each Rating has 1 game - Each game could have many Ratings - Rating has FK to game:
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.Game)
+                .WithMany(g => g.Ratings)
+                .HasForeignKey(r => r.GameId);
+            // Each Rating has 1 user - Each user could have many Ratings - Rating has FK to user:
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Ratings)
+                .HasForeignKey(r => r.UserId);
+
+            // Establish EventRegistration relationships:
+            // Each EventRegistration has 1 event - Each event could have many EventRegistrations - EventRegistration has FK to event:
+            modelBuilder.Entity<EventRegistration>()
+                .HasOne(er => er.Event)
+                .WithMany(e => e.EventRegistrations)
+                .HasForeignKey(er => er.EventId);
+            // Each EventRegistration has 1 user - Each user could have many EventRegistrations - EventRegistration has FK to user:
+            modelBuilder.Entity<EventRegistration>()
+                .HasOne(er => er.User)
+                .WithMany(u => u.EventRegistrations)
+                .HasForeignKey(er => er.UserId);
 
             // Seed the Platforms table:
             modelBuilder.Entity<Platform>().HasData(
@@ -542,6 +620,82 @@ namespace VirtualGameStore.DataAccess
                     GameLanguageId = 8,
                     GameId = 4,
                     LanguageId = "en"
+                });
+
+            // Seed the Countries table:
+            modelBuilder.Entity<Country>().HasData(
+                new Country
+                {
+                    CountryId = "CA",
+                    Name = "Canada"
+                });
+
+            // Seed the Provinces table:
+            modelBuilder.Entity<Province>().HasData(
+                new Province
+                {
+                    ProvinceId = "AB",
+                    Name = "Alberta"
+                },
+                new Province
+                {
+                    ProvinceId = "BC",
+                    Name = "British Columbia"
+                },
+                new Province
+                {
+                    ProvinceId = "MB",
+                    Name = "Manitoba"
+                },
+                new Province
+                {
+                    ProvinceId = "NB",
+                    Name = "New Brunswick"
+                },
+                new Province
+                {
+                    ProvinceId = "NL",
+                    Name = "Newfoundland and Labrador"
+                },
+                new Province
+                {
+                    ProvinceId = "NT",
+                    Name = "Northwest Territories"
+                },
+                new Province
+                {
+                    ProvinceId = "NS",
+                    Name = "Nova Scotia"
+                },
+                new Province
+                {
+                    ProvinceId = "NU",
+                    Name = "Nunavut"
+                },
+                new Province
+                {
+                    ProvinceId = "ON",
+                    Name = "Ontario"
+                },
+                new Province
+                {
+                    ProvinceId = "PE",
+                    Name = "Prince Edward Island"
+                },
+                new Province
+                {
+                    ProvinceId = "QC",
+                    Name = "Quebec"
+                },
+                new Province
+                {
+                    ProvinceId = "SK",
+                    Name = "Saskatchewan"
+                },
+                new Province
+                {
+                    ProvinceId = "YT",
+                    Name = "Yukon"
                 });
         }
     }
