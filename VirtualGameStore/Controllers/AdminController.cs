@@ -19,7 +19,7 @@ namespace VirtualGameStore.Controllers
 
         // GET /admin
         [HttpGet("/admin")]
-        public IActionResult ViewAdminPanel()
+        public IActionResult ViewAdminPanel(string tab)
         {
             // Check if user has admin role:
             User user = _userManager.GetUserAsync(User).Result;
@@ -28,10 +28,15 @@ namespace VirtualGameStore.Controllers
                 List<string> roles = (List<string>) _userManager.GetRolesAsync(user).Result;
                 if (roles.Contains("Admin"))
                 {
-                    ViewBag.View = "Games";
+                    if (string.IsNullOrEmpty(tab))
+                    {
+                        tab = "Games";
+                    }
+                    ViewBag.View = tab;
                     AdminPanelViewModel adminPanelViewModel = new AdminPanelViewModel()
                     {
-                        AllGames = _gameStoreManager.GetAllGames("Alphabetical")
+                        AllGames = _gameStoreManager.GetAllGames("Alphabetical"),
+                        AllEvents = _gameStoreManager.GetAllEvents()
                     };
                     return View("Panel", adminPanelViewModel);
                 }

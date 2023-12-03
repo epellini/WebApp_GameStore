@@ -469,6 +469,73 @@ namespace VirtualGameStore.Services
         }
 
 
+        // CRUD operations for Event entity:
+        // Create Event:
+        public void CreateEvent(Event eventEntity)
+        {
+            _gameStoreDbContext.Events.Add(eventEntity);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read Event:
+        public Event? GetEventById(int id)
+        {
+            return _gameStoreDbContext.Events.Include(e => e.EventRegistrations).ThenInclude(er => er.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Where(e => e.EventId == id).FirstOrDefault();
+        }
+        // Read all Events:
+        public List<Event>? GetAllEvents()
+        {
+            return _gameStoreDbContext.Events.Include(e => e.EventRegistrations).ThenInclude(er => er.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).ToList();
+        }
+        // Update Event:
+        public void UpdateEvent(Event eventEntity)
+        {
+            _gameStoreDbContext.Events.Update(eventEntity);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete Event:
+        public void DeleteEvent(Event eventEntity)
+        {
+            _gameStoreDbContext.Events.Remove(eventEntity);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+        // CRUD operations for EventRegistration entity:
+        // Create EventRegistration:
+        public void CreateEventRegistration(EventRegistration eventRegistration)
+        {
+            _gameStoreDbContext.EventRegistrations.Add(eventRegistration);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read EventRegistration:
+        public EventRegistration? GetEventRegistrationById(string id)
+        {
+            return _gameStoreDbContext.EventRegistrations.Include(er => er.Event).Include(er => er.User).Where(er => er.UserId == id).FirstOrDefault();
+        }
+        // Read all EventRegistrations:
+        public List<EventRegistration>? GetAllEventRegistrations()
+        {
+            return _gameStoreDbContext.EventRegistrations.Include(er => er.Event).Include(er => er.User).ToList();
+        }
+        public List<EventRegistration>? GetAllEventRegistrationsByUserId(string id)
+        {
+            return _gameStoreDbContext.EventRegistrations.Include(er => er.Event).Include(er => er.User).Where(er => er.UserId == id).ToList();
+        }
+        // Update EventRegistration:
+        public void UpdateEventRegistration(EventRegistration eventRegistration)
+        {
+            _gameStoreDbContext.EventRegistrations.Update(eventRegistration);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete EventRegistration:
+        public void DeleteEventRegistration(EventRegistration eventRegistration)
+        {
+            _gameStoreDbContext.EventRegistrations.Remove(eventRegistration);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+
         // private DbContext field
         private GameStoreDbContext _gameStoreDbContext;
     }

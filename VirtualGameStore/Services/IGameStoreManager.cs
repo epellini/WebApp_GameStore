@@ -156,6 +156,33 @@ namespace VirtualGameStore.Services
         public Photo? GetPhotoById(int photoId);
 
 
+        // CRUD operations for Event entity:
+        // Create Event:
+        public void CreateEvent(Event eventEntity);
+        // Read Event:
+        public Event? GetEventById(int id);
+        // Read all Events:
+        public List<Event>? GetAllEvents();
+        // Update Event:
+        public void UpdateEvent(Event eventEntity);
+        // Delete Event:
+        public void DeleteEvent(Event eventEntity);
+
+
+        // CRUD operations for EventRegistration entity:
+        // Create EventRegistration:
+        public void CreateEventRegistration(EventRegistration eventRegistration);
+        // Read EventRegistration:
+        public EventRegistration? GetEventRegistrationById(string id);
+        // Read all EventRegistrations:
+        public List<EventRegistration>? GetAllEventRegistrations();
+        public List<EventRegistration>? GetAllEventRegistrationsByUserId(string id);
+        // Update EventRegistration:
+        public void UpdateEventRegistration(EventRegistration eventRegistration);
+        // Delete EventRegistration:
+        public void DeleteEventRegistration(EventRegistration eventRegistration);
+
+
         public byte[] ConvertImageToBytes(IFormFile image);
 
     }
