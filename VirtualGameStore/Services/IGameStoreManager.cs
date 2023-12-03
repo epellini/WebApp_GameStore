@@ -57,6 +57,11 @@ namespace VirtualGameStore.Services
         // Delete wished game:
         public void DeleteWishedGame(WishedGame wishedGame);
 
+        public Cart? GetCartById(string id);
+        public void AddItemToCart(CartItem cartItem);
+        public void RemoveItemFromCart(CartItem cartItem);
+        public void CreateCart(Cart cart);
+
 
         // CRUD operations for FriendConnect entity:
         // Create friend connect:
@@ -126,6 +131,8 @@ namespace VirtualGameStore.Services
         public void CreatePhoto(IFormFile image, Photo photo);
         // Read Photo:
         public Photo? GetPhotoById(int photoId);
+
+
 
 
         public byte[] ConvertImageToBytes(IFormFile image);

@@ -229,7 +229,7 @@ namespace VirtualGameStore.Services
         // Read friendConnect:
         public FriendConnect? GetFriendConnect(int id)
         {
-            return _gameStoreDbContext.FriendConnects.Include(fc => fc.User).Include(fc => fc.Friend).ThenInclude(f => f.Profile).ThenInclude(p => p .Photos).Where(fc => fc.FriendConnectId == id).FirstOrDefault();
+            return _gameStoreDbContext.FriendConnects.Include(fc => fc.User).Include(fc => fc.Friend).ThenInclude(f => f.Profile).ThenInclude(p => p.Photos).Where(fc => fc.FriendConnectId == id).FirstOrDefault();
         }
         // Read all friendConnects:
         public List<FriendConnect>? GetFriendConnectsById(string id)
@@ -269,7 +269,6 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
-
         // CRUD operations for Shipping address entity:
         // Create Shipping address:
         public void CreateShippingAddress(ShippingAddress shippingAddress)
@@ -300,7 +299,7 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
-        
+
         // Read all Platforms:
         public List<Platform>? GetAllPlatforms()
         {
@@ -398,6 +397,30 @@ namespace VirtualGameStore.Services
             return imageBytes;
         }
 
+        public Cart GetCartById(string id)
+        {
+            return _gameStoreDbContext.Carts
+                .Include(sc => sc.Items)
+                .Where(sc => sc.UserId == id)
+                .FirstOrDefault();
+        }
+
+        public void AddItemToCart(CartItem cartItem)
+        {
+            _gameStoreDbContext.CartItems.Add(cartItem);
+            _gameStoreDbContext.SaveChanges();
+        }
+        public void RemoveItemFromCart(CartItem cartItem)
+        {
+            _gameStoreDbContext.CartItems.Remove(cartItem);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+        public void CreateCart(Cart cart)
+        {
+            _gameStoreDbContext.Carts.Add(cart);
+            _gameStoreDbContext.SaveChanges();
+        }
 
         // private DbContext field
         private GameStoreDbContext _gameStoreDbContext;
