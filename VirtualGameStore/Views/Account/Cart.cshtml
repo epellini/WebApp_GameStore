@@ -15,8 +15,8 @@
             <td>@item.Quantity</td>
             <td>@item.Game.RetailPrice</td>
             <td>
-                @Html.ActionLink("Update", "UpdateCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name, quantity = item.Quantity }, null)
-                @Html.ActionLink("Remove", "RemoveFromCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name }, null)
+                @* @Html.ActionLink("Update", "UpdateCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name, quantity = item.Quantity }, null)
+                @Html.ActionLink("Remove", "RemoveFromCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name }, null) *@
             </td>
         </tr>
     }
