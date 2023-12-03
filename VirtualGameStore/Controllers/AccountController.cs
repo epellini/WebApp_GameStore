@@ -1186,32 +1186,29 @@ namespace VirtualGameStore.Controllers
             }
         }
 
-        [HttpGet("")]
+        [HttpGet("/account/cart")]
         public IActionResult ViewCart(string userId)
         {
             Cart? cart = _gameStoreManager.GetCartById(userId);
             if (cart != null)
             {
-                Cart cartItems = _gameStoreManager.GetCartById(cart.UserId);
-                if (cartItems != null)
+                List<Game> games = new List<Game>();
+                foreach (var item in cart.Items)
                 {
-                    List<Game> games = new List<Game>();
-                    foreach (var item in cartItems.Items)
+                    Game? game = _gameStoreManager.GetGameById(item.GameId);
+                    if (game != null)
                     {
-                        Game? game = _gameStoreManager.GetGameById(item.GameId);
-                        if (game != null)
-                        {
-                            games.Add(game);
-                        }
+                        games.Add(game);
                     }
-                    CartViewModel cartViewModel = new CartViewModel()
-                    {
-                        ShoppingCart = cart,
-                        shoppingCartGames = games,
-                        UserId = userId
-                    };
-                    return View("Cart", cartViewModel);
                 }
+                CartViewModel cartViewModel = new CartViewModel()
+                {
+                    ShoppingCart = cart,
+                    shoppingCartGames = games,
+                    UserId = userId
+                };
+                return View("Cart", cartViewModel);
+
             }
             return View("Cart", new CartViewModel());
         }

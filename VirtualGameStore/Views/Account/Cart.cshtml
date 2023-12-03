@@ -8,21 +8,31 @@
         <th>Total</th>
         <th>Actions</th>
     </tr>
-    @foreach (var item in Model.ShoppingCart.Items)
+    @if (Model == null)
     {
         <tr>
-            <td>@item.Game.Name</td>
-            <td>@item.Quantity</td>
-            <td>@item.Game.RetailPrice</td>
-            <td>
-                @* @Html.ActionLink("Update", "UpdateCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name, quantity = item.Quantity }, null)
-                @Html.ActionLink("Remove", "RemoveFromCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name }, null) *@
-            </td>
+            <td colspan="5">Your cart is empty</td>
         </tr>
     }
-    <tr>
-        <td colspan="3"></td>
-        <td>Total: </td>
-        <td></td>
-    </tr>
+    else
+    {
+        foreach (var item in Model.ShoppingCart.Items)
+        {
+            <tr>
+                <td>@item.Game.Name</td>
+                <td>@item.Game.RetailPrice</td>
+                @* <td>@(item.Game.RetailPrice * item.Quantity)</td> *@
+                <td>
+                    @* @Html.ActionLink("Update", "UpdateCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name, quantity = item.Quantity }, null)
+                    @Html.ActionLink("Remove", "RemoveFromCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name }, null)
+                </td> *@
+            </tr>
+        }
+        <tr>
+            <td colspan="3"></td>
+            <td>Total: </td>
+            <td>@Model.ShoppingCart</td>
+        </tr>
+    })
+  
 </table>
