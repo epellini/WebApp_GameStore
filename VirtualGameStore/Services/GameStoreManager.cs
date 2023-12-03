@@ -211,10 +211,80 @@ namespace VirtualGameStore.Services
         {
             return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.UserId == id).ToList();
         }
+        public List<WishedGame>? GetWishedGamesByGameId(int id)
+        {
+            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.GameId == id).ToList();
+        }
         // Delete wished game:
         public void DeleteWishedGame(WishedGame wishedGame)
         {
             _gameStoreDbContext.WishedGames.Remove(wishedGame);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+        // CRUD operations for Order entity:
+        // Create order:
+        public void CreateOrder(Order order)
+        {
+            _gameStoreDbContext.Orders.Add(order);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read order:
+        public Order? GetOrder(int id)
+        {
+            return _gameStoreDbContext.Orders.Include(o => o.ShippingAddress).Include(o => o.Items).Where(o => o.OrderId == id).FirstOrDefault();
+        }
+        // Read all orders:
+        public List<Order>? GetOrdersById(string id)
+        {
+            return _gameStoreDbContext.Orders.Include(o => o.ShippingAddress).Include(o => o.Items).ToList();
+        }
+        // Update order:
+        public void UpdateOrder(Order order)
+        {
+            _gameStoreDbContext.Orders.Update(order);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete order:
+        public void DeleteOrder(Order order)
+        {
+            _gameStoreDbContext.Orders.Remove(order);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+        // CRUD operations for OrderItem entity:
+        // Create order item:
+        public void CreateOrderItem(OrderItem orderItem)
+        {
+            _gameStoreDbContext.OrderItems.Add(orderItem);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read order item:
+        public OrderItem? GetOrderItem(int id)
+        {
+            return _gameStoreDbContext.OrderItems.Include(oi => oi.Order).Include(oi => oi.Game).Where(oi => oi.OrderItemId == id).FirstOrDefault();
+        }
+        // Read all order items:
+        public List<OrderItem>? GetOrderItemsById(string id)
+        {
+            return _gameStoreDbContext.OrderItems.Include(oi => oi.Order).Include(oi => oi.Game).ToList();
+        }
+        public List<OrderItem>? GetOrderItemsByGameId(int id)
+        {
+            return _gameStoreDbContext.OrderItems.Include(oi => oi.Order).Include(oi => oi.Game).Where(oi => oi.GameId == id).ToList();
+        }
+        // Update order item:
+        public void UpdateOrderItem(OrderItem orderItem)
+        {
+            _gameStoreDbContext.OrderItems.Update(orderItem);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete order item:
+        public void DeleteOrderItem(OrderItem orderItem)
+        {
+            _gameStoreDbContext.OrderItems.Remove(orderItem);
             _gameStoreDbContext.SaveChanges();
         }
 

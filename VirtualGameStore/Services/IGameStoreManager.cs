@@ -54,8 +54,36 @@ namespace VirtualGameStore.Services
         public WishedGame? GetWishedGame(int id);
         // Read all wished games:
         public List<WishedGame>? GetWishedGamesById(string id);
+        public List<WishedGame>? GetWishedGamesByGameId(int id);
         // Delete wished game:
         public void DeleteWishedGame(WishedGame wishedGame);
+
+
+        // CRUD operations for Order entity:
+        // Create order:
+        public void CreateOrder(Order order);
+        // Read order:
+        public Order? GetOrder(int id);
+        // Read all orders:
+        public List<Order>? GetOrdersById(string id);
+        // Update order:
+        public void UpdateOrder(Order order);
+        // Delete order:
+        public void DeleteOrder(Order order);
+
+
+        // CRUD operations for OrderItem entity:
+        // Create order item:
+        public void CreateOrderItem(OrderItem orderItem);
+        // Read order item:
+        public OrderItem? GetOrderItem(int id);
+        // Read all order items:
+        public List<OrderItem>? GetOrderItemsById(string id);
+        public List<OrderItem>? GetOrderItemsByGameId(int id);
+        // Update order item:
+        public void UpdateOrderItem(OrderItem orderItem);
+        // Delete order item:
+        public void DeleteOrderItem(OrderItem orderItem);
 
 
         // CRUD operations for FriendConnect entity:

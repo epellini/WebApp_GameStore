@@ -1,0 +1,62 @@
+﻿@model List<User>
+@{
+    ViewData["Title"] = "Member Details Report";
+}
+@section scripts {
+    <script src="~/js/report.js"></script>
+}
+<div class="row justify-content-start text-snow-bright">
+    <div class="col-12 py-3">
+        <div class="row justify-content-start">
+            <div class="col-12">
+                <div class="card shadow bg-night text-snow-bright mb-4">
+                    <div class="card-header bg-shade border-bottom-0">
+                        <div class="row justify-content-between align-items-center m-0 py-2">
+                            <h5 class="card-title text-uppercase col-auto fw-bold mb-0">Member Details Report</h5>
+                            <button class="btn btn-frost-primary col-md-3 col-6" onclick="printDiv()">Print</button>
+                        </div>
+                    </div>
+                    <div class="card-body bg-night row m-0">
+                        <div id="printableTable">
+                            <table class="table text-snow">
+                                <thead>
+                                    <tr class="text-uppercase">
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Join Date</th>
+                                        <th scope="col">Gender</th>
+                                        <th scope="col">Birth Date</th>
+                                        <th scope="col"># of Friends</th>
+                                        <th scope="col"># in Wishlist</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (User user in Model)
+                                    {
+                                        <tr>
+                                            <td scope="col">@user.UserName</td>
+                                            <td>@user.Profile.FirstName @user.Profile.LastName</td>
+                                            <td>@user.Email</td>
+                                            <td>@user.Profile.JoinDate.Value.ToString("d")</td>
+                                            <td>@user.Profile.Gender</td>
+                                            <td>
+                                                @{
+                                                    string birthdate = user.Profile.BirthDate == null ? "" : user.Profile.BirthDate.Value.ToString("d");
+                                                }
+                                                @birthdate
+                                            </td>
+                                            <td>@user.Friends.Count()</td>
+                                            <td>@user.WishedGames.Count()</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
