@@ -17,5 +17,8 @@ namespace VirtualGameStore.Models
         public List<Language>? Languages { get; set; }
         public List<Platform>? Platforms { get; set; }
         public List<WishedGame>? Wishlist { get; set; }
+
+        public List<Review>? Reviews { get; set; }
+        public Review? NewReview { get; set; }
     }
 }

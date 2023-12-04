@@ -157,3 +157,7 @@ function registerForEvent(id) {
         }
     });
 }
+
+function openReview() {
+    $("#review-form").toggleClass('d-none');
+}
