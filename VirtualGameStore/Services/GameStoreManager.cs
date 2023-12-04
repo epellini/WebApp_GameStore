@@ -397,12 +397,9 @@ namespace VirtualGameStore.Services
             return imageBytes;
         }
 
-        public Cart GetCartById(string id)
+        public Cart? GetCartById(string id)
         {
-            return _gameStoreDbContext.Carts
-                .Include(sc => sc.Items)
-                .Where(sc => sc.UserId == id)
-                .FirstOrDefault();
+            return _gameStoreDbContext.Carts.Where(sc => sc.UserId == id).FirstOrDefault();
         }
 
         public void AddItemToCart(CartItem cartItem)

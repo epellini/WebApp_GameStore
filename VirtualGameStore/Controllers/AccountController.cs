@@ -1186,17 +1186,22 @@ namespace VirtualGameStore.Controllers
             }
         }
 
-        [HttpGet("")]
-        public IActionResult ViewCart(string userId)
+        [HttpGet("/cart")]
+        public async Task<IActionResult> ViewCart()
         {
-            Cart? cart = _gameStoreManager.GetCartById(userId);
-            if (cart != null)
+            if (_signInManager.IsSignedIn(User))
             {
-                Cart cartItems = _gameStoreManager.GetCartById(cart.UserId);
-                if (cartItems != null)
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                Cart? cart = _gameStoreManager.GetCartById(user.Id);
+                if (cart != null)
                 {
+                    //Cart cartItems = _gameStoreManager.GetCartById(cart.UserId);
+                    //if (cartItems != null)
+                    //{
+                        
+                    //}
                     List<Game> games = new List<Game>();
-                    foreach (var item in cartItems.Items)
+                    foreach (var item in cart.Items)
                     {
                         Game? game = _gameStoreManager.GetGameById(item.GameId);
                         if (game != null)
@@ -1208,12 +1213,23 @@ namespace VirtualGameStore.Controllers
                     {
                         ShoppingCart = cart,
                         shoppingCartGames = games,
-                        UserId = userId
+                        UserId = user.Id
                     };
                     return View("Cart", cartViewModel);
                 }
+                CartViewModel newCartViewModel = new CartViewModel()
+                {
+                    ShoppingCart = new Cart()
+                    {
+                        UserId = user.Id,
+                        Items = new List<CartItem>()
+                    },
+                    UserId = user.Id
+                };
+                return View("Cart", newCartViewModel);
             }
-            return View("Cart", new CartViewModel());
+            return RedirectToAction("ViewAllGames", "Games");
+
         }
 
         //[HttpPost("games/{gameId}/add-to-cart")]
