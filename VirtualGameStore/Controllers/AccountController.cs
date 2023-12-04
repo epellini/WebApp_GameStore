@@ -1227,8 +1227,7 @@ namespace VirtualGameStore.Controllers
             return RedirectToAction("ViewAllGames", "Games");
         }
 
-        //[HttpPost("games/{gameId}/add-to-cart")]
-
+        [HttpGet("games/{id}/add-to-cart")]
         public IActionResult AddGameToCart(int id)
         {
             if (_signInManager.IsSignedIn(User))
@@ -1265,7 +1264,7 @@ namespace VirtualGameStore.Controllers
             return RedirectToAction("ViewAllGames", "Games");
         }
 
-        //[HttpPost("games/{gameId}/remove-from-cart")]
+        [HttpGet("account/cart/item/{id}/remove")]
         public IActionResult RemoveGameFromCart(int id)
         {
             if (_signInManager.IsSignedIn(User))
@@ -1276,16 +1275,12 @@ namespace VirtualGameStore.Controllers
                     Cart? cart = _gameStoreManager.GetCartById(user.Id);
                     if (cart != null)
                     {
-                        CartItem cartItem = new CartItem()
-                        {
-                            CartId = cart.CartId,
-                            GameId = id
-                        };
+                        CartItem cartItem = _gameStoreManager.GetCartItemById(id);
                         _gameStoreManager.RemoveItemFromCart(cartItem);
                     }
                 }
             }
-            return RedirectToAction("ViewCart", "Games");
+            return RedirectToAction("ViewCart", "Account");
         }
 
         // private fields for services

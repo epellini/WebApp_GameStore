@@ -58,6 +58,7 @@ namespace VirtualGameStore.Services
         public void DeleteWishedGame(WishedGame wishedGame);
 
         public Cart? GetCartById(string id);
+        public CartItem? GetCartItemById(int id);
         public void AddItemToCart(CartItem cartItem);
         public void RemoveItemFromCart(CartItem cartItem);
         public void CreateCart(Cart cart);

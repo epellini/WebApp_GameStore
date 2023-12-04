@@ -1,13 +1,12 @@
 ﻿@model CartViewModel
 @{
     ViewData["Title"] = "Cart";
+    double? total = 0.0;
 }
 <table class="table text-snow">
     <tr>
         <th>Product</th>
-        <th>Quantity</th>
         <th>Price</th>
-        <th>Total</th>
         <th>Actions</th>
     </tr>
     @if (Model.shoppingCartGames.Count() == 0)
@@ -20,20 +19,19 @@
     {
         foreach (var item in Model.ShoppingCart.Items)
         {
+            total += item.Game.RetailPrice;
             <tr>
                 <td>@item.Game.Name</td>
                 <td>@item.Game.RetailPrice</td>
-                @* <td>@(item.Game.RetailPrice * item.Quantity)</td> *@
                 <td>
-                    @* @Html.ActionLink("Update", "UpdateCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name, quantity = item.Quantity }, null)
-                    @Html.ActionLink("Remove", "RemoveFromCart", "Cart", new { productId = item.GameId, userId = User.Identity.Name }, null)
-                </td> *@
+                    <a asp-action="RemoveGameFromCart" asp-controller="Account" asp-route-id="@item.CartItemId" class="link-danger text-uppercase fw-bold text-decoration-none">Remove</a>
+                </td>
             </tr>
         }
         <tr>
             <td colspan="3"></td>
-            <td>Total: </td>
-            <td>@Model.ShoppingCart</td>
+            <td>Total:</td>
+            <td>@total</td>
         </tr>
     }
   

@@ -399,7 +399,12 @@ namespace VirtualGameStore.Services
 
         public Cart? GetCartById(string id)
         {
-            return _gameStoreDbContext.Carts.Where(sc => sc.UserId == id).FirstOrDefault();
+            return _gameStoreDbContext.Carts.Where(sc => sc.UserId == id).Include(sc => sc.Items).FirstOrDefault();
+        }
+
+        public CartItem? GetCartItemById(int id)
+        {
+            return _gameStoreDbContext.CartItems.Where(ci => ci.CartItemId == id).FirstOrDefault();
         }
 
         public void AddItemToCart(CartItem cartItem)
