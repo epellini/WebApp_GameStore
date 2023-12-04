@@ -47,6 +47,16 @@
                             <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Games" asp-action="ViewAllGames">Games</a>
                         }
                     </li>
+                    <li class="nav-item">
+                        @if (ViewData["Title"] == "All Events")
+                        {
+                            <a class="nav-link nav-link-snow nav-link-snow-active p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Events" asp-action="ViewAllEvents">Events</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Events" asp-action="ViewAllEvents">Events</a>
+                        }
+                    </li>
                 </ul>
                 <ul class="navbar-nav justify-content-end flex-grow-1">
 

@@ -211,10 +211,80 @@ namespace VirtualGameStore.Services
         {
             return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.UserId == id).ToList();
         }
+        public List<WishedGame>? GetWishedGamesByGameId(int id)
+        {
+            return _gameStoreDbContext.WishedGames.Include(wg => wg.Game).Where(wg => wg.GameId == id).ToList();
+        }
         // Delete wished game:
         public void DeleteWishedGame(WishedGame wishedGame)
         {
             _gameStoreDbContext.WishedGames.Remove(wishedGame);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+        // CRUD operations for Order entity:
+        // Create order:
+        public void CreateOrder(Order order)
+        {
+            _gameStoreDbContext.Orders.Add(order);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read order:
+        public Order? GetOrder(int id)
+        {
+            return _gameStoreDbContext.Orders.Include(o => o.ShippingAddress).Include(o => o.Items).Where(o => o.OrderId == id).FirstOrDefault();
+        }
+        // Read all orders:
+        public List<Order>? GetOrdersById(string id)
+        {
+            return _gameStoreDbContext.Orders.Include(o => o.ShippingAddress).Include(o => o.Items).ToList();
+        }
+        // Update order:
+        public void UpdateOrder(Order order)
+        {
+            _gameStoreDbContext.Orders.Update(order);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete order:
+        public void DeleteOrder(Order order)
+        {
+            _gameStoreDbContext.Orders.Remove(order);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+        // CRUD operations for OrderItem entity:
+        // Create order item:
+        public void CreateOrderItem(OrderItem orderItem)
+        {
+            _gameStoreDbContext.OrderItems.Add(orderItem);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read order item:
+        public OrderItem? GetOrderItem(int id)
+        {
+            return _gameStoreDbContext.OrderItems.Include(oi => oi.Order).Include(oi => oi.Game).Where(oi => oi.OrderItemId == id).FirstOrDefault();
+        }
+        // Read all order items:
+        public List<OrderItem>? GetOrderItemsById(string id)
+        {
+            return _gameStoreDbContext.OrderItems.Include(oi => oi.Order).Include(oi => oi.Game).ToList();
+        }
+        public List<OrderItem>? GetOrderItemsByGameId(int id)
+        {
+            return _gameStoreDbContext.OrderItems.Include(oi => oi.Order).Include(oi => oi.Game).Where(oi => oi.GameId == id).ToList();
+        }
+        // Update order item:
+        public void UpdateOrderItem(OrderItem orderItem)
+        {
+            _gameStoreDbContext.OrderItems.Update(orderItem);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete order item:
+        public void DeleteOrderItem(OrderItem orderItem)
+        {
+            _gameStoreDbContext.OrderItems.Remove(orderItem);
             _gameStoreDbContext.SaveChanges();
         }
 
@@ -423,6 +493,73 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.Carts.Add(cart);
             _gameStoreDbContext.SaveChanges();
         }
+
+        // CRUD operations for Event entity:
+        // Create Event:
+        public void CreateEvent(Event eventEntity)
+        {
+            _gameStoreDbContext.Events.Add(eventEntity);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read Event:
+        public Event? GetEventById(int id)
+        {
+            return _gameStoreDbContext.Events.Include(e => e.EventRegistrations).ThenInclude(er => er.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Where(e => e.EventId == id).FirstOrDefault();
+        }
+        // Read all Events:
+        public List<Event>? GetAllEvents()
+        {
+            return _gameStoreDbContext.Events.Include(e => e.EventRegistrations).ThenInclude(er => er.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).ToList();
+        }
+        // Update Event:
+        public void UpdateEvent(Event eventEntity)
+        {
+            _gameStoreDbContext.Events.Update(eventEntity);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete Event:
+        public void DeleteEvent(Event eventEntity)
+        {
+            _gameStoreDbContext.Events.Remove(eventEntity);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+        // CRUD operations for EventRegistration entity:
+        // Create EventRegistration:
+        public void CreateEventRegistration(EventRegistration eventRegistration)
+        {
+            _gameStoreDbContext.EventRegistrations.Add(eventRegistration);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read EventRegistration:
+        public EventRegistration? GetEventRegistrationById(string id)
+        {
+            return _gameStoreDbContext.EventRegistrations.Include(er => er.Event).Include(er => er.User).Where(er => er.UserId == id).FirstOrDefault();
+        }
+        // Read all EventRegistrations:
+        public List<EventRegistration>? GetAllEventRegistrations()
+        {
+            return _gameStoreDbContext.EventRegistrations.Include(er => er.Event).Include(er => er.User).ToList();
+        }
+        public List<EventRegistration>? GetAllEventRegistrationsByUserId(string id)
+        {
+            return _gameStoreDbContext.EventRegistrations.Include(er => er.Event).Include(er => er.User).Where(er => er.UserId == id).ToList();
+        }
+        // Update EventRegistration:
+        public void UpdateEventRegistration(EventRegistration eventRegistration)
+        {
+            _gameStoreDbContext.EventRegistrations.Update(eventRegistration);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete EventRegistration:
+        public void DeleteEventRegistration(EventRegistration eventRegistration)
+        {
+            _gameStoreDbContext.EventRegistrations.Remove(eventRegistration);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
 
         // private DbContext field
         private GameStoreDbContext _gameStoreDbContext;

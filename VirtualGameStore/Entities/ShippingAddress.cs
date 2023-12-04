@@ -31,15 +31,15 @@ namespace VirtualGameStore.Entities
         [Required(ErrorMessage = "Please enter your city.")]
         public string? City { get; set; }
 
-        [Required(ErrorMessage = "Please enter your province.")]
+        [Required(ErrorMessage = "Please select your province.")]
         public string? Province { get; set; }
 
         [Required(ErrorMessage = "Please enter your postal code.")]
         [Remote("CheckPostalCode", "Account")]
         public string? PostalCode { get; set; }
 
-        [Required(ErrorMessage = "Please enter your country.")]
-        public string? Country { get; set; }
+        [Required(ErrorMessage = "Please select your country.")]
+        public string? Country { get; set; } = "Canada";
 
         public string? DeliveryInstructions { get; set; }
 

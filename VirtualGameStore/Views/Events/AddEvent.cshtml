@@ -1,0 +1,86 @@
+﻿@model Event
+@{
+    ViewData["Title"] = "Add Event";
+}
+
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8 col-12">
+        <div class="card shadow bg-night text-snow-bright my-4">
+            <div class="row text-start p-2 m-0 bg-shade">
+                <h4 class="card-title text-uppercase fw-bold">Add Event</h4>
+            </div>
+            <div class="card-body">
+                <!-- Game form starts here -->
+                <div asp-validation-summary="ModelOnly" class="text-aurora-red"></div>
+                <form asp-action="SaveEvent" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <!-- Right column for input fields -->
+                        <div class="col-12">
+                            <div class="row">
+                                <!-- Game name and developer inputs -->
+                                <div class="col-12 mb-3">
+                                    <label for="EventName" class="fw-bold text-uppercase text-snow-deep">Event Name</label>
+                                    <input type="text" class="form-control" id="EventName" name="EventName" asp-for="EventName">
+                                    <div class="row">
+                                        <span asp-validation-for="EventName" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="Location" class="fw-bold text-uppercase text-snow-deep">Location</label>
+                                    <input type="text" class="form-control" id="Location" name="Location" asp-for="Location">
+                                    <div class="row">
+                                        <span asp-validation-for="Location" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Game description input -->
+                                <div class="col-12 mb-3">
+                                    <label for="EventDescription" class="fw-bold text-uppercase text-snow-deep">Event Description</label>
+                                    <textarea class="form-control" id="EventDescription" name="EventDescription" asp-for="EventDescription"></textarea>
+                                    <div class="row">
+                                        <span asp-validation-for="EventDescription" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Release date and price inputs -->
+                                <div class="col-6 mb-3">
+                                    <label for="StartTime" class="fw-bold text-uppercase text-snow-deep">Start Date</label>
+                                    <input type="date" class="form-control" id="StartTime" name="StartTime" asp-for="StartTime">
+                                    <div class="row">
+                                        <span asp-validation-for="StartTime" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="EndTime" class="fw-bold text-uppercase text-snow-deep">End Date</label>
+                                    <input type="date" class="form-control" id="EndTime" name="EndTime" asp-for="EndTime">
+                                    <div class="row">
+                                        <span asp-validation-for="EndTime" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="Sponsor" class="fw-bold text-uppercase text-snow-deep">Sponsor</label>
+                                    <input type="text" class="form-control" id="Sponsor" name="Sponsor" asp-for="Sponsor">
+                                    <div class="row">
+                                        <span asp-validation-for="Sponsor" class="text-aurora-red"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit and cancel buttons -->
+                    <div class="row justify-content-end">
+                        <a class="btn btn-aurora-red-outline text-uppercase fw-bold col-3 p-2" asp-action="ViewAdminPanel" asp-controller="Admin" asp-route-tab="Events">Cancel</a>
+                        <button type="submit" class="btn btn-frost-primary col-3 p-2 mx-3 text-uppercase">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

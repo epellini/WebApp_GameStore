@@ -129,3 +129,35 @@ function addGameToWishlist(id) {
         }
     });
 }
+
+function registerForEvent(id) {
+    url = `/events/${id}/register`;
+    $.ajax({
+        type: "Post",
+        url: url,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: true,
+        success: function (result) {
+            //console.log(result);
+            if (result.added) {
+                if ($("#RegisterBtn").hasClass('btn-frost-outline')) {
+                    $("#RegisterBtn").text('Deregister');
+                    $("#RegisterBtn").removeClass('btn-frost-outline');
+                    $("#RegisterBtn").addClass('btn-aurora-red-outline');
+                }
+                else if ($("#RegisterBtn").hasClass('btn-aurora-red-outline')) {
+                    $("#RegisterBtn").text('Register');
+                    $("#RegisterBtn").removeClass('btn-aurora-red-outline');
+                    $("#RegisterBtn").addClass('btn-frost-outline');
+                }
+                $("#regCount").text('');
+                $("#regCount").append(`Members Registered: <b id="regCount">${result.count}</b></p>`);
+            }
+        }
+    });
+}
+
+function openReview() {
+    $("#review-form").toggleClass('d-none');
+}

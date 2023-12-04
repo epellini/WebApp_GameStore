@@ -61,7 +61,22 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label for="province" class="form-label fw-bold text-uppercase text-snow-deep">Province</label>
-                                                    <input type="text" class="form-control" id="province" asp-for="Province" value="@Model.Province">
+                                                    <select class="form-select" id="province" asp-for="Province" value="@Model.Province">
+                                                        <option></option>
+                                                        <option value="Alberta">Alberta</option>
+                                                        <option value="British Columbia">British Columbia</option>
+                                                        <option value="Manitoba">Manitoba</option>
+                                                        <option value="New Brunswick">New Brunswick</option>
+                                                        <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                                                        <option value="Northwest Territories">Northwest Territories</option>
+                                                        <option value="Nova Scotia">Nova Scotia</option>
+                                                        <option value="Nunavut">Nunavut</option>
+                                                        <option value="Ontario">Ontario</option>
+                                                        <option value="Prince Edward Island">Prince Edward Island</option>
+                                                        <option value="Quebec">Quebec</option>
+                                                        <option value="Saskatchewan">Saskatchewan</option>
+                                                        <option value="Yukon">Yukon</option>
+                                                    </select>
                                                     <div class="row">
                                                         <span asp-validation-for="Province" class="text-aurora-red"></span>
                                                     </div>
@@ -77,8 +92,8 @@
                                             <div class="row mb-3">
 
                                                 <div class="col-md-6">
-                                                    <label for="country" class="form-label fw-bold text-uppercase text-snow-deep">Country</label>
-                                                    <input type="text" class="form-control" id="country" asp-for="Country" value="@Model.Country">
+                                                    <label for="country" class="form-label fw-bold text-uppercase text-snow-deep">Country<sup class="secondary"> *</sup></></label>
+                                                    <input type="text" disabled class="form-control bg-white bg-opacity-50 text-night-bright" id="country" asp-for="Country" value="@Model.Country">
                                                     <div class="row">
                                                         <span asp-validation-for="Country" class="text-aurora-red"></span>
                                                     </div>
@@ -95,6 +110,9 @@
                                                         Set as Default
                                                     </label>
                                                 </div>
+                                            </div>
+                                            <div class="row justify-content-center">
+                                                <p class="small text-uppercase fw-bold m-0 text-secondary"><sup>* </sup>Shipping available to Canadian residents only</p>
                                             </div>
                                         </div>
                                     </div>
