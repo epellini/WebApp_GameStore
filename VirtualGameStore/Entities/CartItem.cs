@@ -7,6 +7,5 @@
         public int GameId { get; set; }
         public Cart? Cart { get; set; }
         public Game? Game { get; set; }
-        public int? Quantity { get; set; }
     }
 }

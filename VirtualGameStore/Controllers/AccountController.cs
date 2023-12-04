@@ -1186,7 +1186,7 @@ namespace VirtualGameStore.Controllers
             }
         }
 
-        [HttpGet("/cart")]
+        [HttpGet("/account/cart")]
         public async Task<IActionResult> ViewCart()
         {
             if (_signInManager.IsSignedIn(User))
@@ -1195,11 +1195,6 @@ namespace VirtualGameStore.Controllers
                 Cart? cart = _gameStoreManager.GetCartById(user.Id);
                 if (cart != null)
                 {
-                    //Cart cartItems = _gameStoreManager.GetCartById(cart.UserId);
-                    //if (cartItems != null)
-                    //{
-                        
-                    //}
                     List<Game> games = new List<Game>();
                     foreach (var item in cart.Items)
                     {
@@ -1217,19 +1212,19 @@ namespace VirtualGameStore.Controllers
                     };
                     return View("Cart", cartViewModel);
                 }
+                cart = new Cart()
+                {
+                    UserId = user.Id
+                };
                 CartViewModel newCartViewModel = new CartViewModel()
                 {
-                    ShoppingCart = new Cart()
-                    {
-                        UserId = user.Id,
-                        Items = new List<CartItem>()
-                    },
-                    UserId = user.Id
+                    ShoppingCart = cart,
+                    UserId = user.Id,
+                    shoppingCartGames = new List<Game>()
                 };
                 return View("Cart", newCartViewModel);
             }
             return RedirectToAction("ViewAllGames", "Games");
-
         }
 
         //[HttpPost("games/{gameId}/add-to-cart")]
