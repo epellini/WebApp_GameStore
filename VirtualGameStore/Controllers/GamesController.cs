@@ -89,7 +89,7 @@ namespace VirtualGameStore.Controllers
             {
                 editGameViewModel.GameGenres = new List<GameGenre>();
                 newGens = editGameViewModel.Genres.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
-                foreach(string gens in newGens)
+                foreach (string gens in newGens)
                 {
                     GameGenre gameGenre = new GameGenre()
                     {
@@ -447,7 +447,7 @@ namespace VirtualGameStore.Controllers
             }
             return View("Error", "Account");
         }
-        
+
         // GET: /games/{id}
         [HttpGet("games/{id}")]
         public async Task<IActionResult> GetGameById(int id)
@@ -621,9 +621,5 @@ namespace VirtualGameStore.Controllers
         private IGameStoreManager _gameStoreManager;
         private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
-
     }
-
-
-
 }

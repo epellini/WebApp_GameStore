@@ -1,0 +1,38 @@
+﻿@model CartViewModel
+@{
+    ViewData["Title"] = "Cart";
+    double? total = 0.0;
+}
+<table class="table text-snow">
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+    @if (Model.shoppingCartGames.Count() == 0)
+    {
+        <tr>
+            <td colspan="5">Your cart is empty</td>
+        </tr>
+    }
+    else
+    {
+        foreach (var item in Model.ShoppingCart.Items)
+        {
+            total += item.Game.RetailPrice;
+            <tr>
+                <td>@item.Game.Name</td>
+                <td>@item.Game.RetailPrice</td>
+                <td>
+                    <a asp-action="RemoveGameFromCart" asp-controller="Account" asp-route-id="@item.CartItemId" class="link-danger text-uppercase fw-bold text-decoration-none">Remove</a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3"></td>
+            <td>Total:</td>
+            <td>@total</td>
+        </tr>
+    }
+  
+</table>

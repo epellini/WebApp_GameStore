@@ -62,6 +62,16 @@
 
                     @if (_signInManager.IsSignedIn(User))
                     {
+                        <li class="nav-item">
+                            @if (ViewData["Title"] == "Cart")
+                            {
+                                <a class="nav-link nav-link-snow nav-link-snow-active p-1 px-3 m-2 text-uppercase fw-bold" asp-area="" asp-controller="Account" asp-action="ViewCart">Cart</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link nav-link-snow p-1 px-3 m-2 text-uppercase fw-bold" asp-controller="Account" asp-action="ViewCart">Cart</a>
+                            }
+                        </li>
                         <li class="nav-item dropdown">
                             <div class="d-inline-flex align-bottom">
                                 <a class="nav-link" asp-action="ViewProfile" asp-controller="Account" asp-route-username="@User.Identity.Name">
