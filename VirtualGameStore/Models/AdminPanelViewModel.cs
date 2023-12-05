@@ -6,5 +6,7 @@ namespace VirtualGameStore.Models
     {
         public List<Game>? AllGames { get; set; }
         public List<Event>? AllEvents { get; set; }
+
+        public List<Review>? AllReviews { get; set; }
     }
 }

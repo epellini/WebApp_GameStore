@@ -1,4 +1,5 @@
-﻿using VirtualGameStore.Entities;
+﻿using VirtualGameStore.DataAccess;
+using VirtualGameStore.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace VirtualGameStore.Services
@@ -187,6 +188,22 @@ namespace VirtualGameStore.Services
         public void UpdateEventRegistration(EventRegistration eventRegistration);
         // Delete EventRegistration:
         public void DeleteEventRegistration(EventRegistration eventRegistration);
+
+
+        // CRUD operations for review entity:
+        // Create review:
+        public void CreateReview(Review review);
+        // Read review:
+        public Review? GetReviewById(int id);
+        public List<Review>? GetAllReviews();
+        // Read all reviews by userId:
+        public List<Review>? GetAllReviewsByUserId(string id);
+        // Read all reviews by gameId:
+        public List<Review>? GetAllReviewsByGameId(int id);
+        // Update review:
+        public void UpdateReview(Review review);
+        // Delete review:
+        public void DeleteReview(Review review);
 
 
         public byte[] ConvertImageToBytes(IFormFile image);

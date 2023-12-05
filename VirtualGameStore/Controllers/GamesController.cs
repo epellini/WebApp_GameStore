@@ -468,7 +468,8 @@ namespace VirtualGameStore.Controllers
                     RetailPrice = game.RetailPrice,
                     Genres = new List<Genre>(),
                     Platforms = new List<Platform>(),
-                    Languages = new List<Language>()
+                    Languages = new List<Language>(),
+                    Reviews = _gameStoreManager.GetAllReviewsByGameId(id)
                 };
 
                 if (game.Genres != null)
@@ -505,6 +506,13 @@ namespace VirtualGameStore.Controllers
                         {
                             gameDetailsViewModel.Wishlist = wishes;
                         }
+                        gameDetailsViewModel.NewReview = new Review()
+                        {
+                            UserId = user.Id,
+                            GameId = id,
+                            Game = game
+                        };
+                        gameDetailsViewModel.PendingReviewCount = _gameStoreManager.GetAllReviewsByUserId(user.Id).Where(r => r.Status == "Pending").Count();
                     }
                 }
 
@@ -615,6 +623,38 @@ namespace VirtualGameStore.Controllers
                 sort = "New";
             }
             return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort });
+        }
+
+        // Post method to submit a review of a game
+        [HttpPost("/games/{id}")]
+        public async Task<IActionResult> SubmitReview(int id, GameDetailsViewModel gameDetailsViewModel)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user != null)
+                {
+                    Game game = _gameStoreManager.GetGameById(id);
+                    if (game != null)
+                    {
+                        Review review = new Review()
+                        {
+                            GameId = game.GameId,
+                            UserId = user.Id,
+                            ReviewText = gameDetailsViewModel.NewReview.ReviewText,
+                            ReviewDate = DateTime.Now
+                        };
+                        _gameStoreManager.CreateReview(review);
+                        return RedirectToAction("GetGameById", "Games", new { id = id });
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Game not found.";
+                    }
+                    return View("Error", "Account");
+                }
+            }
+            return RedirectToAction("GetGameById", "Games", new {id = id});
         }
 
         // Private fields for services

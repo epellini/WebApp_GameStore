@@ -106,29 +106,9 @@
                                 <p class="fw-bold col-auto px-1">@Model.Languages[i].LanguageName@punct</p>
                             }
                         </div>
-                        <div class="row">
-                            <a role="button" onclick="openReview()" class="link-danger link-frost text-uppercase fw-bold text-decoration-none col-auto">Review</a>
-                            <div id="review-form" class="col-12 d-none">
-                                <form asp-action="SubmitReview" asp-controller="Games" asp-route-gameId="@Model.GameId">
-									<div class="row">
-										<div class="col mb-3">
-                                            <textarea class="form-control form-control-sm" asp-for="@Model.NewReview.ReviewText" placeholder="Review" rows="3"></textarea>
-										</div>
-									</div>
-                                    <div class="row">
-                                        <span asp-validation-for="@Model.NewReview.ReviewText" class="text-aurora-red"></span>
-                                    </div>
-									<div class="row mb-3">
-										<div class="col">
-											<button type="submit" class="btn btn-frost-primary">Submit</button>
-										</div>
-									</div>
-                                </form>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <div class="row justify-content-between p-2 m-0">
+                <div class="row justify-content-between p-2 m-0 mb-4">
                     <div class="col-6 px-1">
                         @if (Model.Wishlist != null && Model.Wishlist.Where(w => w.Game.GameId == Model.GameId).FirstOrDefault() != null)
                         {
@@ -146,6 +126,105 @@
                             </svg>
                             Add to Cart
                         </a>
+                    </div>
+                </div>
+                <div class="row justify-content-between">
+                    <h4 class="text-uppercase fw-bold text-snow col-auto">Reviews</h4>
+                    @if (Model.NewReview != null)
+                    {
+                        <a role="button" onclick="openReview()" class="link-danger link-frost text-uppercase fw-bold text-decoration-none col-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square mb-1 me-1" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                            </svg>
+                            Write a review
+                        </a>
+                    }
+                </div>
+                <div class="row">
+                    @if (Model.NewReview != null)
+                    {
+                        <div id="review-form" class="col-12 d-none">
+                            <form asp-action="SubmitReview" asp-controller="Games" asp-route-id="@Model.GameId">
+                                <div class="row">
+                                    <div class="col">
+                                        <textarea class="form-control form-control-sm" asp-for="@Model.NewReview.ReviewText" placeholder="Review" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <span asp-validation-for="@Model.NewReview.ReviewText" class="text-aurora-red"></span>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-frost-primary">Submit</button>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.NewReview.GameId" value="@Model.NewReview.GameId" />
+                                <input type="hidden" asp-for="@Model.NewReview.UserId" value="@Model.NewReview.UserId" />
+                                <input type="hidden" asp-for="@Model.NewReview.Game" value="@Model.NewReview.Game" />
+                            </form>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="list-group list-group-flush">
+                            @if (Model.PendingReviewCount != null && Model.PendingReviewCount > 0)
+                            {
+                                <li class="bg-aurora-orange text-night list-group-item d-flex m-2 rounded shadow-sm p-2 row">
+                                    <div class="col-12">
+										<div class="row m-0 p-0 align-items-center">
+											<div class="col m-0 p-0">
+												<div class="row align-items-center m-0 p-0">
+                                                    <span class="fw-bold">You have @Model.PendingReviewCount pending review</span>
+												</div>
+											</div>
+										</div>
+									</div>
+                                </li>
+                            }
+                            @foreach (Review review in Model.Reviews.Where(r => r.Status == "Approved"))
+                            {
+                                <li class="bg-night text-snow-deep list-group-item d-flex p-2 row">
+                                    <a asp-action="ViewProfile" asp-controller="Account" asp-route-username="@review.User.UserName" class="m-0 p-0 fw-bold nav-link-snow text-decoration-none col-12">
+                                        <div class="row m-0 p-0 align-items-center justify-content-between">
+                                            <div class="col m-0 p-0">
+                                                <div class="row align-items-center m-0 p-0">
+                                                    @{
+                                                        Photo? pfp = null;
+                                                    }
+                                                    @if (review.User.Profile.Photos != null)
+                                                    {
+                                                        pfp = review.User.Profile.Photos.Where(p => p.isProfilePic == true).FirstOrDefault();
+                                                    }
+                                                    @if (pfp != null)
+                                                    {
+                                                        <img src="/images/user-uploaded/@pfp.PhotoId" class="profile-pic p-1 ms-3 col-2" alt="@pfp.AltText" style="object-fit: cover">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/images/blank-profile.png" class="profile-pic p-1 ms-3 col-2" alt="@review.User.UserName profile picture" style="object-fit: cover">
+                                                    }
+                                                    <p class="m-2 p-0 fw-bold col-auto">@review.User.UserName</p>
+                                                </div>
+                                            </div>
+                                            <p class="m-2 p-0 text-secondary col-auto">@review.ReviewDate.Value.ToString("f")</p>
+                                        </div>
+                                    </a>
+                                    <div class="row p-0 m-0">
+                                        <p class="col-10 m-2">@review.ReviewText</p>
+                                    </div>
+                                    
+                                </li>
+                            }
+                            @if (Model.Reviews == null || Model.Reviews.Where(r => r.Status == "Approved").Count() == 0)
+                            {
+                                <li class="bg-night text-snow-deep list-group-item d-flex p-2 row">
+                                    <p class="text-uppercase fw-bold">None...</p>
+                                </li>
+                            }
+                        </ul>
+                        
                     </div>
                 </div>
             </div>

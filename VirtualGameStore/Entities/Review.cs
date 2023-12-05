@@ -13,6 +13,6 @@ namespace VirtualGameStore.Entities
         [Required(ErrorMessage = "Please enter a review text.")]
         public string? ReviewText { get; set; }
         public string? Status { get; set; } = "Pending";
-        public DateTime ReviewDate { get; set; } = DateTime.Now;
+        public DateTime? ReviewDate { get; set; } = DateTime.Now;
     }
 }

@@ -36,7 +36,8 @@ namespace VirtualGameStore.Controllers
                     AdminPanelViewModel adminPanelViewModel = new AdminPanelViewModel()
                     {
                         AllGames = _gameStoreManager.GetAllGames("Alphabetical"),
-                        AllEvents = _gameStoreManager.GetAllEvents()
+                        AllEvents = _gameStoreManager.GetAllEvents(),
+                        AllReviews = _gameStoreManager.GetAllReviews()
                     };
                     return View("Panel", adminPanelViewModel);
                 }
@@ -173,6 +174,34 @@ namespace VirtualGameStore.Controllers
                 }
             }
             return View("AccessDenied");
+        }
+
+        // GET /reviews/{id}/approve
+        [HttpGet("/reviews/{id}/approve")]
+        public IActionResult ApproveReview(int id)
+        {
+            // mark review status as "Approved"
+            Review review =  _gameStoreManager.GetReviewById(id);
+            if (review != null)
+            {
+                review.Status = "Approved";
+                _gameStoreManager.UpdateReview(review);
+            }
+            return RedirectToAction("ViewAdminPanel", "Admin", new {tab = "Reviews"});
+        }
+
+        // GET /reviews/{id}/reject
+        [HttpGet("/reviews/{id}/reject")]
+        public IActionResult RejectReview(int id)
+        {
+            // mark review status as "Approved"
+            Review review = _gameStoreManager.GetReviewById(id);
+            if (review != null)
+            {
+                review.Status = "Rejected";
+                _gameStoreManager.UpdateReview(review);
+            }
+            return RedirectToAction("ViewAdminPanel", "Admin", new { tab = "Reviews" });
         }
 
         // Private fields for services

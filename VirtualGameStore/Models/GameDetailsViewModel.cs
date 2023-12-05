@@ -20,5 +20,6 @@ namespace VirtualGameStore.Models
 
         public List<Review>? Reviews { get; set; }
         public Review? NewReview { get; set; }
+        public int? PendingReviewCount { get; set; }
     }
 }

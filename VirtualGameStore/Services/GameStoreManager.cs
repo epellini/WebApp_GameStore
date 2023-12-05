@@ -559,6 +559,46 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
+        // CRUD operations for review entity:
+        // Create review:
+        public void CreateReview(Review review)
+        {
+            _gameStoreDbContext.Reviews.Add(review);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read review:
+        public Review? GetReviewById(int id)
+        {
+            return _gameStoreDbContext.Reviews.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).Where(r => r.ReviewId == id).FirstOrDefault();
+        }
+        // Read all reviews:
+        public List<Review>? GetAllReviews()
+        {
+            return _gameStoreDbContext.Reviews.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).ToList();
+        }
+        // Read all reviews by userId:
+        public List<Review>? GetAllReviewsByUserId(string id)
+        {
+            return _gameStoreDbContext.Reviews.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).Where(r => r.UserId == id).ToList();
+        }
+        // Read all reviews by gameId:
+        public List<Review>? GetAllReviewsByGameId(int id)
+        {
+            return _gameStoreDbContext.Reviews.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).Where(r => r.GameId == id).ToList();
+        }
+        // Update review:
+        public void UpdateReview(Review review)
+        {
+            _gameStoreDbContext.Reviews.Update(review);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete review:
+        public void DeleteReview(Review review)
+        {
+            _gameStoreDbContext.Reviews.Remove(review);
+            _gameStoreDbContext.SaveChanges();
+        }
+
 
 
         // private DbContext field

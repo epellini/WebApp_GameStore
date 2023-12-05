@@ -421,7 +421,7 @@
             </div>
             <div class="col-lg-8 col-12">
                 <div class="row text-center justify-content-between m-0 mb-4">
-                    <div class="col p-0 m-0">
+                    @* <div class="col p-0 m-0">
                         @if (ViewBag.Section == "Library")
                         {
 
@@ -431,8 +431,8 @@
                         {
                             <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Library</a>
                         }
-                    </div>
-                    <div class="col p-0">
+                    </div> *@
+                    @* <div class="col p-0">
                         @if (ViewBag.Section == "Favourites")
                         {
 
@@ -442,8 +442,8 @@
                         {
                             <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Favourites</a>
                         }
-                    </div>
-                    <div class="col p-0">
+                    </div> *@
+                    <div class="col-3 p-0">
                         @if (ViewBag.Section == "Wishlist")
                         {
                             <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold">Wishlist</a>
@@ -453,7 +453,7 @@
                             <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Wishlist</a>
                         }
                     </div>
-                    <div class="col p-0">
+                    @* <div class="col p-0">
                         @if (ViewBag.Section == "Reviews")
                         {
                             <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow sort-link-snow-active p-1 px-3 my-2 m-1 text-uppercase fw-bold">Reviews</a>
@@ -462,7 +462,7 @@
                         {
                             <a asp-controller="Account" asp-action="ViewProfile" class="nav-link sort-link-snow p-1 px-3 my-2 m-1 text-uppercase fw-bold">Reviews</a>
                         }
-                    </div>
+                    </div> *@
                 </div>
                 @if (Model.IsOwner)
                 {
