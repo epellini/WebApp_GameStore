@@ -13,5 +13,10 @@ namespace VirtualGameStore.Entities
         public ICollection<FriendConnect>? Connects { get; set; }
         public Profile? Profile { get; set; }
         public ICollection<ShippingAddress>? ShippingAddresses { get; set; }
+        public ICollection<EventRegistration>? EventRegistrations { get; set; }
+        public ICollection<Rating>? Ratings { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
+        public Cart? Cart { get; set; }
+        public ICollection<Order>? Orders { get; set; }
     }
 }

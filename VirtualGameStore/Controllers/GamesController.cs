@@ -89,7 +89,7 @@ namespace VirtualGameStore.Controllers
             {
                 editGameViewModel.GameGenres = new List<GameGenre>();
                 newGens = editGameViewModel.Genres.Split(";").Where(p => !string.IsNullOrEmpty(p)).ToList();
-                foreach(string gens in newGens)
+                foreach (string gens in newGens)
                 {
                     GameGenre gameGenre = new GameGenre()
                     {
@@ -448,7 +448,7 @@ namespace VirtualGameStore.Controllers
             }
             return View("Error", "Account");
         }
-        
+
         // GET: /games/{id}
         [HttpGet("games/{id}")]
         public async Task<IActionResult> GetGameById(int id)
@@ -469,8 +469,22 @@ namespace VirtualGameStore.Controllers
                     RetailPrice = game.RetailPrice,
                     Genres = new List<Genre>(),
                     Platforms = new List<Platform>(),
-                    Languages = new List<Language>()
+                    Languages = new List<Language>(),
+                    Reviews = _gameStoreManager.GetAllReviewsByGameId(id),
+                    AvgRating = 0.0,
+                    IsSignedIn = false
                 };
+
+                List<Rating>? ratings = _gameStoreManager.GetAllRatingsByGameId(id);
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    int total = 0;
+                    foreach (Rating r in ratings)
+                    {
+                        total += r.RatingValue;
+                    }
+                    gameDetailsViewModel.AvgRating = (double)total / (double)ratings.Count();
+                }
 
                 if (game.Genres != null)
                 {
@@ -501,10 +515,26 @@ namespace VirtualGameStore.Controllers
                     User user = await _userManager.FindByNameAsync(User.Identity.Name);
                     if (user != null)
                     {
+                        gameDetailsViewModel.IsSignedIn = true;
                         List<WishedGame>? wishes = _gameStoreManager.GetWishedGamesById(user.Id);
                         if (wishes != null)
                         {
                             gameDetailsViewModel.Wishlist = wishes;
+                        }
+                        gameDetailsViewModel.NewReview = new Review()
+                        {
+                            UserId = user.Id,
+                            GameId = id,
+                            Game = game
+                        };
+                        gameDetailsViewModel.PendingReviewCount = _gameStoreManager.GetAllReviewsByUserId(user.Id).Where(r => r.Status == "Pending").Count();
+                        if (ratings != null)
+                        {
+                            Rating? rating = ratings.Where(r => r.UserId == user.Id).FirstOrDefault();
+                            if (rating != null)
+                            {
+                                gameDetailsViewModel.Rating = rating.RatingValue;
+                            }
                         }
                     }
                 }
@@ -564,6 +594,57 @@ namespace VirtualGameStore.Controllers
             return Json(new { loggedIn = loggedIn, added = added, id = id });
         }
 
+        // Add rating jsonresult
+        [HttpPost("games/{id}/rate/{rate}")]
+        public JsonResult RateGame(int id, int rate)
+        {
+            bool loggedIn = false;
+            bool added = false;
+            string average = "0.0";
+
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                if (user != null)
+                {
+                    loggedIn = true;
+                    Game game = _gameStoreManager.GetGameById(id);
+                    if (game != null)
+                    {
+                        Rating? existingRate = _gameStoreManager.GetAllRatingsByGameId(id).Where(r => r.UserId == user.Id).FirstOrDefault();
+                        if (existingRate != null)
+                        {
+                            existingRate.RatingValue = rate;
+                            _gameStoreManager.UpdateRating(existingRate);
+                            added = true;
+                        }
+                        else
+                        {
+                            Rating newRating = new Rating()
+                            {
+                                GameId = id,
+                                UserId = user.Id,
+                                RatingValue = rate
+                            };
+                            _gameStoreManager.CreateRating(newRating);
+                            added = true;
+                        }
+                        List<Rating>? ratings = _gameStoreManager.GetAllRatingsByGameId(id);
+                        if (ratings != null)
+                        {
+                            int total = 0;
+                            foreach (Rating r in ratings)
+                            {
+                                total += r.RatingValue;
+                            }
+                            average = ((double)total / (double)ratings.Count()).ToString("0.0#");
+                        }
+                    }
+                }
+            }
+            return Json(new { loggedIn = loggedIn, added = added, id = id, average = average });
+        }
+
         // GET: /images/{id}
         [HttpGet("images/{id}")]
         public IActionResult ViewImage(int id)
@@ -618,13 +699,41 @@ namespace VirtualGameStore.Controllers
             return Json(new { games = games, platforms = platforms, pictures = pictures, sort = sort });
         }
 
+        // Post method to submit a review of a game
+        [HttpPost("/games/{id}")]
+        public async Task<IActionResult> SubmitReview(int id, GameDetailsViewModel gameDetailsViewModel)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user != null)
+                {
+                    Game game = _gameStoreManager.GetGameById(id);
+                    if (game != null)
+                    {
+                        Review review = new Review()
+                        {
+                            GameId = game.GameId,
+                            UserId = user.Id,
+                            ReviewText = gameDetailsViewModel.NewReview.ReviewText,
+                            ReviewDate = DateTime.Now
+                        };
+                        _gameStoreManager.CreateReview(review);
+                        return RedirectToAction("GetGameById", "Games", new { id = id });
+                    }
+                    else
+                    {
+                        ViewBag.errorMessage = "Game not found.";
+                    }
+                    return View("Error", "Account");
+                }
+            }
+            return RedirectToAction("GetGameById", "Games", new {id = id});
+        }
+
         // Private fields for services
         private IGameStoreManager _gameStoreManager;
         private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
-
     }
-
-
-
 }

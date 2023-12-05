@@ -13,8 +13,8 @@ namespace VirtualGameStore.Controllers
 {
     public class AccountController : Controller
     {
-       // Constructor to assign services to private fields
-      public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IGameStoreManager gameStoreManager, IEmailSender emailSender)
+        // Constructor to assign services to private fields
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IGameStoreManager gameStoreManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -306,7 +306,7 @@ namespace VirtualGameStore.Controllers
         [HttpGet("account/reset-password")]
         public async Task<IActionResult> ResetPassword(PasswordViewModel model)
         {
-            
+
             return View(model);
         }
 
@@ -470,7 +470,7 @@ namespace VirtualGameStore.Controllers
                     return View("Error");
                 }
             }
-            
+
             return RedirectToAction("LogIn", "Account");
         }
 
@@ -830,7 +830,7 @@ namespace VirtualGameStore.Controllers
         [HttpPost("/account/preferences")]
         public async Task<IActionResult> SavePreferences(PreferencesViewModel preferenceViewModel)
         {
-            
+
             if (_signInManager.IsSignedIn(User))
             {
                 User user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -1185,6 +1185,185 @@ namespace VirtualGameStore.Controllers
                 return Json(true);
             }
         }
+
+        [HttpGet("/account/cart")]
+        public async Task<IActionResult> ViewCart()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                Cart? cart = _gameStoreManager.GetCartById(user.Id);
+                if (cart != null)
+                {
+                    List<Game> games = new List<Game>();
+                    foreach (var item in cart.Items)
+                    {
+                        Game? game = _gameStoreManager.GetGameById(item.GameId);
+                        if (game != null)
+                        {
+                            games.Add(game);
+                        }
+                    }
+                    CartViewModel cartViewModel = new CartViewModel()
+                    {
+                        ShoppingCart = cart,
+                        shoppingCartGames = games,
+                        UserId = user.Id,
+                        ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id)
+                    };
+                    return View("Cart", cartViewModel);
+                }
+                cart = new Cart()
+                {
+                    UserId = user.Id
+                };
+                CartViewModel newCartViewModel = new CartViewModel()
+                {
+                    ShoppingCart = cart,
+                    UserId = user.Id,
+                    shoppingCartGames = new List<Game>(),
+                    ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id)
+                };
+                return View("Cart", newCartViewModel);
+            }
+            return RedirectToAction("ViewAllGames", "Games");
+        }
+
+        [HttpGet("games/{id}/add-to-cart")]
+        public IActionResult AddGameToCart(int id)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                if (user != null)
+                {
+                    Cart? cart = _gameStoreManager.GetCartById(user.Id);
+                    if (cart != null)
+                    {
+                        CartItem cartItem = new CartItem()
+                        {
+                            CartId = cart.CartId,
+                            GameId = id
+                        };
+                        _gameStoreManager.AddItemToCart(cartItem);
+                    }
+                    else
+                    {
+                        Cart newCart = new Cart()
+                        {
+                            UserId = user.Id
+                        };
+                        _gameStoreManager.CreateCart(newCart);
+                        CartItem cartItem = new CartItem()
+                        {
+                            CartId = newCart.CartId,
+                            GameId = id
+                        };
+                        _gameStoreManager.AddItemToCart(cartItem);
+                    }
+                }
+            }
+            return RedirectToAction("ViewAllGames", "Games");
+        }
+
+        [HttpGet("account/cart/item/{id}/remove")]
+        public IActionResult RemoveGameFromCart(int id)
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                if (user != null)
+                {
+                    Cart? cart = _gameStoreManager.GetCartById(user.Id);
+                    if (cart != null)
+                    {
+                        CartItem cartItem = _gameStoreManager.GetCartItemById(id);
+                        _gameStoreManager.RemoveItemFromCart(cartItem);
+                    }
+                }
+            }
+            return RedirectToAction("ViewCart", "Account");
+        }
+
+        // Purchase cart
+        [HttpPost("account/cart")]
+        public async Task<IActionResult> PurchaseCart(CartViewModel cartViewModel)
+        {
+            User user = await _userManager.FindByNameAsync(User.Identity.Name);
+            Cart? cart = _gameStoreManager.GetCartById(user.Id);
+            if (cart != null)
+            {
+                List<Game> games = new List<Game>();
+                foreach (var item in cart.Items)
+                {
+                    Game? game = _gameStoreManager.GetGameById(item.GameId);
+                    if (game != null)
+                    {
+                        games.Add(game);
+                    }
+                }
+                cartViewModel.ShoppingCart = cart;
+                cartViewModel.shoppingCartGames = games;
+                cartViewModel.UserId = user.Id;
+                cartViewModel.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id);
+            }
+            if (ModelState.IsValid)
+            {
+                decimal subtotal = 0;
+                decimal tax = 0;
+                decimal total = 0;
+                foreach (Game game in cartViewModel.shoppingCartGames)
+                {
+                    subtotal += (decimal)game.RetailPrice;
+                    tax += (decimal)game.RetailPrice * 0.13m;
+                    total += (decimal)game.RetailPrice * 1.13m;
+                }
+                ShippingAddress? shippingAddress = _gameStoreManager.GetAddressById((int)cartViewModel.AddressId);
+                Order newOrder = new Order()
+                {
+                    UserId = user.Id,
+                    ShippingAddressId = (int)cartViewModel.AddressId,
+                    OrderDate = DateTime.Now,
+                    Subtotal = subtotal,
+                    Tax = tax,
+                    Total = total,
+                    Status = "Paid",
+                    BillingName = shippingAddress.FullName
+                };
+                _gameStoreManager.CreateOrder(newOrder);
+
+                foreach (var item in cart.Items)
+                {
+                    OrderItem orderItem = new OrderItem()
+                    {
+                        GameId = item.GameId,
+                        OrderId = newOrder.OrderId
+                    };
+                    _gameStoreManager.CreateOrderItem(orderItem);
+                }
+                foreach (var item in cart.Items)
+                {
+                    _gameStoreManager.RemoveItemFromCart(item);
+                }
+                return RedirectToAction("ViewDownloads", "Account");
+            }
+            return View("Cart", cartViewModel);
+        }
+
+        // Get view downloads:
+        [HttpGet("/account/downloads")]
+        public async Task<IActionResult> ViewDownloads()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                List<OrderItem> items = _gameStoreManager.GetOrderItemsById(user.Id);
+                return View("Downloads", items);
+            }
+            return RedirectToAction("ViewAllGames", "Games");
+        }
+
 
         // private fields for services
         private UserManager<User> _userManager;

@@ -1,0 +1,137 @@
+﻿@model CartViewModel
+@{
+    ViewData["Title"] = "Cart";
+    double total = 0.0;
+    double subtotal = 0.0;
+    double tax = 0.0;
+}
+
+
+<!--Default Address-->
+<div class="mb-4">
+    <div class="p-1 my-2 col-auto selected-list">
+        <div class="row justify-content-center p-0 m-0">
+            <div class="col-8 p-0 m-0">
+                @if (Model.shoppingCartGames == null || Model.shoppingCartGames.Count() == 0)
+                {
+                    <table class="table text-snow">
+                        <tr>
+                            <td colspan="5">Your cart is empty</td>
+                        </tr>
+                    </table>
+                }
+                else
+                {
+                    <table class="table text-snow">
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                        @foreach (var item in Model.ShoppingCart.Items)
+                        {
+                            subtotal += (double)item.Game.RetailPrice;
+                            <tr>
+                                <td>@item.Game.Name</td>
+                                <td>$@item.Game.RetailPrice</td>
+                                <td>
+                                    <a asp-action="RemoveGameFromCart" asp-controller="Account" asp-route-id="@item.CartItemId" class="link-danger text-uppercase fw-bold text-decoration-none">Remove</a>
+                                </td>
+                            </tr>
+                        }
+                        @{
+                            tax = subtotal * 0.13;
+                        }
+                        @{
+                            total = subtotal + tax;
+                        }
+                        <tr>
+                            <td colspan="3"></td>
+                            <td>Subtotal:</td>
+                            <td>@subtotal.ToString("C")</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td>Tax:</td>
+                            <td>@tax.ToString("C")</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td><h4>Total:</h4></td>
+                            <td><h4>@total.ToString("C")</h4></td>
+                        </tr>
+                    </table>
+                    <form asp-action="PurchaseCart" asp-controller="Account" method="post">
+                        <div class="row align-items-center mb-4">
+                            <h5 class="display-5">Shipping Address</h5>
+                            <div class="col">
+                                <select class="form-select" id="addressId" asp-for="AddressId" value="@Model.AddressId">
+                                    @if (Model.ShippingAddresses != null && Model.ShippingAddresses.Count() > 0)
+                                    {
+                                        @foreach (var add in Model.ShippingAddresses.Where(a => a.IsDefault == true))
+                                        {
+                                            <option value="@add.ShippingAddressId">DEFAULT @add.FullName @add.Address @add.Address2</option>
+                                        }
+                                        @foreach (var add in Model.ShippingAddresses.Where(a => a.IsDefault == false))
+                                        {
+                                            <option value="@add.ShippingAddressId">@add.FullName @add.Address @add.Address2</option>
+                                        }
+                                    }
+                                </select>
+                                <div class="row">
+                                    <span asp-validation-for="ShippingAddresses" class="text-aurora-red"></span>
+                                </div>
+                            </div>
+                            <a class="col-auto link-frost-primary text-uppercase fw-bold" asp-action="NewAddress" asp-controller="Account">Add New Address</a>
+                        </div>
+                        <div class="row align-items-center mb-4">
+                            <h5 class="display-5">Credit Card Details</h5>
+                            <div class="col-12 mb-3">
+                                <label for="creditCard" class="form-label fw-bold text-uppercase text-snow-deep">Card Number</label>
+                                <input type="text" class="form-control" id="creditCard" asp-for="CreditCard" value="@Model.CreditCard">
+                                <div class="row">
+                                    <span asp-validation-for="CreditCard" class="text-aurora-red"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="expMonth" class="form-label fw-bold text-uppercase text-snow-deep">Expiry Month</label>
+                                <input type="text" class="form-control" id="expMonth" asp-for="ExpMonth" value="@Model.ExpMonth">
+                                <div class="row">
+                                    <span asp-validation-for="ExpMonth" class="text-aurora-red"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="expYear" class="form-label fw-bold text-uppercase text-snow-deep">Expiry Year</label>
+                                <input type="text" class="form-control" id="expYear" asp-for="ExpYear" value="@Model.ExpYear">
+                                <div class="row">
+                                    <span asp-validation-for="ExpYear" class="text-aurora-red"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="cvv" class="form-label fw-bold text-uppercase text-snow-deep">CVV</label>
+                                <input type="text" class="form-control" id="cvv" asp-for="CVV" value="@Model.CVV">
+                                <div class="row">
+                                    <span asp-validation-for="CVV" class="text-aurora-red"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="postalCode" class="form-label fw-bold text-uppercase text-snow-deep">Postal Code</label>
+                                <input type="text" class="form-control" id="postalCode" asp-for="PostalCode" value="@Model.PostalCode">
+                                <div class="row">
+                                    <span asp-validation-for="PostalCode" class="text-aurora-red"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+
+                                <button type="submit" class="btn btn-frost-primary col-12 p-2 m-0 text-uppercase">Purchase</button>
+                            </div>
+                        </div>
+                        
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+  
+

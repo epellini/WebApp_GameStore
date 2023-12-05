@@ -1,4 +1,5 @@
-﻿using VirtualGameStore.Entities;
+﻿using VirtualGameStore.DataAccess;
+using VirtualGameStore.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace VirtualGameStore.Services
@@ -54,8 +55,42 @@ namespace VirtualGameStore.Services
         public WishedGame? GetWishedGame(int id);
         // Read all wished games:
         public List<WishedGame>? GetWishedGamesById(string id);
+        public List<WishedGame>? GetWishedGamesByGameId(int id);
         // Delete wished game:
         public void DeleteWishedGame(WishedGame wishedGame);
+
+        public Cart? GetCartById(string id);
+        public CartItem? GetCartItemById(int id);
+        public void AddItemToCart(CartItem cartItem);
+        public void RemoveItemFromCart(CartItem cartItem);
+        public void CreateCart(Cart cart);
+
+
+        // CRUD operations for Order entity:
+        // Create order:
+        public void CreateOrder(Order order);
+        // Read order:
+        public Order? GetOrder(int id);
+        // Read all orders:
+        public List<Order>? GetOrdersById(string id);
+        // Update order:
+        public void UpdateOrder(Order order);
+        // Delete order:
+        public void DeleteOrder(Order order);
+
+
+        // CRUD operations for OrderItem entity:
+        // Create order item:
+        public void CreateOrderItem(OrderItem orderItem);
+        // Read order item:
+        public OrderItem? GetOrderItem(int id);
+        // Read all order items:
+        public List<OrderItem>? GetOrderItemsById(string id);
+        public List<OrderItem>? GetOrderItemsByGameId(int id);
+        // Update order item:
+        public void UpdateOrderItem(OrderItem orderItem);
+        // Delete order item:
+        public void DeleteOrderItem(OrderItem orderItem);
 
 
         // CRUD operations for FriendConnect entity:
@@ -126,6 +161,66 @@ namespace VirtualGameStore.Services
         public void CreatePhoto(IFormFile image, Photo photo);
         // Read Photo:
         public Photo? GetPhotoById(int photoId);
+
+
+        // CRUD operations for Event entity:
+        // Create Event:
+        public void CreateEvent(Event eventEntity);
+        // Read Event:
+        public Event? GetEventById(int id);
+        // Read all Events:
+        public List<Event>? GetAllEvents();
+        // Update Event:
+        public void UpdateEvent(Event eventEntity);
+        // Delete Event:
+        public void DeleteEvent(Event eventEntity);
+
+
+        // CRUD operations for EventRegistration entity:
+        // Create EventRegistration:
+        public void CreateEventRegistration(EventRegistration eventRegistration);
+        // Read EventRegistration:
+        public EventRegistration? GetEventRegistrationById(string id);
+        // Read all EventRegistrations:
+        public List<EventRegistration>? GetAllEventRegistrations();
+        public List<EventRegistration>? GetAllEventRegistrationsByUserId(string id);
+        // Update EventRegistration:
+        public void UpdateEventRegistration(EventRegistration eventRegistration);
+        // Delete EventRegistration:
+        public void DeleteEventRegistration(EventRegistration eventRegistration);
+
+
+        // CRUD operations for review entity:
+        // Create review:
+        public void CreateReview(Review review);
+        // Read review:
+        public Review? GetReviewById(int id);
+        public List<Review>? GetAllReviews();
+        // Read all reviews by userId:
+        public List<Review>? GetAllReviewsByUserId(string id);
+        // Read all reviews by gameId:
+        public List<Review>? GetAllReviewsByGameId(int id);
+        // Update review:
+        public void UpdateReview(Review review);
+        // Delete review:
+        public void DeleteReview(Review review);
+
+
+        // CRUD operations for rating entity:
+        // Create rating:
+        public void CreateRating(Rating rating);
+        // Read rating:
+        public Rating? GetRatingById(int id);
+        // Read all ratings:
+        public List<Rating>? GetAllRatings();
+        // Read all ratings by userId:
+        public List<Rating>? GetAllRatingsByUserId(string id);
+        // Read all ratings by gameId:
+        public List<Rating>? GetAllRatingsByGameId(int id);
+        // Update rating:
+        public void UpdateRating(Rating rating);
+        // Delete rating:
+        public void DeleteRating(Rating rating);
 
 
         public byte[] ConvertImageToBytes(IFormFile image);

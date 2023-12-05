@@ -1,0 +1,45 @@
+﻿@model EventViewModel
+
+@{
+    ViewData["Title"] = Model.Event.EventName;
+}
+@section scripts {
+    <script src="~/js/site.js"></script>
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6 col-12">
+        <div class="card shadow bg-night text-snow-bright my-4">
+            <div class="row text-start p-2 m-0 bg-shade">
+                <h4 class="card-title text-uppercase fw-bold">@Model.Event.EventName</h4>
+            </div>
+            <div class="card-body bg-night">
+                <div class="row justify-content-start">
+                    <div class="mb-4">
+                        <p id="regCount">Members Registered: <b>@Model.Event.EventRegistrations.Count()</b></p>
+                        <p>Start Time: <b>@Model.Event.StartTime.Value.ToString("dddd, MMM d, yyyy h:mm tt")</b></p>
+                        <p>End Time: <b>@Model.Event.EndTime.Value.ToString("dddd, MMM d, yyyy h:mm tt")</b></p>
+                        <p>Location: <b>@Model.Event.Location</b></p>
+                        <p>Description: <b>@Model.Event.EventDescription</b></p>
+                        <p>Sponsor: <b>@Model.Event.Sponsor</b></p>
+                    </div>
+                </div>
+                <div class="row justify-content-between p-2 m-0">
+                    <div class="col-6 px-1">
+                        @if (Model.Registrations != null && Model.Registrations.Where(r => r.Event.EventId == Model.Event.EventId).FirstOrDefault() != null)
+                        {
+                            <a role="button" onclick="registerForEvent(@Model.Event.EventId)" id="RegisterBtn" class="col-12 btn btn-aurora-red-outline">Deregister</a>
+                        }
+                        else
+                        {
+                            <a role="button" onclick="registerForEvent(@Model.Event.EventId)" id="RegisterBtn" class="col-12 btn btn-frost-outline">Register</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
