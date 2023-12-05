@@ -206,6 +206,23 @@ namespace VirtualGameStore.Services
         public void DeleteReview(Review review);
 
 
+        // CRUD operations for rating entity:
+        // Create rating:
+        public void CreateRating(Rating rating);
+        // Read rating:
+        public Rating? GetRatingById(int id);
+        // Read all ratings:
+        public List<Rating>? GetAllRatings();
+        // Read all ratings by userId:
+        public List<Rating>? GetAllRatingsByUserId(string id);
+        // Read all ratings by gameId:
+        public List<Rating>? GetAllRatingsByGameId(int id);
+        // Update rating:
+        public void UpdateRating(Rating rating);
+        // Delete rating:
+        public void DeleteRating(Rating rating);
+
+
         public byte[] ConvertImageToBytes(IFormFile image);
 
     }

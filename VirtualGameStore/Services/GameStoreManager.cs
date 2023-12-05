@@ -600,6 +600,48 @@ namespace VirtualGameStore.Services
         }
 
 
+        // CRUD operations for rating entity:
+        // Create rating:
+        public void CreateRating(Rating rating)
+        {
+            _gameStoreDbContext.Ratings.Add(rating);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Read rating:
+        public Rating? GetRatingById(int id)
+        {
+            return _gameStoreDbContext.Ratings.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).Where(r => r.RatingId == id).FirstOrDefault();
+        }
+        // Read all ratings:
+        public List<Rating>? GetAllRatings()
+        {
+            return _gameStoreDbContext.Ratings.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).ToList();
+        }
+        // Read all ratings by userId:
+        public List<Rating>? GetAllRatingsByUserId(string id)
+        {
+            return _gameStoreDbContext.Ratings.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).Where(r => r.UserId == id).ToList();
+        }
+        // Read all ratings by gameId:
+        public List<Rating>? GetAllRatingsByGameId(int id)
+        {
+            return _gameStoreDbContext.Ratings.Include(r => r.User).ThenInclude(u => u.Profile).ThenInclude(p => p.Photos).Include(r => r.Game).Where(r => r.GameId == id).ToList();
+        }
+        // Update rating:
+        public void UpdateRating(Rating rating)
+        {
+            _gameStoreDbContext.Ratings.Update(rating);
+            _gameStoreDbContext.SaveChanges();
+        }
+        // Delete rating:
+        public void DeleteRating(Rating rating)
+        {
+            _gameStoreDbContext.Ratings.Remove(rating);
+            _gameStoreDbContext.SaveChanges();
+        }
+
+
+
 
         // private DbContext field
         private GameStoreDbContext _gameStoreDbContext;

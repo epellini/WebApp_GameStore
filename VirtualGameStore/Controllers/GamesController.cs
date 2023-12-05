@@ -469,8 +469,20 @@ namespace VirtualGameStore.Controllers
                     Genres = new List<Genre>(),
                     Platforms = new List<Platform>(),
                     Languages = new List<Language>(),
-                    Reviews = _gameStoreManager.GetAllReviewsByGameId(id)
+                    Reviews = _gameStoreManager.GetAllReviewsByGameId(id),
+                    AvgRating = 0.0
                 };
+
+                List<Rating>? ratings = _gameStoreManager.GetAllRatingsByGameId(id);
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    int total = 0;
+                    foreach (Rating r in ratings)
+                    {
+                        total += r.RatingValue;
+                    }
+                    gameDetailsViewModel.AvgRating = total / ratings.Count();
+                }
 
                 if (game.Genres != null)
                 {
@@ -513,6 +525,14 @@ namespace VirtualGameStore.Controllers
                             Game = game
                         };
                         gameDetailsViewModel.PendingReviewCount = _gameStoreManager.GetAllReviewsByUserId(user.Id).Where(r => r.Status == "Pending").Count();
+                        if (ratings != null)
+                        {
+                            Rating? rating = ratings.Where(r => r.UserId == user.Id).FirstOrDefault();
+                            if (rating != null)
+                            {
+                                gameDetailsViewModel.Rating = rating.RatingValue;
+                            }
+                        }
                     }
                 }
 
@@ -569,6 +589,57 @@ namespace VirtualGameStore.Controllers
                 }
             }
             return Json(new { loggedIn = loggedIn, added = added, id = id });
+        }
+
+        // Add rating jsonresult
+        [HttpPost("games/{id}/rate/{rate}")]
+        public JsonResult RateGame(int id, int rate)
+        {
+            bool loggedIn = false;
+            bool added = false;
+            string average = "0.0";
+
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+                if (user != null)
+                {
+                    loggedIn = true;
+                    Game game = _gameStoreManager.GetGameById(id);
+                    if (game != null)
+                    {
+                        Rating? existingRate = _gameStoreManager.GetAllRatingsByGameId(id).Where(r => r.UserId == user.Id).FirstOrDefault();
+                        if (existingRate != null)
+                        {
+                            existingRate.RatingValue = rate;
+                            _gameStoreManager.UpdateRating(existingRate);
+                            added = true;
+                        }
+                        else
+                        {
+                            Rating newRating = new Rating()
+                            {
+                                GameId = id,
+                                UserId = user.Id,
+                                RatingValue = rate
+                            };
+                            _gameStoreManager.CreateRating(newRating);
+                            added = true;
+                        }
+                        List<Rating>? ratings = _gameStoreManager.GetAllRatingsByGameId(id);
+                        if (ratings != null)
+                        {
+                            int total = 0;
+                            foreach (Rating r in ratings)
+                            {
+                                total += r.RatingValue;
+                            }
+                            average = (total / ratings.Count()).ToString("0.0#");
+                        }
+                    }
+                }
+            }
+            return Json(new { loggedIn = loggedIn, added = added, id = id, average = average });
         }
 
         // GET: /images/{id}

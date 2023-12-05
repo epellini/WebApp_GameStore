@@ -18,6 +18,9 @@ namespace VirtualGameStore.Models
         public List<Platform>? Platforms { get; set; }
         public List<WishedGame>? Wishlist { get; set; }
 
+        public double? AvgRating { get; set; }
+        public int? Rating { get; set; }
+
         public List<Review>? Reviews { get; set; }
         public Review? NewReview { get; set; }
         public int? PendingReviewCount { get; set; }
