@@ -1208,7 +1208,8 @@ namespace VirtualGameStore.Controllers
                     {
                         ShoppingCart = cart,
                         shoppingCartGames = games,
-                        UserId = user.Id
+                        UserId = user.Id,
+                        ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id)
                     };
                     return View("Cart", cartViewModel);
                 }
@@ -1220,7 +1221,8 @@ namespace VirtualGameStore.Controllers
                 {
                     ShoppingCart = cart,
                     UserId = user.Id,
-                    shoppingCartGames = new List<Game>()
+                    shoppingCartGames = new List<Game>(),
+                    ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id)
                 };
                 return View("Cart", newCartViewModel);
             }
@@ -1282,6 +1284,86 @@ namespace VirtualGameStore.Controllers
             }
             return RedirectToAction("ViewCart", "Account");
         }
+
+        // Purchase cart
+        [HttpPost("account/cart")]
+        public async Task<IActionResult> PurchaseCart(CartViewModel cartViewModel)
+        {
+            User user = await _userManager.FindByNameAsync(User.Identity.Name);
+            Cart? cart = _gameStoreManager.GetCartById(user.Id);
+            if (cart != null)
+            {
+                List<Game> games = new List<Game>();
+                foreach (var item in cart.Items)
+                {
+                    Game? game = _gameStoreManager.GetGameById(item.GameId);
+                    if (game != null)
+                    {
+                        games.Add(game);
+                    }
+                }
+                cartViewModel.ShoppingCart = cart;
+                cartViewModel.shoppingCartGames = games;
+                cartViewModel.UserId = user.Id;
+                cartViewModel.ShippingAddresses = _gameStoreManager.GetShippingAddressesById(user.Id);
+            }
+            if (ModelState.IsValid)
+            {
+                decimal subtotal = 0;
+                decimal tax = 0;
+                decimal total = 0;
+                foreach (Game game in cartViewModel.shoppingCartGames)
+                {
+                    subtotal += (decimal)game.RetailPrice;
+                    tax += (decimal)game.RetailPrice * 0.13m;
+                    total += (decimal)game.RetailPrice * 1.13m;
+                }
+                ShippingAddress? shippingAddress = _gameStoreManager.GetAddressById((int)cartViewModel.AddressId);
+                Order newOrder = new Order()
+                {
+                    UserId = user.Id,
+                    ShippingAddressId = (int)cartViewModel.AddressId,
+                    OrderDate = DateTime.Now,
+                    Subtotal = subtotal,
+                    Tax = tax,
+                    Total = total,
+                    Status = "Paid",
+                    BillingName = shippingAddress.FullName
+                };
+                _gameStoreManager.CreateOrder(newOrder);
+
+                foreach (var item in cart.Items)
+                {
+                    OrderItem orderItem = new OrderItem()
+                    {
+                        GameId = item.GameId,
+                        OrderId = newOrder.OrderId
+                    };
+                    _gameStoreManager.CreateOrderItem(orderItem);
+                }
+                foreach (var item in cart.Items)
+                {
+                    _gameStoreManager.RemoveItemFromCart(item);
+                }
+                return RedirectToAction("ViewDownloads", "Account");
+            }
+            return View("Cart", cartViewModel);
+        }
+
+        // Get view downloads:
+        [HttpGet("/account/downloads")]
+        public async Task<IActionResult> ViewDownloads()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+                List<OrderItem> items = _gameStoreManager.GetOrderItemsById(user.Id);
+                return View("Downloads", items);
+            }
+            return RedirectToAction("ViewAllGames", "Games");
+        }
+
 
         // private fields for services
         private UserManager<User> _userManager;

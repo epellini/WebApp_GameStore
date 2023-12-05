@@ -49,7 +49,7 @@ namespace VirtualGameStore.Services
                 .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
                 .Include(g => g.Languages).ThenInclude(l => l.Language)
                 .Include(g => g.Pictures)
-                .OrderBy(g => g.Genres.Count())
+                .OrderByDescending(g => g.Reviews.Count())
                 .ToList();
             }
             if (sort == "Top")
@@ -59,6 +59,7 @@ namespace VirtualGameStore.Services
                 .Include(g => g.Genres).ThenInclude(ge => ge.Genre)
                 .Include(g => g.Languages).ThenInclude(l => l.Language)
                 .Include(g => g.Pictures)
+                .OrderByDescending(g => g.Ratings.Average(r => r.RatingValue))
                 .ToList();
             }
             if (sort == "Alphabetical")
@@ -640,6 +641,8 @@ namespace VirtualGameStore.Services
             _gameStoreDbContext.SaveChanges();
         }
 
+
+        
 
 
 

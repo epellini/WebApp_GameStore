@@ -27,23 +27,20 @@ namespace VirtualGameStore.Entities
         public int? ExpirationMonth { get; set; }
         public int? ExpirationYear { get; set; }
 
-        [Required(ErrorMessage = "Please enter your billing address.")]
-        [Remote("CheckAddress", "Account")]
         public string? BillingAddress { get; set; }
 
         public string? BillingAddress2 { get; set; }
 
-        [Required(ErrorMessage = "Please enter your city.")]
+
         public string? BillingCity { get; set; }
 
-        [Required(ErrorMessage = "Please enter your province.")]
+  
         public string? BillingProvince { get; set; }
 
-        [Required(ErrorMessage = "Please enter your postal code.")]
-        [Remote("CheckPostalCode", "Account")]
+
         public string? BillingPostalCode { get; set; }
 
-        [Required(ErrorMessage = "Please enter your country.")]
+
         public string? BillingCountry { get; set; }
     }
 }

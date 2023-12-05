@@ -35,8 +35,8 @@
                                             <td>@game.GameId</td>
                                             <td scope="col">@game.Name</td>
                                             <td>@game.Developer</td>
-                                            <td>0</td>
-                                            <td>$0 CAD</td>
+                                            <td>@game.OrderItems.Count()</td>
+                                            <td>$@(game.OrderItems.Count() * game.RetailPrice) CAD</td>
                                         </tr>
                                     }
                                 </tbody>

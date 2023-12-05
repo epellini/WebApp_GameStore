@@ -470,7 +470,8 @@ namespace VirtualGameStore.Controllers
                     Platforms = new List<Platform>(),
                     Languages = new List<Language>(),
                     Reviews = _gameStoreManager.GetAllReviewsByGameId(id),
-                    AvgRating = 0.0
+                    AvgRating = 0.0,
+                    IsSignedIn = false
                 };
 
                 List<Rating>? ratings = _gameStoreManager.GetAllRatingsByGameId(id);
@@ -513,6 +514,7 @@ namespace VirtualGameStore.Controllers
                     User user = await _userManager.FindByNameAsync(User.Identity.Name);
                     if (user != null)
                     {
+                        gameDetailsViewModel.IsSignedIn = true;
                         List<WishedGame>? wishes = _gameStoreManager.GetWishedGamesById(user.Id);
                         if (wishes != null)
                         {
