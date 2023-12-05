@@ -422,43 +422,43 @@ namespace VirtualGameStore.DataAccess
                 });
 
             //Seed the Pictures table:
-            //modelBuilder.Entity<Picture>().HasData(
-            //    new Picture
-            //    {
-            //        PictureId = 1,
-            //        GameId = 1,
-            //        Title = "Doom Cover Art",
-            //        AltText = "Cover image for the 1993 game, Doom",
-            //        IsCoverArt = true,
-            //        Image = GetBytes("doom-cover.jpg")
-            //    },
-            //    new Picture
-            //    {
-            //        PictureId = 2,
-            //        GameId = 2,
-            //        Title = "RuneScape Cover Art",
-            //        AltText = "Cover image for the 2001 game, RuenScape",
-            //        IsCoverArt = true,
-            //        Image = GetBytes("runescape-cover.jpg")
-            //    },
-            //    new Picture
-            //    {
-            //        PictureId = 3,
-            //        GameId = 3,
-            //        Title = "Minecraft Cover Art",
-            //        AltText = "Cover image for the 2011 game, Minecraft",
-            //        IsCoverArt = true,
-            //        Image = GetBytes("minecraft-cover.png")
-            //    },
-            //    new Picture
-            //    {
-            //        PictureId = 4,
-            //        GameId = 4,
-            //        Title = "RollerCoaster Tycoon Cover Art",
-            //        AltText = "Cover image for the 1999 game, RollerCoaster Tycoon",
-            //        IsCoverArt = true,
-            //        Image = GetBytes("rollercoaster-tycoon-cover.png")
-            //    });
+            modelBuilder.Entity<Picture>().HasData(
+                new Picture
+                {
+                    PictureId = 1,
+                    GameId = 1,
+                    Title = "Doom Cover Art",
+                    AltText = "Cover image for the 1993 game, Doom",
+                    IsCoverArt = true,
+                    Image = GetBytes("doom-cover.jpg")
+                },
+                new Picture
+                {
+                    PictureId = 2,
+                    GameId = 2,
+                    Title = "RuneScape Cover Art",
+                    AltText = "Cover image for the 2001 game, RuenScape",
+                    IsCoverArt = true,
+                    Image = GetBytes("runescape-cover.jpg")
+                },
+                new Picture
+                {
+                    PictureId = 3,
+                    GameId = 3,
+                    Title = "Minecraft Cover Art",
+                    AltText = "Cover image for the 2011 game, Minecraft",
+                    IsCoverArt = true,
+                    Image = GetBytes("minecraft-cover.png")
+                },
+                new Picture
+                {
+                    PictureId = 4,
+                    GameId = 4,
+                    Title = "RollerCoaster Tycoon Cover Art",
+                    AltText = "Cover image for the 1999 game, RollerCoaster Tycoon",
+                    IsCoverArt = true,
+                    Image = GetBytes("rollercoaster-tycoon-cover.png")
+                });
 
             // Seed the Games table:
             modelBuilder.Entity<Game>().HasData(

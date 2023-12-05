@@ -37,7 +37,7 @@ namespace VirtualGameStore.Models
         [Required(ErrorMessage = "Please select at least 1 language.")]
         public string? Languages { get; set; }
 
-        public Photo? CurrentPicture { get; set; }
+        public Picture? CurrentPicture { get; set; }
         public IFormFile? NewPicture { get; set; }
     }
 }

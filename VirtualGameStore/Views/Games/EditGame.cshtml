@@ -23,7 +23,16 @@
                     <div class="row">
                         <!-- Left column for image -->
                         <div class="col-md-4 p-4">
-                            <img id="picture" src="~/images/no-image.png" class="img-fluid" style="width: 100%; height: auto; object-fit: cover;">
+                            <div class="row ratio ratio-16x9 m-0">
+                                @if (Model.CurrentPicture != null)
+                                {
+                                    <img src="/images/@Model.CurrentPicture.PictureId" class="rounded p-0" alt="@Model.CurrentPicture.AltText" style="object-fit: cover">
+                                }
+                                else
+                                {
+                                    <img src="~/images/no-image.png" class="rounded p-0" alt="@Model.Name cover image" style="object-fit: cover">
+                                }
+                            </div>
                             <div class="mt-2">
                                 <label for="picture" class="link-frost text-uppercase fw-bold">Upload picture</label>
                                 <input type="file" id="picture" name="picture" hidden accept=".bmp, .jpg, .png, image/bmp, image/jpeg, image/png" onchange="fileCheck(this);">
