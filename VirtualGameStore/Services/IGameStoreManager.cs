@@ -85,6 +85,7 @@ namespace VirtualGameStore.Services
         // Read order item:
         public OrderItem? GetOrderItem(int id);
         // Read all order items:
+        public List<Order>? GetAllOrders();
         public List<OrderItem>? GetOrderItemsById(string id);
         public List<OrderItem>? GetOrderItemsByGameId(int id);
         // Update order item:

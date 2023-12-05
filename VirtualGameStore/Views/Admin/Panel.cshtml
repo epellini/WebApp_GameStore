@@ -302,7 +302,76 @@
                     </div>
                 </div>
             }
-            
+            else if (ViewBag.View == "Orders")
+            {
+                <div class="col-12 mb-4">
+                    <h4 class="fw-bold text-uppercase m-2 mb-4">Pending Orders</h4>
+                    <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0">
+                        <div class="card-body m-0 p-0">
+                            @if (Model.AllOrders.Where(o => o.Status == "Paid").Count() == 0)
+                            {
+                                <p class="fw-bold text-uppercase m-2">No Pending Orders...</p>
+                            }
+                            else
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var order in Model.AllOrders.Where(r => r.Status == "Paid"))
+                                    {
+
+                                        <li class="bg-night text-snow-deep list-group-item d-flex p-2 row align-items-center">
+                                            <div class="col m-0 p-0">
+                                                <div class="row align-items-center m-0 p-0">
+                                                    <p class="m-2 p-0 text-secondary col-auto">Order Id: <b>@order.OrderId</b></p>
+                                                    <p class="m-2 p-0 text-secondary col-auto">Items in order: <b>@order.Items.Count()</b></p>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="col-6 col-xl-4">
+                                                <div class="row">
+                                                    <a role="button" asp-action="ProcessOrder" asp-controller="Admin" asp-route-id="@order.OrderId" class="btn btn-frost-primary p-2 mx-1 text-uppercase col">Process Order</a>
+                                                </div>
+                                            </div>
+
+                                        </li>
+                                    }
+
+                                </ul>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <h4 class="fw-bold text-uppercase m-2 mb-4">Completed Orders</h4>
+                    <div class="card shadow bg-night text-snow-bright mb-4 mb-lg-0">
+                        <div class="card-body m-0 p-0">
+                            @if (Model.AllOrders.Where(o => o.Status == "Complete").Count() > 0)
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var order in Model.AllOrders.Where(r => r.Status == "Complete"))
+                                    {
+
+                                        <li class="bg-night text-snow-deep list-group-item d-flex p-2 row align-items-center">
+                                            <div class="col m-0 p-0">
+                                                <div class="row align-items-center m-0 p-0">
+                                                    <p class="m-2 p-0 text-secondary col-auto">Order Id: <b>@order.OrderId</b></p>
+                                                    <p class="m-2 p-0 text-secondary col-auto">Items in order: <b>@order.Items.Count()</b></p>
+                                                </div>
+
+                                            </div>
+
+                                        </li>
+                                    }
+
+                                </ul>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
         
     </div>

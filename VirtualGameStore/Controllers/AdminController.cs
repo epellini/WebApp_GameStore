@@ -37,7 +37,8 @@ namespace VirtualGameStore.Controllers
                     {
                         AllGames = _gameStoreManager.GetAllGames("Alphabetical"),
                         AllEvents = _gameStoreManager.GetAllEvents(),
-                        AllReviews = _gameStoreManager.GetAllReviews()
+                        AllReviews = _gameStoreManager.GetAllReviews(),
+                        AllOrders = _gameStoreManager.GetAllOrders()
                     };
                     return View("Panel", adminPanelViewModel);
                 }
@@ -202,6 +203,19 @@ namespace VirtualGameStore.Controllers
                 _gameStoreManager.UpdateReview(review);
             }
             return RedirectToAction("ViewAdminPanel", "Admin", new { tab = "Reviews" });
+        }
+
+        [HttpGet("/orders/{id}/process")]
+        public IActionResult ProcessOrder(int id)
+        {
+            // mark review status as "Approved"
+            Order order = _gameStoreManager.GetOrder(id);
+            if (order != null)
+            {
+                order.Status = "Complete";
+                _gameStoreManager.UpdateOrder(order);
+            }
+            return RedirectToAction("ViewAdminPanel", "Admin", new { tab = "Orders" });
         }
 
         // Private fields for services

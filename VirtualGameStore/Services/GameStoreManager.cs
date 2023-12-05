@@ -237,9 +237,13 @@ namespace VirtualGameStore.Services
             return _gameStoreDbContext.Orders.Include(o => o.ShippingAddress).Include(o => o.Items).Where(o => o.OrderId == id).FirstOrDefault();
         }
         // Read all orders:
-        public List<Order>? GetOrdersById(string id)
+        public List<Order>? GetAllOrders()
         {
             return _gameStoreDbContext.Orders.Include(o => o.ShippingAddress).Include(o => o.Items).ToList();
+        }
+        public List<Order>? GetOrdersById(string id)
+        {
+            return _gameStoreDbContext.Orders.Include(o => o.ShippingAddress).Include(o => o.Items).Where(o => o.UserId == id).ToList();
         }
         // Update order:
         public void UpdateOrder(Order order)

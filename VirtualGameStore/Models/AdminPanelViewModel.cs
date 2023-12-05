@@ -8,5 +8,7 @@ namespace VirtualGameStore.Models
         public List<Event>? AllEvents { get; set; }
 
         public List<Review>? AllReviews { get; set; }
+
+        public List<Order>? AllOrders { get; set; }
     }
 }
