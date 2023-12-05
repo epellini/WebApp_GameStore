@@ -483,7 +483,7 @@ namespace VirtualGameStore.Controllers
                     {
                         total += r.RatingValue;
                     }
-                    gameDetailsViewModel.AvgRating = (double)total / (double)ratings.Count();
+                    gameDetailsViewModel.AvgRating = total / ratings.Count();
                 }
 
                 if (game.Genres != null)
@@ -637,7 +637,7 @@ namespace VirtualGameStore.Controllers
                             {
                                 total += r.RatingValue;
                             }
-                            average = ((double)total / (double)ratings.Count()).ToString("0.0#");
+                            average = (total / ratings.Count()).ToString("0.0#");
                         }
                     }
                 }
