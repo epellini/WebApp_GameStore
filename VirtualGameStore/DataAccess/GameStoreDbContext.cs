@@ -51,19 +51,19 @@ namespace VirtualGameStore.DataAccess
         }
 
         // Generate an array of bytes from an image file located in wwwroot/images:
-        private byte[] GetBytes(string fileName)
-        {
-            var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+        //private byte[] GetBytes(string fileName)
+        //{
+        //    var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
 
-            // Check that the file exists:
-            if (!File.Exists(path))
-            {
-                throw new FileNotFoundException("Image not found");
-            }
+        //    // Check that the file exists:
+        //    if (!File.Exists(path))
+        //    {
+        //        throw new FileNotFoundException("Image not found");
+        //    }
 
-            // Read all the bytes and return as byte array:
-            return File.ReadAllBytes(path);
-        }
+        //    // Read all the bytes and return as byte array:
+        //    return File.ReadAllBytes(path);
+        //}
 
         // DbSets of every entity (used to query and save instances of entities):
         public DbSet<Game>? Games { get; set; }
@@ -430,7 +430,7 @@ namespace VirtualGameStore.DataAccess
                     Title = "Doom Cover Art",
                     AltText = "Cover image for the 1993 game, Doom",
                     IsCoverArt = true,
-                    Image = GetBytes("doom-cover.jpg")
+                    //Image = GetBytes("doom-cover.jpg")
                 },
                 new Picture
                 {
@@ -439,7 +439,7 @@ namespace VirtualGameStore.DataAccess
                     Title = "RuneScape Cover Art",
                     AltText = "Cover image for the 2001 game, RuenScape",
                     IsCoverArt = true,
-                    Image = GetBytes("runescape-cover.jpg")
+                    //Image = GetBytes("runescape-cover.jpg")
                 },
                 new Picture
                 {
@@ -448,7 +448,7 @@ namespace VirtualGameStore.DataAccess
                     Title = "Minecraft Cover Art",
                     AltText = "Cover image for the 2011 game, Minecraft",
                     IsCoverArt = true,
-                    Image = GetBytes("minecraft-cover.png")
+                    //Image = GetBytes("minecraft-cover.png")
                 },
                 new Picture
                 {
@@ -457,7 +457,7 @@ namespace VirtualGameStore.DataAccess
                     Title = "RollerCoaster Tycoon Cover Art",
                     AltText = "Cover image for the 1999 game, RollerCoaster Tycoon",
                     IsCoverArt = true,
-                    Image = GetBytes("rollercoaster-tycoon-cover.png")
+                    //Image = GetBytes("rollercoaster-tycoon-cover.png")
                 });
 
             // Seed the Games table:
