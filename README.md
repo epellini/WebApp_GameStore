@@ -1,1 +1,1 @@
-# VirtualGameStore
+# Game Store
